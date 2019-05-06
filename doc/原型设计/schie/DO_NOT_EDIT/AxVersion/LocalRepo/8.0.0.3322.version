@@ -1,0 +1,16 @@
+<BreakingChanges>
+    <Change Fail='True' UseMessage='False' Beta='false'>
+        <Version>8.0.5.0</Version>
+        <Message>This file was created with Axure RP 8.0, and cannot be opened in earlier versions.
+
+If you are using the Axure RP 8.0 Beta, please update to the latest beta version.
+
+Please visit www.axure.com to upgrade to the latest version of Axure RP.</Message>
+        <TeamMessage>This team project has been upgraded to a newer version of Axure RP.
+To use this team project, you need to upgrade to version 8.0 or above.
+
+If you are using the Axure RP 8.0 Beta, please update to the latest beta version.
+
+Please visit www.axure.com to upgrade to the latest version of Axure RP.</TeamMessage>
+    </Change>
+</BreakingChanges>
