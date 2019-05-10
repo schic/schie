@@ -1,0 +1,666 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>WSDL资源编辑</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/wsdl资源编辑/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/prototypePre.js"></script>
+    <script src="data/document.js"></script>
+    <script src="resources/scripts/prototypePost.js"></script>
+    <script src="files/wsdl资源编辑/data.js"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (矩形) -->
+      <div id="u881" class="ax_default button">
+        <div id="u881_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u882" class="text">
+          <p><span>保存</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u883" class="ax_default text_field">
+        <input id="u883_input" type="text" value="{http://WebXml.com.cn/}qqOnlineWebService"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u884" class="ax_default label">
+        <div id="u884_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u885" class="text">
+          <p><span>service</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u886" class="ax_default text_field">
+        <input id="u886_input" type="text" value="{http://WebXml.com.cn/}qqOnlineWebServiceSoap12"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u887" class="ax_default label">
+        <div id="u887_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u888" class="text">
+          <p><span>Endpoint</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u889" class="ax_default text_field">
+        <input id="u889_input" type="text" value="http://www.webxml.com.cn/webservices/qqOnlineWebService.asmx"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u890" class="ax_default label">
+        <div id="u890_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u891" class="text">
+          <p><span>Location URI</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u892" class="ax_default text_field">
+        <input id="u892_input" type="text" value="http://www.webxml.com.cn/webservices/qqOnlineWebService.asmx?wsdl"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u893" class="ax_default label">
+        <div id="u893_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u894" class="text">
+          <p><span>url</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u895" class="ax_default text_field">
+        <input id="u895_input" type="text" value="http://WebXml.com.cn/qqCheckOnline"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u896" class="ax_default label">
+        <div id="u896_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u897" class="text">
+          <p><span>SOAP Action</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u898" class="ax_default _文本段落">
+        <img id="u898_img" class="img " src="images/wsdl资源编辑/u898.png"/>
+        <!-- Unnamed () -->
+        <div id="u899" class="text">
+          <p><span>SOAP Envelope</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (多行文本框) -->
+      <div id="u900" class="ax_default text_area">
+        <textarea id="u900_input">&lt;soap:Envelope xmlns:soap=&quot;http://www.w3.org/2003/05/soap-envelope&quot; xmlns:web=&quot;http://WebXml.com.cn/&quot;&gt;
+&nbsp;&nbsp; &lt;soap:Header/&gt;&nbsp;&nbsp; &lt;soap:Body&gt;&nbsp; &nbsp; &nbsp; &lt;web:qqCheckOnline&gt;
+&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &lt;web:qqCode&gt;$C{qqcode}&lt;/web:qqCode&gt;
+&nbsp; &nbsp; &nbsp; &lt;/web:qqCheckOnline&gt;&nbsp;&nbsp; &lt;/soap:Body&gt;&lt;/soap:Envelope&gt;</textarea>
+      </div>
+
+      <!-- Unnamed (文本段落) -->
+      <div id="u901" class="ax_default _文本段落">
+        <img id="u901_img" class="img " src="images/wsdl资源编辑/u901.png"/>
+        <!-- Unnamed () -->
+        <div id="u902" class="text">
+          <p><span>Headers</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (表格) -->
+      <div id="u903" class="ax_default">
+
+        <!-- Unnamed (单元格) -->
+        <div id="u904" class="ax_default table_cell">
+          <img id="u904_img" class="img " src="images/数据资源编辑/u818.png"/>
+          <!-- Unnamed () -->
+          <div id="u905" class="text">
+            <p><span>名称</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u906" class="ax_default table_cell">
+          <img id="u906_img" class="img " src="images/数据资源编辑/u820.png"/>
+          <!-- Unnamed () -->
+          <div id="u907" class="text">
+            <p><span>值</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u908" class="ax_default table_cell">
+          <img id="u908_img" class="img " src="images/节点管理/u468.png"/>
+          <!-- Unnamed () -->
+          <div id="u909" class="text">
+            <p><span>操作</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u910" class="ax_default table_cell">
+          <img id="u910_img" class="img " src="images/数据资源编辑/u818.png"/>
+          <!-- Unnamed () -->
+          <div id="u911" class="text">
+            <p><span>flag</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u912" class="ax_default table_cell">
+          <img id="u912_img" class="img " src="images/数据资源编辑/u820.png"/>
+          <!-- Unnamed () -->
+          <div id="u913" class="text">
+            <p><span>1</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u914" class="ax_default table_cell">
+          <img id="u914_img" class="img " src="images/节点管理/u468.png"/>
+          <!-- Unnamed () -->
+          <div id="u915" class="text">
+            <p><span>删除</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u916" class="ax_default table_cell">
+          <img id="u916_img" class="img " src="images/数据资源编辑/u830.png"/>
+          <!-- Unnamed () -->
+          <div id="u917" class="text" style="display:none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u918" class="ax_default table_cell">
+          <img id="u918_img" class="img " src="images/数据资源编辑/u832.png"/>
+          <!-- Unnamed () -->
+          <div id="u919" class="text" style="display:none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u920" class="ax_default table_cell">
+          <img id="u920_img" class="img " src="images/wsdl资源编辑/u920.png"/>
+          <!-- Unnamed () -->
+          <div id="u921" class="text" style="display:none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u922" class="ax_default text_field">
+        <input id="u922_input" type="text" value="医护人员"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u923" class="ax_default label">
+        <div id="u923_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u924" class="text">
+          <p><span>名称</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u925" class="ax_default label">
+        <div id="u925_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u926" class="text">
+          <p><span>资源类型</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (下拉列表框) -->
+      <div id="u927" class="ax_default droplist">
+        <select id="u927_input">
+          <option value="数据资源">数据资源</option>
+          <option selected value="WSDL webservice资源">WSDL webservice资源</option>
+          <option value="http资源">http资源</option>
+        </select>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u928" class="ax_default box_1">
+        <img id="u928_img" class="img " src="images/数据资源编辑/u797.png"/>
+        <!-- Unnamed () -->
+        <div id="u929" class="text" style="display:none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u930" class="ax_default label">
+        <div id="u930_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u931" class="text">
+          <p><span>资源详细</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u932" class="ax_default label">
+        <div id="u932_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u933" class="text">
+          <p><span>执行节点</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (下拉列表框) -->
+      <div id="u934" class="ax_default droplist">
+        <select id="u934_input">
+          <option value="省节点">省节点</option>
+          <option value="市节点">市节点</option>
+        </select>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u935" class="ax_default text_field">
+        <input id="u935_input" type="text" value="172.16.3.24"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u936" class="ax_default label">
+        <div id="u936_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u937" class="text">
+          <p><span>ip</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u938" class="ax_default text_field">
+        <input id="u938_input" type="text" value="8080"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u939" class="ax_default label">
+        <div id="u939_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u940" class="text">
+          <p><span>端口</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (复选框) -->
+      <div id="u941" class="ax_default checkbox">
+        <label for="u941_input">
+          <!-- Unnamed () -->
+          <div id="u942" class="text">
+            <p><span>启用</span></p>
+          </div>
+        </label>
+        <input id="u941_input" type="checkbox" value="checkbox" checked/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u943" class="ax_default button">
+        <div id="u943_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u944" class="text">
+          <p><span>提交</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (文本框) -->
+      <div id="u945" class="ax_default text_field">
+        <input id="u945_input" type="text" value="2"/>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u946" class="ax_default label">
+        <div id="u946_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u947" class="text">
+          <p><span>排序</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (表格) -->
+      <div id="u948" class="ax_default">
+
+        <!-- Unnamed (单元格) -->
+        <div id="u949" class="ax_default table_cell">
+          <img id="u949_img" class="img " src="images/数据资源编辑/u818.png"/>
+          <!-- Unnamed () -->
+          <div id="u950" class="text">
+            <p><span>名称</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u951" class="ax_default table_cell">
+          <img id="u951_img" class="img " src="images/数据资源编辑/u820.png"/>
+          <!-- Unnamed () -->
+          <div id="u952" class="text">
+            <p><span>说明</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u953" class="ax_default table_cell">
+          <img id="u953_img" class="img " src="images/数据资源编辑/u822.png"/>
+          <!-- Unnamed () -->
+          <div id="u954" class="text">
+            <p><span>操作</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u955" class="ax_default table_cell">
+          <img id="u955_img" class="img " src="images/数据资源编辑/u818.png"/>
+          <!-- Unnamed () -->
+          <div id="u956" class="text">
+            <p><span>qqcode</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u957" class="ax_default table_cell">
+          <img id="u957_img" class="img " src="images/数据资源编辑/u820.png"/>
+          <!-- Unnamed () -->
+          <div id="u958" class="text">
+            <p><span>qq号码</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u959" class="ax_default table_cell">
+          <img id="u959_img" class="img " src="images/数据资源编辑/u822.png"/>
+          <!-- Unnamed () -->
+          <div id="u960" class="text">
+            <p><span>删除</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u961" class="ax_default table_cell">
+          <img id="u961_img" class="img " src="images/数据资源编辑/u830.png"/>
+          <!-- Unnamed () -->
+          <div id="u962" class="text" style="display:none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u963" class="ax_default table_cell">
+          <img id="u963_img" class="img " src="images/数据资源编辑/u832.png"/>
+          <!-- Unnamed () -->
+          <div id="u964" class="text" style="display:none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u965" class="ax_default table_cell">
+          <img id="u965_img" class="img " src="images/数据资源编辑/u834.png"/>
+          <!-- Unnamed () -->
+          <div id="u966" class="text" style="display:none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u967" class="ax_default button">
+        <div id="u967_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u968" class="text">
+          <p><span>新增</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u969" class="ax_default box_1">
+        <img id="u969_img" class="img " src="images/数据资源编辑/u758.png"/>
+        <!-- Unnamed () -->
+        <div id="u970" class="text" style="display:none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u971" class="ax_default label">
+        <div id="u971_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u972" class="text">
+          <p><span>入参</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (表格) -->
+      <div id="u973" class="ax_default">
+
+        <!-- Unnamed (单元格) -->
+        <div id="u974" class="ax_default table_cell">
+          <img id="u974_img" class="img " src="images/wsdl资源编辑/u974.png"/>
+          <!-- Unnamed () -->
+          <div id="u975" class="text">
+            <p><span>名称</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u976" class="ax_default table_cell">
+          <img id="u976_img" class="img " src="images/节点管理/u482.png"/>
+          <!-- Unnamed () -->
+          <div id="u977" class="text">
+            <p><span>说明</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u978" class="ax_default table_cell">
+          <img id="u978_img" class="img " src="images/wsdl资源编辑/u978.png"/>
+          <!-- Unnamed () -->
+          <div id="u979" class="text">
+            <p><span>可见性需机构数据权限等级</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u980" class="ax_default table_cell">
+          <img id="u980_img" class="img " src="images/wsdl资源编辑/u980.png"/>
+          <!-- Unnamed () -->
+          <div id="u981" class="text">
+            <p><span>取值公式</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u982" class="ax_default table_cell">
+          <img id="u982_img" class="img " src="images/资源管理/u694.png"/>
+          <!-- Unnamed () -->
+          <div id="u983" class="text">
+            <p><span>操作</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u984" class="ax_default table_cell">
+          <img id="u984_img" class="img " src="images/wsdl资源编辑/u984.png"/>
+          <!-- Unnamed () -->
+          <div id="u985" class="text">
+            <p><span>status</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u986" class="ax_default table_cell">
+          <img id="u986_img" class="img " src="images/节点管理/u466.png"/>
+          <!-- Unnamed () -->
+          <div id="u987" class="text">
+            <p><span>状态</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u988" class="ax_default table_cell">
+          <img id="u988_img" class="img " src="images/wsdl资源编辑/u988.png"/>
+          <!-- Unnamed () -->
+          <div id="u989" class="text" style="display:none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u990" class="ax_default table_cell">
+          <img id="u990_img" class="img " src="images/wsdl资源编辑/u990.png"/>
+          <!-- Unnamed () -->
+          <div id="u991" class="text">
+            <p><span>['status']</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u992" class="ax_default table_cell">
+          <img id="u992_img" class="img " src="images/wsdl资源编辑/u992.png"/>
+          <!-- Unnamed () -->
+          <div id="u993" class="text">
+            <p><span>删除</span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u994" class="ax_default table_cell">
+          <img id="u994_img" class="img " src="images/wsdl资源编辑/u994.png"/>
+          <!-- Unnamed () -->
+          <div id="u995" class="text" style="display:none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u996" class="ax_default table_cell">
+          <img id="u996_img" class="img " src="images/wsdl资源编辑/u996.png"/>
+          <!-- Unnamed () -->
+          <div id="u997" class="text" style="display:none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u998" class="ax_default table_cell">
+          <img id="u998_img" class="img " src="images/wsdl资源编辑/u998.png"/>
+          <!-- Unnamed () -->
+          <div id="u999" class="text" style="display:none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u1000" class="ax_default table_cell">
+          <img id="u1000_img" class="img " src="images/wsdl资源编辑/u1000.png"/>
+          <!-- Unnamed () -->
+          <div id="u1001" class="text" style="display:none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+
+        <!-- Unnamed (单元格) -->
+        <div id="u1002" class="ax_default table_cell">
+          <img id="u1002_img" class="img " src="images/wsdl资源编辑/u1002.png"/>
+          <!-- Unnamed () -->
+          <div id="u1003" class="text" style="display:none; visibility: hidden">
+            <p><span></span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1004" class="ax_default button">
+        <div id="u1004_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u1005" class="text">
+          <p><span>新增</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1006" class="ax_default box_1">
+        <img id="u1006_img" class="img " src="images/数据资源编辑/u758.png"/>
+        <!-- Unnamed () -->
+        <div id="u1007" class="text" style="display:none; visibility: hidden">
+          <p><span></span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1008" class="ax_default label">
+        <div id="u1008_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u1009" class="text">
+          <p><span>出参</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1010" class="ax_default button">
+        <div id="u1010_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u1011" class="text">
+          <p><span>导入</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1012" class="ax_default button">
+        <div id="u1012_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u1013" class="text">
+          <p><span>新增</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (多行文本框) -->
+      <div id="u1014" class="ax_default text_area">
+        <textarea id="u1014_input">{&quot;code&quot;:&quot;200&quot;,&quot;status&quot;:&quot;1&quot;}</textarea>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1015" class="ax_default label">
+        <div id="u1015_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u1016" class="text">
+          <p><span>返回模版</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (矩形) -->
+      <div id="u1017" class="ax_default button">
+        <div id="u1017_div" class=""></div>
+        <!-- Unnamed () -->
+        <div id="u1018" class="text">
+          <p><span>导入</span></p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
