@@ -9,9 +9,16 @@
 }
 .box_1 {
 }
+._形状 {
+}
 .image {
 }
+.placeholder {
+}
 .button {
+}
+.primary_button {
+  color:#FFFFFF;
 }
 ._一级标题 {
   font-family:'Arial Normal', 'Arial';
@@ -85,4 +92,9 @@
   text-align:left;
 }
 .table_cell {
+}
+._连接线 {
+}
+.marker {
+  color:#FFFFFF;
 }
