@@ -18,3 +18,6 @@
 2. target目录及其下的所有文件
 3. 自动产生的目录和文件，如.idea、iml文件
 4. pom.xml、application.yml、application-*.yml等全局配置文件
+
+### 工作日志
+[点击查看详细](https://github.com/schic/schie/tree/master/doc/%E5%B7%A5%E4%BD%9C%E6%97%A5%E5%BF%97)
