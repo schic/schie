@@ -1,23 +1,10 @@
 # 省级通用数据交换平台
 
-### 项目介绍
+### [工作计划](https://github.com/schic/schie/tree/master/doc/%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92)
 
+### [工作日志](https://github.com/schic/schie/tree/master/doc/%E5%B7%A5%E4%BD%9C%E6%97%A5%E5%BF%97)
 
+### [开发规范](https://github.com/schic/schie/tree/master/doc/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83)
 
-### 开发环境要求
-1. jdk 1.8
-2. eclipse
-
-### eclipse设置
-1. 所有编码设为utf-8
-2. 所有tab缩进改为空格替代
-3. 每行字符数限制为120
-
-### 禁止push的文件
-1. 所有.开头的文件和目录
-2. target目录及其下的所有文件
-3. 自动产生的目录和文件，如.idea、iml文件
-4. pom.xml、application.yml、application-*.yml等全局配置文件
-
-### 工作日志
-[点击查看详细](https://github.com/schic/schie/tree/master/doc/%E5%B7%A5%E4%BD%9C%E6%97%A5%E5%BF%97)
+### 插件开发文档
+学习整理中...
