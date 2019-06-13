@@ -71,6 +71,12 @@ public abstract class ConnectorMessageQueue {
         size = dataSource.getSize();
     }
 
+    public synchronized void updateSizeIfEmpty() {
+        if (size == null || size == 0) {
+            updateSize();
+        }
+    }
+
     public synchronized void invalidate(boolean updateSize, boolean reset) {
         buffer.clear();
 
@@ -109,6 +115,14 @@ public abstract class ConnectorMessageQueue {
         return size;
     }
 
+    protected void incrementActualSize() {
+        size++;
+    }
+
+    protected void decrementActualSize() {
+        size--;
+    }
+
     public synchronized void add(ConnectorMessage connectorMessage) {
         if (invalidated) {
             /*
@@ -118,7 +132,7 @@ public abstract class ConnectorMessageQueue {
              * database
              */
             if (size != null) {
-                size++;
+                incrementActualSize();
             }
 
             /*
@@ -134,23 +148,29 @@ public abstract class ConnectorMessageQueue {
             }
             if (!reachedCapacity) {
                 if (size < bufferCapacity && !dataSource.isQueueRotated()) {
-                    buffer.put(connectorMessage.getMessageId(), connectorMessage);
+                    if (canAddNewMessageToBuffer(connectorMessage)) {
+                        buffer.put(connectorMessage.getMessageId(), connectorMessage);
 
-                    // If there is a poll with timeout waiting, notify that an item was added to the buffer.
-                    if (timeoutLock.get()) {
-                        synchronized (timeoutLock) {
-                            timeoutLock.notifyAll();
-                            timeoutLock.set(false);
+                        // If there is a poll with timeout waiting, notify that an item was added to the buffer.
+                        if (timeoutLock.get()) {
+                            synchronized (timeoutLock) {
+                                timeoutLock.notifyAll();
+                                timeoutLock.set(false);
+                            }
                         }
                     }
                 } else {
                     reachedCapacity = true;
                 }
             }
-            size++;
+            incrementActualSize();
         }
 
         eventDispatcher.dispatchEvent(new MessageEvent(channelId, metaDataId, MessageEventType.QUEUED, (long) size(), false));
+    }
+
+    protected boolean canAddNewMessageToBuffer(ConnectorMessage connectorMessage) {
+        return true;
     }
 
     public synchronized void fillBuffer() {

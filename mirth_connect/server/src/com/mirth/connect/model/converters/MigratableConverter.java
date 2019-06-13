@@ -93,8 +93,8 @@ public class MigratableConverter extends ReflectionConverter {
              * MIRTH-3446: If any migration was performed, we need to tell the DomReader to reload
              * its internal list of child elements (since children may have been added or removed).
              */
-            if (reader instanceof MirthDomReader) {
-                ((MirthDomReader) reader).reloadCurrentElement();
+            if (reader.underlyingReader() instanceof MirthDomReader) {
+                ((MirthDomReader) reader.underlyingReader()).reloadCurrentElement();
             }
         }
 
@@ -142,9 +142,13 @@ public class MigratableConverter extends ReflectionConverter {
             if (MigrationUtil.compareVersions(elementVersion, "3.5.0") < 0) {
                 instance.migrate3_5_0(element);
             }
-            
+
             if (MigrationUtil.compareVersions(elementVersion, "3.6.0") < 0) {
                 instance.migrate3_6_0(element);
+            }
+
+            if (MigrationUtil.compareVersions(elementVersion, "3.7.0") < 0) {
+                instance.migrate3_7_0(element);
             }
         } catch (Exception e) {
             throw new SerializerException("An error occurred while attempting to migrate serialized object element: " + element.getNodeName(), e);

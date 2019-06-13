@@ -9,6 +9,7 @@
 
 package com.mirth.connect.model.converters;
 
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.mirth.connect.donkey.model.channel.ConnectorProperties;
+import com.mirth.connect.donkey.model.channel.DestinationConnectorProperties;
 import com.mirth.connect.donkey.util.DonkeyElement;
 import com.mirth.connect.donkey.util.DonkeyElement.DonkeyElementException;
 import com.mirth.connect.donkey.util.xstream.SerializerException;
@@ -173,6 +175,13 @@ public class ObjectXMLSerializer extends XStreamSerializer {
         }
     }
 
+    /**
+     * Warning: this method is not called by the CLI project, so any channels that contain extension
+     * models that use @XStreamAlias will fail to be deserialized by CLI. Serialized objects that
+     * are not added to channel properites are not affected and can continue to use @XStreamAlias.
+     * 
+     * @param classes
+     */
     public void processAnnotations(Class<?>[] classes) {
         // Lazy load because this could be called before static initialization
         if (extraAnnotatedClasses == null) {
@@ -193,10 +202,19 @@ public class ObjectXMLSerializer extends XStreamSerializer {
             getXStream().registerConverter(new MigratableConverter(normalizedVersion, getXStream().getMapper()));
             getXStream().registerConverter(new ChannelConverter(normalizedVersion, getXStream().getMapper()));
             getXStream().registerLocalConverter(ConnectorProperties.class, "pluginProperties", new PluginPropertiesConverter(normalizedVersion, getXStream().getMapper()));
+            getXStream().registerLocalConverter(DestinationConnectorProperties.class, "pluginProperties", new PluginPropertiesConverter(normalizedVersion, getXStream().getMapper()));
             getXStream().registerLocalConverter(ResourcePropertiesList.class, "list", new ResourcePropertiesConverter(normalizedVersion, getXStream().getMapper()));
 
             if (instanceWithReferences != null) {
                 instanceWithReferences.init(currentVersion);
+
+                /*
+                 * Include a custom reflection converter that rejects any object that isn't
+                 * Serializable. This should be higher priority than the default reflection
+                 * converter which is very low, but lower priority than all other converters.
+                 */
+                int priorityBetweenLowAndVeryLow = (int) Math.floor((XStream.PRIORITY_LOW + XStream.PRIORITY_VERY_LOW) / 2.0);
+                instanceWithReferences.getXStream().registerConverter(new SerializableReflectionConverter(instanceWithReferences.getXStream().getMapper()), priorityBetweenLowAndVeryLow);
             }
         } else {
             throw new Exception("Serializer has already been initialized.");
@@ -212,7 +230,7 @@ public class ObjectXMLSerializer extends XStreamSerializer {
         try {
             return super.serialize(object);
         } catch (Exception e) {
-            if (isCircularReferenceException(e) && instanceWithReferences != null) {
+            if (object instanceof Serializable && isCircularReferenceException(e) && instanceWithReferences != null) {
                 try {
                     return instanceWithReferences.serialize(object);
                 } catch (Exception e2) {
@@ -231,7 +249,7 @@ public class ObjectXMLSerializer extends XStreamSerializer {
         try {
             getXStream().toXML(object, writer);
         } catch (Exception e) {
-            if (isCircularReferenceException(e) && instanceWithReferences != null) {
+            if (object instanceof Serializable && isCircularReferenceException(e) && instanceWithReferences != null) {
                 try {
                     // Since part of the XML was probably already written, need to add an invalid marker
                     writer.write(INVALID_MARKER);

@@ -17,13 +17,16 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.inject.Inject;
 import com.mirth.connect.donkey.model.message.Status;
 import com.mirth.connect.donkey.server.Donkey;
 import com.mirth.connect.donkey.server.channel.Statistics;
 import com.mirth.connect.donkey.server.data.DonkeyDao;
 import com.mirth.connect.donkey.server.data.DonkeyDaoException;
+import com.mirth.connect.donkey.server.data.DonkeyDaoFactory;
 
 public class ChannelController {
+    @Inject
     private static ChannelController instance;
 
     public static ChannelController getInstance() {
@@ -73,7 +76,7 @@ public class ChannelController {
     }
 
     public Statistics getStatisticsFromStorage(String serverId) {
-        DonkeyDao dao = donkey.getDaoFactory().getDao();
+        DonkeyDao dao = donkey.getReadOnlyDaoFactory().getDao();
 
         try {
             return dao.getChannelStatistics(serverId);
@@ -83,7 +86,7 @@ public class ChannelController {
     }
 
     public Statistics getTotalStatisticsFromStorage(String serverId) {
-        DonkeyDao dao = donkey.getDaoFactory().getDao();
+        DonkeyDao dao = donkey.getReadOnlyDaoFactory().getDao();
 
         try {
             return dao.getChannelTotalStatistics(serverId);
@@ -93,7 +96,7 @@ public class ChannelController {
     }
 
     public int getConnectorMessageCount(String channelId, String serverId, int metaDataId, Status status) {
-        DonkeyDao dao = donkey.getDaoFactory().getDao();
+        DonkeyDao dao = donkey.getReadOnlyDaoFactory().getDao();
 
         try {
             return dao.getConnectorMessageCount(channelId, serverId, metaDataId, status);
@@ -146,12 +149,17 @@ public class ChannelController {
     }
 
     public Long getLocalChannelId(String channelId) {
+        return getLocalChannelId(channelId, false);
+    }
+
+    public Long getLocalChannelId(String channelId, boolean readOnly) {
         int attemptsRemaining = 3;
 
         while (true) {
             try {
                 Long localChannelId = null;
-                DonkeyDao dao = donkey.getDaoFactory().getDao();
+                DonkeyDaoFactory daoFactory = readOnly ? donkey.getReadOnlyDaoFactory() : donkey.getDaoFactory();
+                DonkeyDao dao = daoFactory.getDao();
 
                 try {
                     localChannelId = dao.getLocalChannelIds().get(channelId);

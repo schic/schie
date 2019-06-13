@@ -10,6 +10,7 @@
 package com.mirth.connect.server.api.servlets;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -29,9 +30,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.mirth.connect.client.core.ControllerException;
+import com.mirth.connect.client.core.Operation;
 import com.mirth.connect.client.core.api.MirthApiException;
 import com.mirth.connect.client.core.api.providers.MetaDataSearchParamConverterProvider.MetaDataSearch;
+import com.mirth.connect.client.core.api.servlets.ChannelStatisticsServletInterface;
 import com.mirth.connect.client.core.api.servlets.MessageServletInterface;
+import com.mirth.connect.client.core.api.util.OperationUtil;
 import com.mirth.connect.donkey.model.message.ConnectorMessage;
 import com.mirth.connect.donkey.model.message.ContentType;
 import com.mirth.connect.donkey.model.message.Message;
@@ -59,11 +63,22 @@ import com.mirth.connect.util.messagewriter.MessageWriterOptions;
 public class MessageServlet extends MirthServlet implements MessageServletInterface {
 
     private static final Logger logger = Logger.getLogger(MessageServlet.class);
-    private static final MessageController messageController = ControllerFactory.getFactory().createMessageController();
-    private static final EngineController engineController = ControllerFactory.getFactory().createEngineController();
+    private static MessageController messageController;
+    private static EngineController engineController;
 
     public MessageServlet(@Context HttpServletRequest request, @Context ContainerRequestContext containerRequestContext, @Context SecurityContext sc) {
         super(request, containerRequestContext, sc);
+    }
+
+    public MessageServlet(@Context HttpServletRequest request, @Context ContainerRequestContext containerRequestContext, @Context SecurityContext sc, ControllerFactory controllerFactory) {
+        super(request, containerRequestContext, sc, controllerFactory);
+    }
+
+    @Override
+    protected void initializeControllers() {
+        super.initializeControllers();
+        messageController = controllerFactory.createMessageController();
+        engineController = controllerFactory.createEngineController();
     }
 
     @Override
@@ -117,16 +132,16 @@ public class MessageServlet extends MirthServlet implements MessageServletInterf
     @CheckAuthorizedChannelId
     public List<Attachment> getAttachmentsByMessageId(String channelId, Long messageId, boolean includeContent) {
         if (includeContent) {
-            return messageController.getMessageAttachment(channelId, messageId);
+            return messageController.getMessageAttachment(channelId, messageId, true);
         } else {
-            return messageController.getMessageAttachmentIds(channelId, messageId);
+            return messageController.getMessageAttachmentIds(channelId, messageId, true);
         }
     }
 
     @Override
     @CheckAuthorizedChannelId
     public Attachment getAttachment(String channelId, Long messageId, String attachmentId) {
-        return messageController.getMessageAttachment(channelId, attachmentId, messageId);
+        return messageController.getMessageAttachment(channelId, attachmentId, messageId, true);
     }
 
     @Override
@@ -138,7 +153,7 @@ public class MessageServlet extends MirthServlet implements MessageServletInterf
     @Override
     @CheckAuthorizedChannelId
     public Long getMaxMessageId(String channelId) {
-        return messageController.getMaxMessageId(channelId);
+        return messageController.getMaxMessageId(channelId, true);
     }
 
     @Override
@@ -237,11 +252,29 @@ public class MessageServlet extends MirthServlet implements MessageServletInterf
     @Override
     @CheckAuthorizedChannelId
     public void removeAllMessages(String channelId, boolean restartRunningChannels, boolean clearStatistics) {
+        if (clearStatistics) {
+            checkClearStatisticsAuthorization();
+        }
         engineController.removeAllMessages(Collections.singleton(channelId), restartRunningChannels, clearStatistics, null);
+    }
+
+    private void checkClearStatisticsAuthorization() {
+        try {
+            ChannelStatisticsServlet channelStatsServlet = new ChannelStatisticsServlet(request, sc, controllerFactory);
+            Method matchingMethod = (ChannelStatisticsServlet.class).getMethod("clearStatistics", Map.class, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE, Boolean.TYPE);
+            Operation operation = OperationUtil.getOperation(ChannelStatisticsServletInterface.class, matchingMethod);
+            channelStatsServlet.setOperation(operation);
+            channelStatsServlet.checkUserAuthorized();
+        } catch (NoSuchMethodException e) {
+            throw new MirthApiException(e);
+        }
     }
 
     @Override
     public void removeAllMessages(Set<String> channelIds, boolean restartRunningChannels, boolean clearStatistics) {
+        if (clearStatistics) {
+            checkClearStatisticsAuthorization();
+        }
         engineController.removeAllMessages(redactChannelIds(channelIds), restartRunningChannels, clearStatistics, null);
     }
 

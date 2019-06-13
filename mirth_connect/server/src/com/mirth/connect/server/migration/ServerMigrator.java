@@ -92,16 +92,27 @@ public class ServerMigrator extends Migrator {
     }
 
     public void migrateConfiguration(PropertiesConfiguration mirthConfig) throws MigrationException {
+        Version startingVersion = Version.fromString(mirthConfig.getString("version"));
         Version version = Version.values()[1];
 
         while (version != null) {
             Migrator migrator = getMigrator(version);
 
             if (migrator != null && migrator instanceof ConfigurationMigrator) {
+                migrator.setStartingVersion(startingVersion);
                 runConfigurationMigrator((ConfigurationMigrator) migrator, mirthConfig, version);
             }
 
             version = version.getNextVersion();
+        }
+
+        try {
+            mirthConfig.setProperty("version", Version.getLatest().toString());
+            mirthConfig.getLayout().setBlancLinesBefore("version", 1);
+            mirthConfig.getLayout().setComment("version", "Only used for migration purposes, do not modify");
+            mirthConfig.save();
+        } catch (ConfigurationException e) {
+            logger.error("Unable to update mirth.properties version during migration.", e);
         }
     }
 
@@ -218,6 +229,10 @@ public class ServerMigrator extends Migrator {
             case V3_5_1: return null;
             case V3_5_2: return null;
             case V3_6_0: return null;
+            case V3_6_1: return null;
+            case V3_6_2: return null;
+            case V3_7_0: return new Migrate3_7_0();
+            case V3_7_1: return null;
         } // @formatter:on
 
         return null;
@@ -330,6 +345,8 @@ public class ServerMigrator extends Migrator {
                     }
                 } catch (Exception e) {
                     logger.error("Failed to migrate serialized data", e);
+                } finally {
+                    DbUtils.closeQuietly(updateStatement);
                 }
             }
         } catch (SQLException e) {

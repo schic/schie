@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) Mirth Corporation. All rights reserved.
+ * 
+ * http://www.mirthcorp.com
+ * 
+ * The software in this package is published under the terms of the MPL license a copy of which has
+ * been included with this distribution in the LICENSE.txt file.
+ */
+
 package com.mirth.connect.server.api.servlets;
 
 import static org.junit.Assert.assertEquals;
@@ -8,6 +17,9 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
@@ -19,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -31,14 +44,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.mirth.connect.client.core.Operation;
+import com.mirth.connect.client.core.api.MirthApiException;
 import com.mirth.connect.donkey.server.channel.ChannelException;
 import com.mirth.connect.donkey.server.channel.DispatchResult;
 import com.mirth.connect.donkey.server.message.batch.BatchMessageException;
@@ -52,6 +64,9 @@ import com.mirth.connect.server.controllers.EngineController;
 import com.mirth.connect.server.controllers.UserController;
 
 public class MessageServletTest {
+    private static int ADMIN_USER_ID = 1;
+    private static int RESTRICTED_USER_ID = 2;
+
     static ControllerFactory controllerFactory;
     static EngineController engineController;
     static HttpSession session;
@@ -60,8 +75,8 @@ public class MessageServletTest {
     static SecurityContext sc;
 
     @SuppressWarnings("unchecked")
-    @BeforeClass
-    public static void setup() throws Exception {
+    @Before
+    public void setup() throws Exception {
         controllerFactory = mock(ControllerFactory.class);
 
         engineController = mock(EngineController.class);
@@ -77,41 +92,41 @@ public class MessageServletTest {
         when(userController.authorizeUser(anyString(), anyString())).thenReturn(new LoginStatus(Status.SUCCESS, ""));
         when(userController.getUser(anyInt(), anyString())).thenAnswer((InvocationOnMock invocation) -> {
             User user = new User();
-            user.setId(1);
+            user.setId(invocation.getArgument(0));
             user.setUsername(invocation.getArgument(1));
             return user;
         });
         when(controllerFactory.createUserController()).thenReturn(userController);
 
         AuthorizationController authorizationController = mock(AuthorizationController.class);
-        when(authorizationController.doesUserHaveChannelRestrictions(anyInt())).thenReturn(false);
-        when(authorizationController.isUserAuthorized(anyInt(), any(Operation.class), any(Map.class), anyString(), anyBoolean())).thenReturn(true);
-        when(controllerFactory.createAuthorizationController()).thenReturn(authorizationController);
-
-        Injector injector = Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
-                requestStaticInjection(ControllerFactory.class);
-                bind(ControllerFactory.class).toInstance(controllerFactory);
+        when(authorizationController.doesUserHaveChannelRestrictions(anyInt(), any())).thenReturn(false);
+        when(authorizationController.isUserAuthorized(anyInt(), any(Operation.class), any(Map.class), any(String.class), anyBoolean())).thenAnswer((InvocationOnMock invocation) -> {
+            Object[] args = invocation.getArguments();
+            // Do not authorize restricted user to clear statistics
+            if ((Integer) args[0] == RESTRICTED_USER_ID && ((Operation) args[1]).getName().equals("clearStatistics")) {
+                return false;
+            } else {
+                return true;
             }
         });
-        injector.getInstance(ControllerFactory.class);
+        when(controllerFactory.createAuthorizationController()).thenReturn(authorizationController);
 
-        session = mock(HttpSession.class);
-        when(session.getAttribute("user")).thenReturn("1");
-        when(session.getAttribute("authorized")).thenReturn(Boolean.TRUE);
-
-        request = mock(HttpServletRequest.class);
-        when(request.getSession()).thenReturn(session);
+        setupSessionAndRequest(ADMIN_USER_ID);
 
         context = new MessageServletTest().new TestContainerRequestContext();
 
         sc = mock(SecurityContext.class);
     }
 
+    @After
+    public void teardown() {
+        setupSessionAndRequest(ADMIN_USER_ID);
+        reset(engineController);
+    }
+
     @Test
     public void testProcessMessageReturnsMessageId() {
-        MessageServlet servlet = new MessageServlet(request, context, sc);
+        MessageServlet servlet = new MessageServlet(request, context, sc, controllerFactory);
 
         Long messageId = servlet.processMessage("channel1", "test data", new HashSet<Integer>(), new HashSet<String>(), false, false, null);
         assertEquals(1L, messageId.longValue());
@@ -124,7 +139,7 @@ public class MessageServletTest {
 
     @Test
     public void testProcessMessageWithException() {
-        MessageServlet servlet = new MessageServlet(request, context, sc);
+        MessageServlet servlet = new MessageServlet(request, context, sc, controllerFactory);
 
         Long messageId = servlet.processMessage("channelException", "test data", new HashSet<Integer>(), new HashSet<String>(), false, false, null);
         assertNull(messageId);
@@ -133,6 +148,69 @@ public class MessageServletTest {
         messageId = servlet.processMessage("batchMessageException", "test data", new HashSet<Integer>(), new HashSet<String>(), false, false, null);
         assertNull(messageId);
         assertEquals(500, context.getProperty(ResponseCodeFilter.RESPONSE_CODE_PROPERTY));
+    }
+
+    @Test
+    public void testAdminUserCanRemoveMessagesAndClearStats() {
+        MessageServlet servlet = new MessageServlet(request, context, sc, controllerFactory);
+        servlet.removeAllMessages("channel1", true, true);
+
+        Set<String> channelIds = new HashSet<>();
+        channelIds.add("channel1");
+        servlet.removeAllMessages(channelIds, true, true);
+
+        verify(engineController, times(2)).removeAllMessages(any(), anyBoolean(), anyBoolean(), any());
+    }
+
+    @Test
+    public void testAdminUserCanRemoveMessagesWithoutClearingStats() {
+        MessageServlet servlet = new MessageServlet(request, context, sc, controllerFactory);
+        servlet.removeAllMessages("channel1", true, false);
+
+        Set<String> channelIds = new HashSet<>();
+        channelIds.add("channel1");
+        servlet.removeAllMessages(channelIds, true, false);
+
+        verify(engineController, times(2)).removeAllMessages(any(), anyBoolean(), anyBoolean(), any());
+    }
+
+    @Test(expected = MirthApiException.class)
+    public void testRestrictedUserCannotRemoveMessagesAndClearStats1() {
+        setupSessionAndRequest(RESTRICTED_USER_ID);
+        MessageServlet servlet = new MessageServlet(request, context, sc, controllerFactory);
+        servlet.removeAllMessages("channel1", true, true);
+    }
+
+    @Test(expected = MirthApiException.class)
+    public void testRestrictedUserCannotRemoveMessagesAndClearStats2() {
+        setupSessionAndRequest(RESTRICTED_USER_ID);
+        MessageServlet servlet = new MessageServlet(request, context, sc, controllerFactory);
+        Set<String> channelIds = new HashSet<>();
+        channelIds.add("channel1");
+        servlet.removeAllMessages(channelIds, true, true);
+    }
+
+    @Test
+    public void testRestrictedUserCanRemoveMessagesWithoutClearingStats() {
+        setupSessionAndRequest(RESTRICTED_USER_ID);
+        MessageServlet servlet = new MessageServlet(request, context, sc, controllerFactory);
+        servlet.removeAllMessages("channel1", true, false);
+
+        Set<String> channelIds = new HashSet<>();
+        channelIds.add("channel1");
+        servlet.removeAllMessages(channelIds, true, false);
+
+        verify(engineController, times(2)).removeAllMessages(any(), anyBoolean(), anyBoolean(), any());
+    }
+
+    private static void setupSessionAndRequest(int userId) {
+        session = mock(HttpSession.class);
+        when(session.getAttribute("user")).thenReturn("" + userId);
+        when(session.getAttribute("authorized")).thenReturn(Boolean.TRUE);
+
+        request = mock(HttpServletRequest.class);
+        when(request.getRemoteAddr()).thenReturn("http://remoteaddress");
+        when(request.getSession()).thenReturn(session);
     }
 
     private class TestDispatchResult extends DispatchResult {

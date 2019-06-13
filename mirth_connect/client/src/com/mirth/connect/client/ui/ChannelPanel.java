@@ -91,6 +91,7 @@ import org.jdesktop.swingx.decorator.HighlighterFactory;
 import org.jdesktop.swingx.treetable.MutableTreeTableNode;
 
 import com.mirth.connect.client.core.ClientException;
+import com.mirth.connect.client.core.ForbiddenException;
 import com.mirth.connect.client.core.TaskConstants;
 import com.mirth.connect.client.ui.Frame.ChannelTask;
 import com.mirth.connect.client.ui.Frame.ConflictOption;
@@ -106,6 +107,7 @@ import com.mirth.connect.client.ui.components.tag.SearchFilterListener;
 import com.mirth.connect.client.ui.components.tag.TagFilterCompletion;
 import com.mirth.connect.client.ui.dependencies.ChannelDependenciesWarningDialog;
 import com.mirth.connect.client.ui.tag.SettingsPanelTags;
+import com.mirth.connect.client.ui.util.DisplayUtil;
 import com.mirth.connect.donkey.util.DonkeyElement;
 import com.mirth.connect.donkey.util.DonkeyElement.DonkeyElementException;
 import com.mirth.connect.model.Channel;
@@ -187,6 +189,7 @@ public class ChannelPanel extends AbstractFramePanel {
 
     private Frame parent;
 
+    private Map<String, String> channelIdsAndNames = new HashMap<String, String>();
     private Map<String, ChannelStatus> channelStatuses = new LinkedHashMap<String, ChannelStatus>();
     private Map<String, ChannelGroupStatus> groupStatuses = new LinkedHashMap<String, ChannelGroupStatus>();
     private Set<ChannelDependency> channelDependencies = new HashSet<ChannelDependency>();
@@ -194,6 +197,7 @@ public class ChannelPanel extends AbstractFramePanel {
     private Preferences userPreferences;
     private boolean tagTextModeSelected = false;
     private boolean tagIconModeSelected = false;
+    private boolean canViewChannelGroups = AuthorizationControllerFactory.getAuthorizationController().checkTask(TaskConstants.CHANNEL_GROUP_KEY, TaskConstants.CHANNEL_GROUP_EXPORT_GROUP);
 
     public ChannelPanel() {
         this.parent = PlatformUI.MIRTH_FRAME;
@@ -252,7 +256,7 @@ public class ChannelPanel extends AbstractFramePanel {
 
         ChannelTreeTableModel model = (ChannelTreeTableModel) channelTable.getTreeTableModel();
 
-        if (userPreferences.getBoolean("channelGroupViewEnabled", true)) {
+        if (canViewChannelGroups && userPreferences.getBoolean("channelGroupViewEnabled", true)) {
             tableModeGroupsButton.setSelected(true);
             tableModeGroupsButton.setContentFilled(true);
             tableModeChannelsButton.setContentFilled(false);
@@ -264,6 +268,10 @@ public class ChannelPanel extends AbstractFramePanel {
             model.setGroupModeEnabled(false);
         }
 
+        if (!canViewChannelGroups) {
+            tableModeGroupsButton.setEnabled(false);
+        }
+
         updateTagButtons(userPreferences.getBoolean("showTags", true), userPreferences.getBoolean("tagTextMode", false), false);
 
         updateModel(new TableState(new ArrayList<String>(), null));
@@ -272,7 +280,7 @@ public class ChannelPanel extends AbstractFramePanel {
 
     @Override
     public void switchPanel() {
-        boolean groupViewEnabled = userPreferences.getBoolean("channelGroupViewEnabled", true);
+        boolean groupViewEnabled = canViewChannelGroups && userPreferences.getBoolean("channelGroupViewEnabled", true);
         switchTableMode(groupViewEnabled, false);
 
         if (groupViewEnabled) {
@@ -382,6 +390,10 @@ public class ChannelPanel extends AbstractFramePanel {
         Component taskComponent = channelTasks.add(action);
         channelPopupMenu.add(action);
         return taskComponent;
+    }
+
+    public Map<String, String> getCachedChannelIdsAndNames() {
+        return channelIdsAndNames;
     }
 
     public Map<String, ChannelStatus> getCachedChannelStatuses() {
@@ -566,6 +578,19 @@ public class ChannelPanel extends AbstractFramePanel {
         try {
             updateChannelGroups(parent.mirthClient.getAllChannelGroups());
         } catch (ClientException e) {
+            updateChannelGroups(null);
+            if (!(e instanceof ForbiddenException)) {
+                SwingUtilities.invokeLater(() -> {
+                    parent.alertThrowable(parent, e, false);
+                });
+            }
+        }
+    }
+
+    public void retrieveChannelIdsAndNames() {
+        try {
+            channelIdsAndNames = parent.mirthClient.getChannelIdsAndNames();
+        } catch (ClientException e) {
             SwingUtilities.invokeLater(() -> {
                 parent.alertThrowable(parent, e, false);
             });
@@ -578,8 +603,16 @@ public class ChannelPanel extends AbstractFramePanel {
 
     public void retrieveChannels(boolean refreshTags) {
         try {
+            channelIdsAndNames = parent.mirthClient.getChannelIdsAndNames();
             updateChannelStatuses(parent.mirthClient.getChannelSummary(getChannelHeaders(), false));
-            updateChannelGroups(parent.mirthClient.getAllChannelGroups());
+
+            try {
+                updateChannelGroups(parent.mirthClient.getAllChannelGroups());
+            } catch (ForbiddenException e) {
+                // Ignore
+                updateChannelGroups(null);
+            }
+
             channelDependencies = parent.mirthClient.getChannelDependencies();
             updateChannelMetadata(parent.mirthClient.getChannelMetadata());
 
@@ -1294,7 +1327,7 @@ public class ChannelPanel extends AbstractFramePanel {
                     importGroup.setRevision(0);
 
                     do {
-                        groupName = JOptionPane.showInputDialog(this, "Please enter a new name for the group.", groupName);
+                        groupName = DisplayUtil.showInputDialog(this, "Please enter a new name for the group.", groupName);
                         if (groupName == null) {
                             return;
                         }
@@ -1451,7 +1484,7 @@ public class ChannelPanel extends AbstractFramePanel {
                     importChannel.setRevision(0);
 
                     do {
-                        channelName = JOptionPane.showInputDialog(this, "Please enter a new name for the channel.", channelName);
+                        channelName = DisplayUtil.showInputDialog(this, "Please enter a new name for the channel.", channelName);
                         if (channelName == null) {
                             return null;
                         }
@@ -2270,7 +2303,7 @@ public class ChannelPanel extends AbstractFramePanel {
 
         String channelName = channel.getName();
         do {
-            channelName = JOptionPane.showInputDialog(this, "Please enter a new name for the channel.", channelName);
+            channelName = DisplayUtil.showInputDialog(this, "Please enter a new name for the channel.", channelName);
             if (channelName == null) {
                 return;
             }
@@ -2569,38 +2602,40 @@ public class ChannelPanel extends AbstractFramePanel {
     }
 
     private void updateChannelGroups(List<ChannelGroup> channelGroups) {
-        if (channelGroups != null) {
-            this.groupStatuses.clear();
+        if (channelGroups == null) {
+            channelGroups = new ArrayList<ChannelGroup>();
+        }
 
-            ChannelGroup defaultGroup = ChannelGroup.getDefaultGroup();
-            List<ChannelStatus> defaultGroupChannelStatuses = new ArrayList<ChannelStatus>();
-            ChannelGroupStatus defaultGroupStatus = new ChannelGroupStatus(defaultGroup, defaultGroupChannelStatuses);
-            this.groupStatuses.put(defaultGroup.getId(), defaultGroupStatus);
+        this.groupStatuses.clear();
 
-            Set<String> visitedChannelIds = new HashSet<String>();
-            Set<String> remainingChannelIds = new HashSet<String>(this.channelStatuses.keySet());
+        ChannelGroup defaultGroup = ChannelGroup.getDefaultGroup();
+        List<ChannelStatus> defaultGroupChannelStatuses = new ArrayList<ChannelStatus>();
+        ChannelGroupStatus defaultGroupStatus = new ChannelGroupStatus(defaultGroup, defaultGroupChannelStatuses);
+        this.groupStatuses.put(defaultGroup.getId(), defaultGroupStatus);
 
-            for (ChannelGroup group : channelGroups) {
-                List<ChannelStatus> channelStatuses = new ArrayList<ChannelStatus>();
+        Set<String> visitedChannelIds = new HashSet<String>();
+        Set<String> remainingChannelIds = new HashSet<String>(this.channelStatuses.keySet());
 
-                for (Channel channel : group.getChannels()) {
-                    if (!visitedChannelIds.contains(channel.getId())) {
-                        ChannelStatus channelStatus = this.channelStatuses.get(channel.getId());
-                        if (channelStatus != null) {
-                            channelStatuses.add(channelStatus);
-                        }
-                        visitedChannelIds.add(channel.getId());
-                        remainingChannelIds.remove(channel.getId());
+        for (ChannelGroup group : channelGroups) {
+            List<ChannelStatus> channelStatuses = new ArrayList<ChannelStatus>();
+
+            for (Channel channel : group.getChannels()) {
+                if (!visitedChannelIds.contains(channel.getId())) {
+                    ChannelStatus channelStatus = this.channelStatuses.get(channel.getId());
+                    if (channelStatus != null) {
+                        channelStatuses.add(channelStatus);
                     }
+                    visitedChannelIds.add(channel.getId());
+                    remainingChannelIds.remove(channel.getId());
                 }
-
-                this.groupStatuses.put(group.getId(), new ChannelGroupStatus(group, channelStatuses));
             }
 
-            for (String channelId : remainingChannelIds) {
-                defaultGroup.getChannels().add(new Channel(channelId));
-                defaultGroupChannelStatuses.add(this.channelStatuses.get(channelId));
-            }
+            this.groupStatuses.put(group.getId(), new ChannelGroupStatus(group, channelStatuses));
+        }
+
+        for (String channelId : remainingChannelIds) {
+            defaultGroup.getChannels().add(new Channel(channelId));
+            defaultGroupChannelStatuses.add(this.channelStatuses.get(channelId));
         }
     }
 
@@ -2793,8 +2828,10 @@ public class ChannelPanel extends AbstractFramePanel {
         int visibleChannelCount = filteredChannelStatuses.size();
 
         List<Channel> filteredChannels = new ArrayList<Channel>();
+        Set<String> filteredChannelIds = new HashSet<>();
         for (ChannelStatus filteredChannelStatus : filteredChannelStatuses) {
             filteredChannels.add(filteredChannelStatus.getChannel());
+            filteredChannelIds.add(filteredChannelStatus.getChannel().getId());
         }
 
         List<ChannelGroupStatus> filteredGroupStatuses = new ArrayList<ChannelGroupStatus>();
@@ -2845,10 +2882,6 @@ public class ChannelPanel extends AbstractFramePanel {
             if (totalGroupCount != 1) {
                 builder.append('s');
             }
-
-            if (totalGroupCount != visibleGroupCount) {
-                builder.append(" (").append(totalGroupCount - visibleGroupCount).append(" filtered)");
-            }
             builder.append(", ");
         }
 
@@ -2862,11 +2895,26 @@ public class ChannelPanel extends AbstractFramePanel {
         if (totalChannelCount != 1) {
             builder.append('s');
         }
-
-        if (totalChannelCount != visibleChannelCount) {
-            builder.append(" (").append(totalChannelCount - visibleChannelCount).append(" filtered)");
+        
+        int totalEnabledChannels = 0;
+        int visibleEnabledChannel = 0;
+        for (Map.Entry<String, ChannelStatus> entry : channelStatuses.entrySet()) {
+            if (entry.getValue().getChannel().getExportData().getMetadata().isEnabled()) {
+                if (filteredChannelIds.contains(entry.getKey())) {
+                    visibleEnabledChannel++;
+                }
+                totalEnabledChannels++;
+            }
         }
-        builder.append(", ").append(totalChannelCount).append(" Enabled");
+        
+        builder.append(", ");
+        
+        if (totalEnabledChannels == visibleEnabledChannel) {
+            builder.append(totalEnabledChannels);
+        } else {
+            builder.append(visibleEnabledChannel).append(" of ").append(totalEnabledChannels);
+        }
+        builder.append(" Enabled");
 
         if (tagField.isFilterEnabled()) {
             builder.append(" (");
@@ -3443,6 +3491,10 @@ public class ChannelPanel extends AbstractFramePanel {
     }
 
     private boolean switchTableMode(boolean groupModeEnabled, boolean promptSave) {
+        if (!canViewChannelGroups) {
+            groupModeEnabled = false;
+        }
+
         ChannelTreeTableModel model = (ChannelTreeTableModel) channelTable.getTreeTableModel();
         if (model.isGroupModeEnabled() != groupModeEnabled) {
             if (promptSave && isSaveEnabled() && !promptSave(true)) {

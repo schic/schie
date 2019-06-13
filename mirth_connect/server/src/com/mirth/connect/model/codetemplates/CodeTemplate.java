@@ -242,9 +242,12 @@ public class CodeTemplate implements Serializable, Migratable, Purgable, Cacheab
             propertiesElement.addChildElement("code", codeElement.getTextContent());
         }
     }
-    
+
     @Override
     public void migrate3_6_0(DonkeyElement element) {}
+
+    @Override
+    public void migrate3_7_0(DonkeyElement element) {}
 
     @Override
     public Map<String, Object> getPurgedProperties() {

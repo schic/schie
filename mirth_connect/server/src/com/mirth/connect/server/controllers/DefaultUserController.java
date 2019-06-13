@@ -27,6 +27,7 @@ import com.mirth.connect.client.core.ControllerException;
 import com.mirth.connect.model.Credentials;
 import com.mirth.connect.model.LoginStatus;
 import com.mirth.connect.model.LoginStatus.Status;
+import com.mirth.connect.model.LoginStrike;
 import com.mirth.connect.model.PasswordRequirements;
 import com.mirth.connect.model.User;
 import com.mirth.connect.server.ExtensionLoader;
@@ -39,8 +40,8 @@ import com.mirth.connect.server.util.SqlConfig;
 import com.mirth.connect.server.util.StatementLock;
 
 public class DefaultUserController extends UserController {
-    private static final String VACUUM_LOCK_PERSON_STATEMENT_ID = "User.vacuumPersonTable";
-    private static final String VACUUM_LOCK_PREFERENCES_STATEMENT_ID = "User.vacuumPersonPreferencesTable";
+    public static final String VACUUM_LOCK_PERSON_STATEMENT_ID = "User.vacuumPersonTable";
+    public static final String VACUUM_LOCK_PREFERENCES_STATEMENT_ID = "User.vacuumPersonPreferencesTable";
 
     private Logger logger = Logger.getLogger(this.getClass());
     private ExtensionController extensionController = null;
@@ -68,7 +69,7 @@ public class DefaultUserController extends UserController {
     public void resetUserStatus() {
         StatementLock.getInstance(VACUUM_LOCK_PERSON_STATEMENT_ID).readLock();
         try {
-            SqlConfig.getSqlSessionManager().update("User.resetUserStatus");
+            SqlConfig.getInstance().getSqlSessionManager().update("User.resetUserStatus");
         } catch (PersistenceException e) {
             logger.error("Could not reset user status.");
         } finally {
@@ -81,7 +82,7 @@ public class DefaultUserController extends UserController {
 
         StatementLock.getInstance(VACUUM_LOCK_PERSON_STATEMENT_ID).readLock();
         try {
-            return SqlConfig.getSqlSessionManager().selectList("User.getUser");
+            return SqlConfig.getInstance().getReadOnlySqlSessionManager().selectList("User.getUser");
         } catch (PersistenceException e) {
             throw new ControllerException(e);
         } finally {
@@ -101,7 +102,7 @@ public class DefaultUserController extends UserController {
             User user = new User();
             user.setId(userId);
             user.setUsername(userName);
-            return SqlConfig.getSqlSessionManager().selectOne("User.getUser", user);
+            return SqlConfig.getInstance().getReadOnlySqlSessionManager().selectOne("User.getUser", user);
         } catch (PersistenceException e) {
             throw new ControllerException(e);
         } finally {
@@ -120,7 +121,7 @@ public class DefaultUserController extends UserController {
                 }
 
                 logger.debug("adding user: " + user);
-                SqlConfig.getSqlSessionManager().insert("User.insertUser", getUserMap(user));
+                SqlConfig.getInstance().getSqlSessionManager().insert("User.insertUser", getUserMap(user));
             } else {
                 if (existingUserByName != null && !user.getId().equals(existingUserByName.getId())) {
                     throw new ControllerException("Error updating user: username must be unique");
@@ -133,7 +134,7 @@ public class DefaultUserController extends UserController {
                 String currentUsername = existingUserById.getUsername();
 
                 logger.debug("updating user: " + user);
-                SqlConfig.getSqlSessionManager().update("User.updateUser", getUserMap(user));
+                SqlConfig.getInstance().getSqlSessionManager().update("User.updateUser", getUserMap(user));
 
                 // Notify the authorization controller if the username changed
                 if (!StringUtils.equals(currentUsername, user.getUsername())) {
@@ -175,7 +176,7 @@ public class DefaultUserController extends UserController {
                 userDateMap.put("pruneDate", pruneDate);
 
                 try {
-                    SqlConfig.getSqlSessionManager().delete("User.prunePasswords", userDateMap);
+                    SqlConfig.getInstance().getSqlSessionManager().delete("User.prunePasswords", userDateMap);
                 } catch (Exception e) {
                     // Don't abort changing the password if pruning fails.
                     logger.error("There was an error pruning passwords for user id: " + userId, e);
@@ -186,8 +187,8 @@ public class DefaultUserController extends UserController {
             userPasswordMap.put("id", userId);
             userPasswordMap.put("password", digester.digest(plainPassword));
             userPasswordMap.put("passwordDate", Calendar.getInstance());
-            SqlConfig.getSqlSessionManager().insert("User.updateUserPassword", userPasswordMap);
-            SqlConfig.getSqlSessionManager().update("User.clearGracePeriod", userId);
+            SqlConfig.getInstance().getSqlSessionManager().insert("User.updateUserPassword", userPasswordMap);
+            SqlConfig.getInstance().getSqlSessionManager().update("User.clearGracePeriod", userId);
 
             return null;
         } catch (PersistenceException e) {
@@ -212,7 +213,7 @@ public class DefaultUserController extends UserController {
         try {
             User user = new User();
             user.setId(userId);
-            SqlConfig.getSqlSessionManager().delete("User.deleteUser", user);
+            SqlConfig.getInstance().getSqlSessionManager().delete("User.deleteUser", user);
 
             if (DatabaseUtil.statementExists("User.vacuumPersonTable")) {
                 vacuumPersonTable();
@@ -230,7 +231,7 @@ public class DefaultUserController extends UserController {
     public void vacuumPersonTable() {
         SqlSession session = null;
         try {
-            session = SqlConfig.getSqlSessionManager().openSession(false);
+            session = SqlConfig.getInstance().getSqlSessionManager().openSession(false);
             if (DatabaseUtil.statementExists("User.lockPersonTable")) {
                 session.update("User.lockPersonTable");
             }
@@ -251,7 +252,7 @@ public class DefaultUserController extends UserController {
     public void vacuumPersonPreferencesTable() {
         SqlSession session = null;
         try {
-            session = SqlConfig.getSqlSessionManager().openSession(false);
+            session = SqlConfig.getInstance().getSqlSessionManager().openSession(false);
             if (DatabaseUtil.statementExists("User.lockPersonPreferencesTable")) {
                 session.update("User.lockPersonPreferencesTable");
             }
@@ -283,25 +284,28 @@ public class DefaultUserController extends UserController {
                  * authentication.
                  */
                 if (loginStatus != null) {
-                    return handleSecondaryAuthentication(username, loginStatus);
+                    return handleSecondaryAuthentication(username, loginStatus, null);
                 }
             }
 
-            Digester digester = ControllerFactory.getFactory().createConfigurationController().getDigester();
-            LoginRequirementsChecker loginRequirementsChecker = new LoginRequirementsChecker(username);
-            if (loginRequirementsChecker.isUserLockedOut()) {
-                return new LoginStatus(LoginStatus.Status.FAIL_LOCKED_OUT, "User account \"" + username + "\" has been locked. You may attempt to login again in " + loginRequirementsChecker.getPrintableStrikeTimeRemaining() + ".");
-            }
-
-            loginRequirementsChecker.resetExpiredStrikes();
             boolean authorized = false;
-
-            // Validate the user
-            User validUser = getUser(null, username);
             Credentials credentials = null;
+            LoginRequirementsChecker loginRequirementsChecker = null;
+
+            // Retrieve the matching User
+            User validUser = getUser(null, username);
 
             if (validUser != null) {
-                credentials = (Credentials) SqlConfig.getSqlSessionManager().selectOne("User.getLatestUserCredentials", validUser.getId());
+                Digester digester = ControllerFactory.getFactory().createConfigurationController().getDigester();
+                loginRequirementsChecker = new LoginRequirementsChecker(validUser);
+                if (loginRequirementsChecker.isUserLockedOut()) {
+                    return new LoginStatus(LoginStatus.Status.FAIL_LOCKED_OUT, "User account \"" + username + "\" has been locked. You may attempt to login again in " + loginRequirementsChecker.getPrintableStrikeTimeRemaining() + ".");
+                }
+
+                loginRequirementsChecker.resetExpiredStrikes();
+
+                // Validate the user credentials
+                credentials = (Credentials) SqlConfig.getInstance().getReadOnlySqlSessionManager().selectOne("User.getLatestUserCredentials", validUser.getId());
 
                 if (credentials != null) {
                     if (Pre22PasswordChecker.isPre22Hash(credentials.getPassword())) {
@@ -319,8 +323,6 @@ public class DefaultUserController extends UserController {
             LoginStatus loginStatus = null;
 
             if (authorized) {
-                loginRequirementsChecker.resetStrikes();
-
                 // If password expiration is enabled, do checks now
                 if (passwordRequirements.getExpiration() > 0) {
                     long passwordTime = credentials.getPasswordDate().getTimeInMillis();
@@ -341,7 +343,7 @@ public class DefaultUserController extends UserController {
                                 gracePeriodMap.put("id", validUser.getId());
                                 gracePeriodMap.put("gracePeriodStart", Calendar.getInstance());
 
-                                SqlConfig.getSqlSessionManager().update("User.startGracePeriod", gracePeriodMap);
+                                SqlConfig.getInstance().getSqlSessionManager().update("User.startGracePeriod", gracePeriodMap);
                             } else {
                                 gracePeriodStartTime = validUser.getGracePeriodStart().getTimeInMillis();
                             }
@@ -363,7 +365,7 @@ public class DefaultUserController extends UserController {
                          * before grace periods are disabled.
                          */
                         if ((passwordRequirements.getGracePeriod() <= 0) && (validUser.getGracePeriodStart() != null)) {
-                            SqlConfig.getSqlSessionManager().update("User.clearGracePeriod", validUser.getId());
+                            SqlConfig.getInstance().getSqlSessionManager().update("User.clearGracePeriod", validUser.getId());
                         }
                     }
                 }
@@ -375,19 +377,30 @@ public class DefaultUserController extends UserController {
 
                     // Clear the user's grace period if one exists
                     if (validUser.getGracePeriodStart() != null) {
-                        SqlConfig.getSqlSessionManager().update("User.clearGracePeriod", validUser.getId());
+                        SqlConfig.getInstance().getSqlSessionManager().update("User.clearGracePeriod", validUser.getId());
                     }
                 }
             } else {
-                loginRequirementsChecker.incrementStrikes();
+                LoginStatus.Status status = LoginStatus.Status.FAIL;
                 String failMessage = "Incorrect username or password.";
-                if (loginRequirementsChecker.isLockoutEnabled()) {
-                    failMessage += " " + loginRequirementsChecker.getStrikesRemaining() + " login attempt(s) remaining for \"" + username + "\" until the account is locked for " + loginRequirementsChecker.getPrintableLockoutPeriod() + ".";
+
+                if (loginRequirementsChecker != null) {
+                    loginRequirementsChecker.incrementStrikes();
+
+                    if (loginRequirementsChecker.isLockoutEnabled()) {
+                        if (loginRequirementsChecker.isUserLockedOut()) {
+                            status = LoginStatus.Status.FAIL_LOCKED_OUT;
+                            failMessage += " User account \"" + username + "\" has been locked. You may attempt to login again in " + loginRequirementsChecker.getPrintableStrikeTimeRemaining() + ".";
+                        } else {
+                            failMessage += " " + loginRequirementsChecker.getAttemptsRemaining() + " login attempt(s) remaining for \"" + username + "\" until the account is locked for " + loginRequirementsChecker.getPrintableLockoutPeriod() + ".";
+                        }
+                    }
                 }
-                loginStatus = new LoginStatus(LoginStatus.Status.FAIL, failMessage);
+
+                loginStatus = new LoginStatus(status, failMessage);
             }
 
-            return handleSecondaryAuthentication(username, loginStatus);
+            return handleSecondaryAuthentication(username, loginStatus, loginRequirementsChecker);
         } catch (Exception e) {
             throw new ControllerException(e);
         } finally {
@@ -407,7 +420,7 @@ public class DefaultUserController extends UserController {
             params.put("id", user.getId());
             params.put("lastLogin", Calendar.getInstance());
 
-            SqlConfig.getSqlSessionManager().update("User.loginUser", params);
+            SqlConfig.getInstance().getSqlSessionManager().update("User.loginUser", params);
         } catch (Exception e) {
             throw new ControllerException(e);
         } finally {
@@ -418,7 +431,7 @@ public class DefaultUserController extends UserController {
     public void logoutUser(User user) throws ControllerException {
         StatementLock.getInstance(VACUUM_LOCK_PERSON_STATEMENT_ID).readLock();
         try {
-            SqlConfig.getSqlSessionManager().update("User.logoutUser", user.getId());
+            SqlConfig.getInstance().getSqlSessionManager().update("User.logoutUser", user.getId());
         } catch (Exception e) {
             throw new ControllerException(e);
         } finally {
@@ -429,7 +442,7 @@ public class DefaultUserController extends UserController {
     public boolean isUserLoggedIn(Integer userId) throws ControllerException {
         StatementLock.getInstance(VACUUM_LOCK_PERSON_STATEMENT_ID).readLock();
         try {
-            return (Boolean) SqlConfig.getSqlSessionManager().selectOne("User.isUserLoggedIn", userId);
+            return (Boolean) SqlConfig.getInstance().getReadOnlySqlSessionManager().selectOne("User.isUserLoggedIn", userId);
         } catch (Exception e) {
             throw new ControllerException(e);
         } finally {
@@ -458,7 +471,37 @@ public class DefaultUserController extends UserController {
     @Override
     public List<Credentials> getUserCredentials(Integer userId) throws ControllerException {
         try {
-            return SqlConfig.getSqlSessionManager().selectList("User.getUserCredentials", userId);
+            return SqlConfig.getInstance().getReadOnlySqlSessionManager().selectList("User.getUserCredentials", userId);
+        } catch (Exception e) {
+            throw new ControllerException(e);
+        }
+    }
+
+    @Override
+    public LoginStrike incrementStrikes(Integer userId) throws ControllerException {
+        try {
+            SqlConfig.getInstance().getSqlSessionManager().update("User.incrementStrikes", userId);
+
+            User updatedUser = getUser(userId, null);
+            if (updatedUser != null) {
+                return new LoginStrike(updatedUser.getStrikeCount() != null ? updatedUser.getStrikeCount() : 0, updatedUser.getLastStrikeTime());
+            }
+            return null;
+        } catch (Exception e) {
+            throw new ControllerException(e);
+        }
+    }
+
+    @Override
+    public LoginStrike resetStrikes(Integer userId) throws ControllerException {
+        try {
+            SqlConfig.getInstance().getSqlSessionManager().update("User.resetStrikes", userId);
+
+            User updatedUser = getUser(userId, null);
+            if (updatedUser != null) {
+                return new LoginStrike(updatedUser.getStrikeCount() != null ? updatedUser.getStrikeCount() : 0, updatedUser.getLastStrikeTime());
+            }
+            return null;
         } catch (Exception e) {
             throw new ControllerException(e);
         }
@@ -483,9 +526,9 @@ public class DefaultUserController extends UserController {
             parameterMap.put("value", value);
 
             if (getUserPreference(userId, name) == null) {
-                SqlConfig.getSqlSessionManager().insert("User.insertPreference", parameterMap);
+                SqlConfig.getInstance().getSqlSessionManager().insert("User.insertPreference", parameterMap);
             } else {
-                SqlConfig.getSqlSessionManager().insert("User.updatePreference", parameterMap);
+                SqlConfig.getInstance().getSqlSessionManager().insert("User.updatePreference", parameterMap);
             }
 
             if (DatabaseUtil.statementExists("User.vacuumPersonPreferencesTable")) {
@@ -505,7 +548,7 @@ public class DefaultUserController extends UserController {
 
         StatementLock.getInstance(VACUUM_LOCK_PREFERENCES_STATEMENT_ID).readLock();
         try {
-            List<KeyValuePair> result = SqlConfig.getSqlSessionManager().selectList("User.selectPreferencesForUser", userId);
+            List<KeyValuePair> result = SqlConfig.getInstance().getReadOnlySqlSessionManager().selectList("User.selectPreferencesForUser", userId);
 
             for (KeyValuePair pair : result) {
                 if (CollectionUtils.isEmpty(names) || names.contains(pair.getKey())) {
@@ -530,7 +573,7 @@ public class DefaultUserController extends UserController {
             Map<String, Object> parameterMap = new HashMap<String, Object>();
             parameterMap.put("person_id", userId);
             parameterMap.put("name", name);
-            return (String) SqlConfig.getSqlSessionManager().selectOne("User.selectPreference", parameterMap);
+            return (String) SqlConfig.getInstance().getReadOnlySqlSessionManager().selectOne("User.selectPreference", parameterMap);
         } catch (Exception e) {
             logger.warn("Could not retrieve preference: user id=" + userId + ", name=" + name, e);
         } finally {
@@ -547,7 +590,7 @@ public class DefaultUserController extends UserController {
         try {
             Map<String, Object> parameterMap = new HashMap<String, Object>();
             parameterMap.put("person_id", id);
-            SqlConfig.getSqlSessionManager().delete("User.deletePreference", parameterMap);
+            SqlConfig.getInstance().getSqlSessionManager().delete("User.deletePreference", parameterMap);
         } catch (Exception e) {
             logger.error("Could not delete preferences: user id=" + id);
         } finally {
@@ -564,7 +607,7 @@ public class DefaultUserController extends UserController {
             Map<String, Object> parameterMap = new HashMap<String, Object>();
             parameterMap.put("category", id);
             parameterMap.put("name", name);
-            SqlConfig.getSqlSessionManager().delete("User.deletePreference", parameterMap);
+            SqlConfig.getInstance().getSqlSessionManager().delete("User.deletePreference", parameterMap);
         } catch (Exception e) {
             logger.error("Could not delete preference: user id=" + id + ", name=" + name, e);
         } finally {
@@ -572,10 +615,26 @@ public class DefaultUserController extends UserController {
         }
     }
 
-    private LoginStatus handleSecondaryAuthentication(String username, LoginStatus loginStatus) {
+    private LoginStatus handleSecondaryAuthentication(String username, LoginStatus loginStatus, LoginRequirementsChecker loginRequirementsChecker) {
         if (loginStatus != null && extensionController.getMultiFactorAuthenticationPlugin() != null && (loginStatus.getStatus() == Status.SUCCESS || loginStatus.getStatus() == Status.SUCCESS_GRACE_PERIOD)) {
             loginStatus = extensionController.getMultiFactorAuthenticationPlugin().authenticate(username, loginStatus);
         }
+
+        // Only reset strikes if the final status is successful 
+        if (loginStatus.getStatus() == Status.SUCCESS || loginStatus.getStatus() == Status.SUCCESS_GRACE_PERIOD) {
+            if (loginRequirementsChecker == null) {
+                try {
+                    loginRequirementsChecker = new LoginRequirementsChecker(getUser(null, username));
+                } catch (ControllerException e) {
+                    logger.warn("Unable to reset strikes for user \"" + username + "\": Could not find user.", e);
+                }
+            }
+
+            if (loginRequirementsChecker != null) {
+                loginRequirementsChecker.resetStrikes();
+            }
+        }
+
         return loginStatus;
     }
 }

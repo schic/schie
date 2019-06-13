@@ -16,19 +16,15 @@ import java.awt.Point;
 import com.mirth.connect.client.ui.BareBonesBrowserLaunch;
 import com.mirth.connect.client.ui.MirthDialog;
 import com.mirth.connect.client.ui.PlatformUI;
+import com.mirth.connect.client.ui.util.DisplayUtil;
 
 public class ExtensionInfoDialog extends MirthDialog {
 
-    public ExtensionInfoDialog(String name,
-            String type,
-            String priority,
-            String author,
-            String pluginVersion,
-            String url,
-            String description) {
+    public ExtensionInfoDialog(String name, String type, String priority, String author, String pluginVersion, String url, String description) {
         super(PlatformUI.MIRTH_FRAME, true);
 
         initComponents();
+        DisplayUtil.setResizable(this, false);
         nameLabel.setText(name);
         typeLabel.setText(type);
         priorityLabel.setText(priority);
@@ -51,6 +47,7 @@ public class ExtensionInfoDialog extends MirthDialog {
         setVisible(true);
     }
 
+    // @formatter:off
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -82,7 +79,6 @@ public class ExtensionInfoDialog extends MirthDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Extension Information");
-        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setFont(new java.awt.Font("Tahoma", 1, 11));
@@ -239,6 +235,7 @@ public class ExtensionInfoDialog extends MirthDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    // @formatter:on
 
     private void urlLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_urlLabelMouseClicked
         BareBonesBrowserLaunch.openURL(urlLabel.getText());
@@ -248,7 +245,8 @@ public class ExtensionInfoDialog extends MirthDialog {
     {//GEN-HEADEREND:event_closeButtonActionPerformed
         this.dispose();
     }//GEN-LAST:event_closeButtonActionPerformed
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+     // Variables declaration - do not modify//GEN-BEGIN:variables
+
     private javax.swing.JLabel authorLabel;
     private javax.swing.JButton closeButton;
     private javax.swing.JTextPane descriptionLabel;

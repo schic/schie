@@ -107,6 +107,7 @@ public class DestinationSetFilterPanel extends EditorPanel<Step> {
 
         fieldField.setText(props.getField());
         conditionRadioMap.get(props.getCondition()).setSelected(true);
+        conditionRadioActionPerformed(props.getCondition());
         setValues(props.getValues());
         properties.setName(updateName());
     }
@@ -149,6 +150,16 @@ public class DestinationSetFilterPanel extends EditorPanel<Step> {
     @Override
     public void setNameActionListener(ActionListener actionListener) {
         nameActionListener = actionListener;
+    }
+
+    @Override
+    public void stopEditing() {
+        if (destinationsTable.isEditing()) {
+            destinationsTable.getCellEditor(destinationsTable.getEditingRow(), destinationsTable.getEditingColumn()).stopCellEditing();
+        }
+        if (valuesTable.isEditing()) {
+            valuesTable.getCellEditor(valuesTable.getEditingRow(), valuesTable.getEditingColumn()).stopCellEditing();
+        }
     }
 
     public void setValues(List<String> values) {

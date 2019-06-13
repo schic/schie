@@ -18,6 +18,8 @@ import javax.swing.SwingWorker;
 import org.apache.commons.lang3.StringUtils;
 
 import com.mirth.connect.client.core.ClientException;
+import com.mirth.connect.client.core.TaskConstants;
+import com.mirth.connect.client.ui.util.DisplayUtil;
 
 public class RemoveMessagesDialog extends MirthDialog {
     private Frame parent;
@@ -26,12 +28,17 @@ public class RemoveMessagesDialog extends MirthDialog {
     public RemoveMessagesDialog(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        DisplayUtil.setResizable(this, false);
         this.parent = parent;
     }
 
     public void init(Set<String> selectedChannelIds, boolean restartCheckboxEnabled) {
         yesButton.requestFocus();
-        clearStatsCheckBox.setSelected(true);
+
+        boolean canClearStats = AuthorizationControllerFactory.getAuthorizationController().checkTask(TaskConstants.DASHBOARD_KEY, TaskConstants.DASHBOARD_CLEAR_STATS);
+        clearStatsCheckBox.setSelected(canClearStats);
+        clearStatsCheckBox.setEnabled(canClearStats);
+
         includeRunningChannels.setSelected(false);
         channelIds = selectedChannelIds;
 
@@ -57,7 +64,6 @@ public class RemoveMessagesDialog extends MirthDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Remove All Messages");
-        setResizable(false);
 
         messageLabel.setText("Are you sure you want to remove all messages (including QUEUED) for the selected stopped channel(s)?");
 
@@ -132,7 +138,7 @@ public class RemoveMessagesDialog extends MirthDialog {
 
     private void yesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yesButtonActionPerformed
         if (Preferences.userNodeForPackage(Mirth.class).getBoolean("showReprocessRemoveMessagesWarning", true)) {
-            String result = JOptionPane.showInputDialog(this, "<html>This will remove <b>all</b> messages for the selected channel(s).<br><font size='1'><br></font>Type REMOVEALL and click the OK button to continue.</html>", "Remove All Messages", JOptionPane.WARNING_MESSAGE);
+            String result = DisplayUtil.showInputDialog(this, "<html>This will remove <b>all</b> messages for the selected channel(s).<br><font size='1'><br></font>Type REMOVEALL and click the OK button to continue.</html>", "Remove All Messages", JOptionPane.WARNING_MESSAGE);
             if (!StringUtils.equals(result, "REMOVEALL")) {
                 parent.alertWarning(this, "You must type REMOVEALL to remove all messages.");
                 return;

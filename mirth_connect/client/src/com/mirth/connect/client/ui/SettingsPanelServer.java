@@ -33,6 +33,7 @@ import com.mirth.connect.client.core.ClientException;
 import com.mirth.connect.client.core.TaskConstants;
 import com.mirth.connect.client.ui.alert.DefaultAlertPanel;
 import com.mirth.connect.client.ui.components.MirthFieldConstraints;
+import com.mirth.connect.client.ui.util.DisplayUtil;
 import com.mirth.connect.donkey.model.channel.MetaDataColumn;
 import com.mirth.connect.model.Channel;
 import com.mirth.connect.model.ServerConfiguration;
@@ -133,15 +134,29 @@ public class SettingsPanelServer extends AbstractSettingsPanel {
                 try {
                     getFrame().mirthClient.setServerSettings(serverSettings);
 
+                    String environmentName = environmentNameField.getText();
                     String serverName = serverNameField.getText();
                     StringBuilder titleText = new StringBuilder();
                     StringBuilder statusBarText = new StringBuilder();
                     statusBarText.append("Connected to: ");
 
-                    if (!StringUtils.isBlank(serverNameField.getText())) {
+                    if (!StringUtils.isBlank(environmentName)) {
+                        titleText.append(environmentName + " - ");
+                        statusBarText.append(environmentName);
+
+                        if (!StringUtils.isBlank(serverName)) {
+                            statusBarText.append(" - ");
+                        } else {
+                            statusBarText.append(" | ");
+                        }
+
+                        PlatformUI.ENVIRONMENT_NAME = environmentName;
+                    }
+
+                    if (!StringUtils.isBlank(serverName)) {
                         titleText.append(serverName);
                         statusBarText.append(serverName + " | ");
-                        PlatformUI.SERVER_NAME = serverNameField.getText();
+                        PlatformUI.SERVER_NAME = serverName;
                     } else {
                         titleText.append(PlatformUI.SERVER_URL);
                     }
@@ -173,6 +188,12 @@ public class SettingsPanelServer extends AbstractSettingsPanel {
 
     /** Loads the current server settings into the Settings form */
     public void setServerSettings(ServerSettings serverSettings) {
+        if (serverSettings.getEnvironmentName() != null) {
+            environmentNameField.setText(serverSettings.getEnvironmentName());
+        } else {
+            environmentNameField.setText("");
+        }
+
         if (serverSettings.getServerName() != null) {
             serverNameField.setText(serverSettings.getServerName());
         } else {
@@ -268,6 +289,8 @@ public class SettingsPanelServer extends AbstractSettingsPanel {
     /** Saves the current settings from the settings form */
     public ServerSettings getServerSettings() {
         ServerSettings serverSettings = new ServerSettings();
+
+        serverSettings.setEnvironmentName(environmentNameField.getText());
 
         serverSettings.setServerName(serverNameField.getText());
 
@@ -420,7 +443,8 @@ public class SettingsPanelServer extends AbstractSettingsPanel {
                 final JCheckBox overwriteConfigMap = new JCheckBox("Overwrite Configuration Map");
                 overwriteConfigMap.setSelected(false);
                 String warningMessage = "Import configuration from " + configuration.getDate() + "?\nWARNING: This will overwrite all current channels,\nalerts, server properties, and plugin properties.\n";
-                Object[] params = { warningMessage, new JLabel(" "), deployChannelsCheckBox, overwriteConfigMap };
+                Object[] params = { warningMessage, new JLabel(" "), deployChannelsCheckBox,
+                        overwriteConfigMap };
                 int option = JOptionPane.showConfirmDialog(this, params, "Select an Option", JOptionPane.YES_NO_OPTION);
 
                 if (option == JOptionPane.YES_OPTION) {
@@ -469,7 +493,7 @@ public class SettingsPanelServer extends AbstractSettingsPanel {
     }
 
     public void doClearAllStats() {
-        String result = JOptionPane.showInputDialog(this, "<html>This will reset all channel statistics (including lifetime statistics) for<br>all channels (including undeployed channels).<br><font size='1'><br></font>Type CLEAR and click the OK button to continue.</html>", "Clear All Statistics", JOptionPane.WARNING_MESSAGE);
+        String result = DisplayUtil.showInputDialog(this, "<html>This will reset all channel statistics (including lifetime statistics) for<br>all channels (including undeployed channels).<br><font size='1'><br></font>Type CLEAR and click the OK button to continue.</html>", "Clear All Statistics", JOptionPane.WARNING_MESSAGE);
 
         if (result != null) {
             if (!result.equals("CLEAR")) {
@@ -516,6 +540,7 @@ public class SettingsPanelServer extends AbstractSettingsPanel {
         passwordField.setBackground(null);
     }
 
+    // @formatter:off
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -557,6 +582,8 @@ public class SettingsPanelServer extends AbstractSettingsPanel {
         provideUsageStatsMoreInfoLabel = new javax.swing.JLabel();
         serverNameField = new com.mirth.connect.client.ui.components.MirthTextField();
         serverNameLabel = new javax.swing.JLabel();
+        environmentNameLabel = new javax.swing.JLabel();
+        environmentNameField = new com.mirth.connect.client.ui.components.MirthTextField();
         channelPanel = new javax.swing.JPanel();
         clearGlobalMapLabel = new javax.swing.JLabel();
         clearGlobalMapYesRadio = new com.mirth.connect.client.ui.components.MirthRadioButton();
@@ -767,29 +794,44 @@ public class SettingsPanelServer extends AbstractSettingsPanel {
 
         serverNameLabel.setText("Server name:");
 
+        environmentNameLabel.setText("Environment name:");
+
+        environmentNameField.setToolTipText("<html>The name of this Mirth Connect environment. There is one environment name per Mirth Connect database.</html>");
+
         javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
         generalPanel.setLayout(generalPanelLayout);
         generalPanelLayout.setHorizontalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(generalPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(serverNameLabel, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(provideUsageStatsLabel, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(generalPanelLayout.createSequentialGroup()
-                        .addComponent(provideUsageStatsYesRadio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(environmentNameLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(provideUsageStatsNoRadio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(environmentNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(serverNameLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(provideUsageStatsLabel, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(provideUsageStatsMoreInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(serverNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(87, Short.MAX_VALUE))
+                        .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(generalPanelLayout.createSequentialGroup()
+                                .addComponent(provideUsageStatsYesRadio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(provideUsageStatsNoRadio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(provideUsageStatsMoreInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(serverNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         generalPanelLayout.setVerticalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(generalPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(environmentNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(environmentNameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(serverNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(serverNameLabel))
@@ -912,9 +954,10 @@ public class SettingsPanelServer extends AbstractSettingsPanel {
                 .addComponent(channelPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(emailPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+    // @formatter:on
 
     private void provideUsageStatsMoreInfoLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_provideUsageStatsMoreInfoLabelMouseClicked
         BareBonesBrowserLaunch.openURL(UIConstants.PRIVACY_URL);
@@ -977,7 +1020,7 @@ public class SettingsPanelServer extends AbstractSettingsPanel {
             return;
         }
 
-        String sendToEmail = (String) JOptionPane.showInputDialog(PlatformUI.MIRTH_FRAME, "Send test email to:", "Send Test Email", JOptionPane.INFORMATION_MESSAGE, null, null, serverSettings.getSmtpFrom());
+        String sendToEmail = (String) DisplayUtil.showInputDialog(PlatformUI.MIRTH_FRAME, "Send test email to:", "Send Test Email", JOptionPane.INFORMATION_MESSAGE, null, null, serverSettings.getSmtpFrom());
 
         if (StringUtils.isNotBlank(sendToEmail)) {
             try {
@@ -1044,6 +1087,8 @@ public class SettingsPanelServer extends AbstractSettingsPanel {
     private com.mirth.connect.client.ui.components.MirthCheckBox defaultMetaDataTypeCheckBox;
     private com.mirth.connect.client.ui.components.MirthCheckBox defaultMetaDataVersionCheckBox;
     private javax.swing.JPanel emailPanel;
+    private com.mirth.connect.client.ui.components.MirthTextField environmentNameField;
+    private javax.swing.JLabel environmentNameLabel;
     private javax.swing.JPanel generalPanel;
     private com.mirth.connect.client.ui.components.MirthPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;

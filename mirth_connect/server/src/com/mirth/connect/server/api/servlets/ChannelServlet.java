@@ -11,6 +11,7 @@ package com.mirth.connect.server.api.servlets;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,11 +20,13 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
+import com.mirth.connect.client.core.ClientException;
 import com.mirth.connect.client.core.ControllerException;
 import com.mirth.connect.client.core.api.MirthApiException;
 import com.mirth.connect.client.core.api.servlets.ChannelServletInterface;
@@ -51,6 +54,10 @@ public class ChannelServlet extends MirthServlet implements ChannelServletInterf
 
     @Override
     public boolean createChannel(Channel channel) {
+        if (isChannelRedacted(channel.getId())) {
+            throw new MirthApiException(Status.FORBIDDEN);
+        }
+
         try {
             return channelController.updateChannel(channel, context, false);
         } catch (ControllerException e) {
@@ -122,6 +129,18 @@ public class ChannelServlet extends MirthServlet implements ChannelServletInterf
             return null;
         }
         return channelController.getMetaDataColumns(channelId);
+    }
+
+    @Override
+    @DontCheckAuthorized
+    public Map<String, String> getChannelIdsAndNames() throws ClientException {
+        Map<String, String> channelIdsAndNames = new HashMap<String, String>();
+        if (isUserAuthorized()) {
+            for (Channel channel : redactChannels(channelController.getChannels(null))) {
+                channelIdsAndNames.put(channel.getId(), channel.getName());
+            }
+        }
+        return channelIdsAndNames;
     }
 
     @Override

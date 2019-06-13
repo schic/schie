@@ -63,16 +63,20 @@ public class DefaultMigrationController extends MigrationController {
         if (pluginMigrators == null) {
             pluginMigrators = new ArrayList<Migrator>();
 
-            for (PluginMetaData pluginMetaData : ControllerFactory.getFactory().createExtensionController().getPluginMetaData().values()) {
-                String migratorClassName = pluginMetaData.getMigratorClass();
+            ExtensionController extensionController = ControllerFactory.getFactory().createExtensionController();
 
-                if (migratorClassName != null) {
-                    try {
-                        Migrator migrator = (Migrator) Class.forName(migratorClassName).newInstance();
-                        migrator.setDefaultScriptPath("extensions/" + pluginMetaData.getPath());
-                        pluginMigrators.add(migrator);
-                    } catch (Exception e) {
-                        logger.error("Failed to run migration for plugin: " + pluginMetaData.getName());
+            for (PluginMetaData pluginMetaData : ControllerFactory.getFactory().createExtensionController().getPluginMetaData().values()) {
+                if (extensionController.isExtensionEnabled(pluginMetaData.getName())) {
+                    String migratorClassName = pluginMetaData.getMigratorClass();
+
+                    if (migratorClassName != null) {
+                        try {
+                            Migrator migrator = (Migrator) Class.forName(migratorClassName).newInstance();
+                            migrator.setDefaultScriptPath("extensions/" + pluginMetaData.getPath());
+                            pluginMigrators.add(migrator);
+                        } catch (Exception e) {
+                            logger.error("Failed to run migration for plugin: " + pluginMetaData.getName());
+                        }
                     }
                 }
             }
@@ -81,8 +85,8 @@ public class DefaultMigrationController extends MigrationController {
 
     @Override
     public void migrate() throws MigrationException {
-        SqlConfig.getSqlSessionManager().startManagedSession();
-        Connection connection = SqlConfig.getSqlSessionManager().getConnection();
+        SqlConfig.getInstance().getSqlSessionManager().startManagedSession();
+        Connection connection = SqlConfig.getInstance().getSqlSessionManager().getConnection();
 
         try {
             // ServerMigrator will set its own starting version
@@ -90,8 +94,8 @@ public class DefaultMigrationController extends MigrationController {
             serverMigrator.setDatabaseType(configurationController.getDatabaseType());
             serverMigrator.migrate();
         } finally {
-            if (SqlConfig.getSqlSessionManager().isManagedSessionStarted()) {
-                SqlConfig.getSqlSessionManager().close();
+            if (SqlConfig.getInstance().getSqlSessionManager().isManagedSessionStarted()) {
+                SqlConfig.getInstance().getSqlSessionManager().close();
             }
         }
     }
@@ -100,8 +104,8 @@ public class DefaultMigrationController extends MigrationController {
     public void migrateExtensions() {
         initPluginMigrators();
 
-        SqlConfig.getSqlSessionManager().startManagedSession();
-        Connection connection = SqlConfig.getSqlSessionManager().getConnection();
+        SqlConfig.getInstance().getSqlSessionManager().startManagedSession();
+        Connection connection = SqlConfig.getInstance().getSqlSessionManager().getConnection();
 
         try {
             for (Migrator migrator : pluginMigrators) {
@@ -115,16 +119,16 @@ public class DefaultMigrationController extends MigrationController {
                 }
             }
         } finally {
-            if (SqlConfig.getSqlSessionManager().isManagedSessionStarted()) {
-                SqlConfig.getSqlSessionManager().close();
+            if (SqlConfig.getInstance().getSqlSessionManager().isManagedSessionStarted()) {
+                SqlConfig.getInstance().getSqlSessionManager().close();
             }
         }
     }
 
     @Override
     public void migrateSerializedData() {
-        SqlConfig.getSqlSessionManager().startManagedSession();
-        Connection connection = SqlConfig.getSqlSessionManager().getConnection();
+        SqlConfig.getInstance().getSqlSessionManager().startManagedSession();
+        Connection connection = SqlConfig.getInstance().getSqlSessionManager().getConnection();
 
         try {
             serverMigrator.setConnection(connection);
@@ -143,8 +147,8 @@ public class DefaultMigrationController extends MigrationController {
                 }
             }
         } finally {
-            if (SqlConfig.getSqlSessionManager().isManagedSessionStarted()) {
-                SqlConfig.getSqlSessionManager().close();
+            if (SqlConfig.getInstance().getSqlSessionManager().isManagedSessionStarted()) {
+                SqlConfig.getInstance().getSqlSessionManager().close();
             }
         }
     }

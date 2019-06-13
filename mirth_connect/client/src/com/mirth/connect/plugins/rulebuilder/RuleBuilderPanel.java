@@ -85,6 +85,7 @@ public class RuleBuilderPanel extends EditorPanel<Rule> {
 
         fieldField.setText(props.getField());
         conditionRadioMap.get(props.getCondition()).setSelected(true);
+        conditionRadioActionPerformed(props.getCondition());
         setValues(props.getValues());
         properties.setName(updateName());
     }
@@ -112,6 +113,13 @@ public class RuleBuilderPanel extends EditorPanel<Rule> {
     @Override
     public void setNameActionListener(ActionListener actionListener) {
         nameActionListener = actionListener;
+    }
+
+    @Override
+    public void stopEditing() {
+        if (valuesTable.isEditing()) {
+            valuesTable.getCellEditor(valuesTable.getEditingRow(), valuesTable.getEditingColumn()).stopCellEditing();
+        }
     }
 
     public void setValues(List<String> values) {
@@ -263,6 +271,7 @@ public class RuleBuilderPanel extends EditorPanel<Rule> {
         valuesTable.setSelectionMode(0);
         valuesTable.setRowSelectionAllowed(true);
         valuesTable.setRowHeight(UIConstants.ROW_HEIGHT);
+        valuesTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         valuesTable.setDragEnabled(false);
         valuesTable.setOpaque(true);
         valuesTable.setSortable(false);

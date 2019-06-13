@@ -11,6 +11,7 @@ package com.mirth.connect.server.controllers;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -65,6 +66,7 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionManager;
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -85,6 +87,7 @@ import com.mirth.commons.encryption.Encryptor;
 import com.mirth.commons.encryption.KeyEncryptor;
 import com.mirth.commons.encryption.Output;
 import com.mirth.connect.client.core.ControllerException;
+import com.mirth.connect.donkey.model.DatabaseConstants;
 import com.mirth.connect.donkey.server.data.DonkeyStatisticsUpdater;
 import com.mirth.connect.donkey.util.DonkeyElement;
 import com.mirth.connect.model.Channel;
@@ -116,6 +119,7 @@ import com.mirth.connect.util.ChannelDependencyException;
 import com.mirth.connect.util.ChannelDependencyGraph;
 import com.mirth.connect.util.ConfigurationProperty;
 import com.mirth.connect.util.ConnectionTestResponse;
+import com.mirth.connect.util.JavaScriptSharedUtil;
 import com.mirth.connect.util.MigrationUtil;
 import com.mirth.connect.util.MirthSSLUtil;
 
@@ -130,7 +134,7 @@ public class DefaultConfigurationController extends ConfigurationController {
     public static final String PROPERTIES_CHANNEL_METADATA = "channelMetadata";
     public static final String PROPERTIES_CHANNEL_TAGS = "channelTags";
     public static final String SECRET_KEY_ALIAS = "encryption";
-    private static final String VACUUM_LOCK_STATEMENT_ID = "Configuration.vacuumConfigurationTable";
+    public static final String VACUUM_LOCK_STATEMENT_ID = "Configuration.vacuumConfigurationTable";
 
     private Logger logger = Logger.getLogger(this.getClass());
     private String appDataDir = null;
@@ -154,6 +158,7 @@ public class DefaultConfigurationController extends ConfigurationController {
     private static DatabaseSettings databaseConfig;
     private static String apiBypassword;
     private static int statsUpdateInterval;
+    private static Integer rhinoLanguageVersion;
     private volatile boolean configMapLoaded = false;
 
     private static KeyEncryptor encryptor = null;
@@ -171,6 +176,9 @@ public class DefaultConfigurationController extends ConfigurationController {
     private static final String STARTUP_DEPLOY = "server.startupdeploy";
     private static final String API_BYPASSWORD = "server.api.bypassword";
     private static final String STATS_UPDATE_INTERVAL = "donkey.statsupdateinterval";
+    private static final String RHINO_LANGUAGE_VERSION = "rhino.languageversion";
+
+    private static final String DEFAULT_STOREPASS = "81uWxplDtB";
 
     // singleton pattern
     private static ConfigurationController instance = null;
@@ -348,6 +356,50 @@ public class DefaultConfigurationController extends ConfigurationController {
 
                 setConfigurationProperties(configurationMap, false);
             }
+
+            String rhinoLanguageVersionStr = mirthConfig.getString(RHINO_LANGUAGE_VERSION);
+            if (StringUtils.isNotBlank(rhinoLanguageVersionStr)) {
+                switch (rhinoLanguageVersionStr.toUpperCase()) {
+                    case "1.0":
+                        rhinoLanguageVersion = 100;
+                        break;
+                    case "1.1":
+                        rhinoLanguageVersion = 110;
+                        break;
+                    case "1.2":
+                        rhinoLanguageVersion = 120;
+                        break;
+                    case "1.3":
+                        rhinoLanguageVersion = 130;
+                        break;
+                    case "1.4":
+                        rhinoLanguageVersion = 140;
+                        break;
+                    case "1.5":
+                        rhinoLanguageVersion = 150;
+                        break;
+                    case "1.6":
+                        rhinoLanguageVersion = 160;
+                        break;
+                    case "1.7":
+                        rhinoLanguageVersion = 170;
+                        break;
+                    case "1.8":
+                        rhinoLanguageVersion = 180;
+                        break;
+                    case "ES6":
+                        rhinoLanguageVersion = 200;
+                        break;
+                    case "DEFAULT":
+                        rhinoLanguageVersion = 0;
+                        break;
+                    default:
+                        logger.error("Unknown Rhino version '" + rhinoLanguageVersionStr + "', setting to default");
+                        rhinoLanguageVersion = 0;
+                        break;
+                }
+                JavaScriptSharedUtil.setRhinoLanguageVersion(rhinoLanguageVersion);
+            }
         } catch (Exception e) {
             logger.error("Failed to initialize configuration controller", e);
         }
@@ -426,9 +478,10 @@ public class DefaultConfigurationController extends ConfigurationController {
 
     @Override
     public ServerSettings getServerSettings() throws ControllerException {
+        String environmentName = getProperty(PROPERTIES_CORE, "environment.name");
         serverName = getProperty(PROPERTIES_CORE + "." + serverId, "server.name");
         Properties serverSettings = getPropertiesForGroup(PROPERTIES_CORE);
-        return new ServerSettings(serverName, serverSettings);
+        return new ServerSettings(environmentName, serverName, serverSettings);
     }
 
     @Override
@@ -443,6 +496,11 @@ public class DefaultConfigurationController extends ConfigurationController {
 
     @Override
     public void setServerSettings(ServerSettings settings) throws ControllerException {
+        String environmentName = settings.getEnvironmentName();
+        if (environmentName != null) {
+            saveProperty(PROPERTIES_CORE, "environment.name", environmentName);
+        }
+
         String serverName = settings.getServerName();
         if (serverName != null) {
             saveProperty(PROPERTIES_CORE + "." + serverId, "server.name", serverName);
@@ -556,6 +614,11 @@ public class DefaultConfigurationController extends ConfigurationController {
     }
 
     @Override
+    public Integer getRhinoLanguageVersion() {
+        return rhinoLanguageVersion;
+    }
+
+    @Override
     public int getStatus() {
         return getStatus(true);
     }
@@ -585,9 +648,10 @@ public class DefaultConfigurationController extends ConfigurationController {
         Map<String, ChannelMetadata> metadataMap = getChannelMetadata();
         for (Channel channel : serverConfiguration.getChannels()) {
             ChannelMetadata metadata = metadataMap.get(channel.getId());
-            if (metadata != null) {
-                channel.getExportData().setMetadata(metadata);
+            if (metadata == null) {
+                metadata = new ChannelMetadata();
             }
+            channel.getExportData().setMetadata(metadata);
         }
 
         serverConfiguration.setChannelTags(getChannelTags());
@@ -634,11 +698,11 @@ public class DefaultConfigurationController extends ConfigurationController {
 
     @Override
     public Map<String, String> getConfigurationMap() {
+        loadDatabaseConfigPropsIfNecessary();
         return configurationMap;
     }
-
-    @Override
-    public synchronized Map<String, ConfigurationProperty> getConfigurationProperties() {
+    
+    private void loadDatabaseConfigPropsIfNecessary() {
         try {
             if (!configMapLoaded && "database".equals(mirthConfig.getString(CONFIGURATION_MAP_LOCATION))) {
                 // load configurations from database
@@ -648,15 +712,16 @@ public class DefaultConfigurationController extends ConfigurationController {
                 if (!Strings.isNullOrEmpty(configSerialized)) {
                     HashMap<String, ConfigurationProperty> configurationMap = (HashMap<String, ConfigurationProperty>) ObjectXMLSerializer.getInstance().deserialize(configSerialized, HashMap.class);
                     setConfigurationProperties(configurationMap, true);
-                } else {
-                    // make a new blank one and save it
-                    saveProperty(PROPERTIES_CORE, "configuration.properties", ObjectXMLSerializer.getInstance().serialize(new HashMap<String, ConfigurationProperty>()));
                 }
-
             }
         } catch (ControllerException e) {
             logger.error("Failed to load configuration map from database", e);
         }
+    }
+
+    @Override
+    public synchronized Map<String, ConfigurationProperty> getConfigurationProperties() {
+        loadDatabaseConfigPropsIfNecessary();
         Map<String, ConfigurationProperty> map = new HashMap<String, ConfigurationProperty>();
 
         for (Entry<String, String> entry : configurationMap.entrySet()) {
@@ -730,7 +795,7 @@ public class DefaultConfigurationController extends ConfigurationController {
 
         StatementLock.getInstance(VACUUM_LOCK_STATEMENT_ID).readLock();
         try {
-            List<KeyValuePair> result = SqlConfig.getSqlSessionManager().selectList("Configuration.selectPropertiesForCategory", category);
+            List<KeyValuePair> result = SqlConfig.getInstance().getReadOnlySqlSessionManager().selectList("Configuration.selectPropertiesForCategory", category);
 
             for (KeyValuePair pair : result) {
                 properties.setProperty(pair.getKey(), StringUtils.defaultString(pair.getValue()));
@@ -751,7 +816,7 @@ public class DefaultConfigurationController extends ConfigurationController {
         try {
             Map<String, Object> parameterMap = new HashMap<String, Object>();
             parameterMap.put("category", category);
-            SqlConfig.getSqlSessionManager().delete("Configuration.deleteProperty", parameterMap);
+            SqlConfig.getInstance().getSqlSessionManager().delete("Configuration.deleteProperty", parameterMap);
         } catch (Exception e) {
             logger.error("Could not delete properties: category=" + category);
         } finally {
@@ -768,7 +833,7 @@ public class DefaultConfigurationController extends ConfigurationController {
             Map<String, Object> parameterMap = new HashMap<String, Object>();
             parameterMap.put("category", category);
             parameterMap.put("name", name);
-            return (String) SqlConfig.getSqlSessionManager().selectOne("Configuration.selectProperty", parameterMap);
+            return (String) SqlConfig.getInstance().getReadOnlySqlSessionManager().selectOne("Configuration.selectProperty", parameterMap);
         } catch (Exception e) {
             logger.error("Could not retrieve property: category=" + category + ", name=" + name, e);
         } finally {
@@ -790,9 +855,9 @@ public class DefaultConfigurationController extends ConfigurationController {
             parameterMap.put("value", value);
 
             if (getProperty(category, name) == null) {
-                SqlConfig.getSqlSessionManager().insert("Configuration.insertProperty", parameterMap);
+                SqlConfig.getInstance().getSqlSessionManager().insert("Configuration.insertProperty", parameterMap);
             } else {
-                SqlConfig.getSqlSessionManager().insert("Configuration.updateProperty", parameterMap);
+                SqlConfig.getInstance().getSqlSessionManager().insert("Configuration.updateProperty", parameterMap);
             }
 
             if (DatabaseUtil.statementExists("Configuration.vacuumConfigurationTable")) {
@@ -811,7 +876,7 @@ public class DefaultConfigurationController extends ConfigurationController {
     public void vacuumConfigurationTable() {
         SqlSession session = null;
         try {
-            session = SqlConfig.getSqlSessionManager().openSession(false);
+            session = SqlConfig.getInstance().getSqlSessionManager().openSession(false);
             if (DatabaseUtil.statementExists("Configuration.lockConfigurationTable")) {
                 session.update("Configuration.lockConfigurationTable");
             }
@@ -835,7 +900,7 @@ public class DefaultConfigurationController extends ConfigurationController {
             Map<String, Object> parameterMap = new HashMap<String, Object>();
             parameterMap.put("category", category);
             parameterMap.put("name", name);
-            SqlConfig.getSqlSessionManager().delete("Configuration.deleteProperty", parameterMap);
+            SqlConfig.getInstance().getSqlSessionManager().delete("Configuration.deleteProperty", parameterMap);
         } catch (Exception e) {
             logger.error("Could not delete property: category=" + category + ", name=" + name, e);
         } finally {
@@ -859,7 +924,6 @@ public class DefaultConfigurationController extends ConfigurationController {
 
             list.getList().add(defaultResource);
             resources = ObjectXMLSerializer.getInstance().serialize(list);
-            saveProperty(PROPERTIES_CORE, PROPERTIES_RESOURCES, resources);
         }
 
         return resources;
@@ -879,7 +943,6 @@ public class DefaultConfigurationController extends ConfigurationController {
             dependencies = ObjectXMLSerializer.getInstance().deserialize(dependenciesXml, Set.class);
         } else {
             dependencies = new HashSet<ChannelDependency>();
-            setChannelDependencies(dependencies);
         }
 
         return dependencies;
@@ -906,7 +969,6 @@ public class DefaultConfigurationController extends ConfigurationController {
             channelTags = ObjectXMLSerializer.getInstance().deserialize(channelTagXML, Set.class);
         } else {
             channelTags = new HashSet<ChannelTag>();
-            setChannelTags(channelTags);
         }
 
         return channelTags;
@@ -944,7 +1006,6 @@ public class DefaultConfigurationController extends ConfigurationController {
             channelMetadata = ObjectXMLSerializer.getInstance().deserialize(channelMetadataXml, Map.class);
         } else {
             channelMetadata = new HashMap<String, ChannelMetadata>();
-            setChannelMetadata(channelMetadata);
         }
 
         return channelMetadata;
@@ -981,6 +1042,22 @@ public class DefaultConfigurationController extends ConfigurationController {
                 keyStore.load(new FileInputStream(keyStoreFile), keyStorePassword);
                 logger.debug("found and loaded keystore: " + keyStoreFile.getAbsolutePath());
             } else {
+                /*
+                 * If a new keystore is being created, and the passwords are the defaults, then
+                 * create new passwords.
+                 */
+                if (Arrays.equals(keyStorePassword, DEFAULT_STOREPASS.toCharArray()) && Arrays.equals(keyPassword, DEFAULT_STOREPASS.toCharArray())) {
+                    String keyStorePasswordStr = generateNewPassword();
+                    mirthConfig.setProperty("keystore.storepass", keyStorePasswordStr);
+                    keyStorePassword = keyStorePasswordStr.toCharArray();
+
+                    String keyPasswordStr = generateNewPassword();
+                    mirthConfig.setProperty("keystore.keypass", keyPasswordStr);
+                    keyPassword = keyPasswordStr.toCharArray();
+
+                    saveMirthConfig();
+                }
+
                 keyStore.load(null, keyStorePassword);
                 logger.debug("keystore file not found, created new one");
             }
@@ -988,13 +1065,26 @@ public class DefaultConfigurationController extends ConfigurationController {
             configureEncryption(provider, keyStore, keyPassword);
             generateDefaultCertificate(provider, keyStore, keyPassword);
 
-            // write the kesytore back to the file
+            // write the keystore back to the file
             FileOutputStream fos = new FileOutputStream(keyStoreFile);
             keyStore.store(fos, keyStorePassword);
             IOUtils.closeQuietly(fos);
         } catch (Exception e) {
             logger.error("Could not initialize security settings.", e);
         }
+    }
+
+    /**
+     * Creates a random 12-character alphanumeric password.
+     */
+    private String generateNewPassword() {
+        String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 1; i <= 12; i++) {
+            builder.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return builder.toString();
     }
 
     @Override
@@ -1006,39 +1096,58 @@ public class DefaultConfigurationController extends ConfigurationController {
             databaseConfig.setDirBase(getBaseDir());
 
             String password = databaseConfig.getDatabasePassword();
+            String readOnlyPassword = databaseConfig.getDatabaseReadOnlyPassword();
 
-            if (StringUtils.isNotEmpty(password)) {
+            if (StringUtils.isNotEmpty(password) || StringUtils.isNotEmpty(readOnlyPassword)) {
                 ConfigurationController configurationController = ControllerFactory.getFactory().createConfigurationController();
                 EncryptionSettings encryptionSettings = configurationController.getEncryptionSettings();
                 Encryptor encryptor = configurationController.getEncryptor();
 
                 if (encryptionSettings.getEncryptProperties()) {
-                    if (StringUtils.startsWith(password, EncryptionSettings.ENCRYPTION_PREFIX)) {
-                        String encryptedPassword = StringUtils.removeStart(password, EncryptionSettings.ENCRYPTION_PREFIX);
-                        String decryptedPassword = encryptor.decrypt(encryptedPassword);
-                        databaseConfig.setDatabasePassword(decryptedPassword);
-                    } else if (StringUtils.isNotBlank(password)) {
-                        // encrypt the password and write it back to the file
-                        String encryptedPassword = EncryptionSettings.ENCRYPTION_PREFIX + encryptor.encrypt(password);
-                        mirthConfig.setProperty("database.password", encryptedPassword);
-
-                        /*
-                         * Save using a FileOutputStream so that the file will be saved to the
-                         * proper location, even if running from the IDE.
-                         */
-                        File confDir = new File(ControllerFactory.getFactory().createConfigurationController().getConfigurationDir());
-                        OutputStream os = new FileOutputStream(new File(confDir, "mirth.properties"));
-
-                        try {
-                            mirthConfig.save(os);
-                        } finally {
-                            IOUtils.closeQuietly(os);
-                        }
+                    if (StringUtils.isNotEmpty(password)) {
+                        updateDatabasePassword(encryptor, password, false);
+                    }
+                    if (StringUtils.isNotEmpty(readOnlyPassword)) {
+                        updateDatabasePassword(encryptor, readOnlyPassword, true);
                     }
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void updateDatabasePassword(Encryptor encryptor, String password, boolean readOnly) throws FileNotFoundException, ConfigurationException {
+        if (StringUtils.startsWith(password, EncryptionSettings.ENCRYPTION_PREFIX)) {
+            String encryptedPassword = StringUtils.removeStart(password, EncryptionSettings.ENCRYPTION_PREFIX);
+            String decryptedPassword = encryptor.decrypt(encryptedPassword);
+
+            if (readOnly) {
+                databaseConfig.setDatabaseReadOnlyPassword(decryptedPassword);
+            } else {
+                databaseConfig.setDatabasePassword(decryptedPassword);
+            }
+        } else if (StringUtils.isNotBlank(password)) {
+            // encrypt the password and write it back to the file
+            String encryptedPassword = EncryptionSettings.ENCRYPTION_PREFIX + encryptor.encrypt(password);
+            mirthConfig.setProperty(readOnly ? DatabaseConstants.DATABASE_READONLY_PASSWORD : DatabaseConstants.DATABASE_PASSWORD, encryptedPassword);
+
+            saveMirthConfig();
+        }
+    }
+
+    private void saveMirthConfig() throws FileNotFoundException, ConfigurationException {
+        /*
+         * Save using a FileOutputStream so that the file will be saved to the proper location, even
+         * if running from the IDE.
+         */
+        File confDir = new File(ControllerFactory.getFactory().createConfigurationController().getConfigurationDir());
+        OutputStream os = new FileOutputStream(new File(confDir, "mirth.properties"));
+
+        try {
+            mirthConfig.save(os);
+        } finally {
+            IOUtils.closeQuietly(os);
         }
     }
 
@@ -1121,6 +1230,11 @@ public class DefaultConfigurationController extends ConfigurationController {
         } catch (Exception e) {
             logger.error("Error migrating encryption key from database to keystore.", e);
         }
+    }
+
+    @Override
+    public void updatePropertiesConfiguration(PropertiesConfiguration config) {
+        config.copy(mirthConfig);
     }
 
     /**
@@ -1217,12 +1331,25 @@ public class DefaultConfigurationController extends ConfigurationController {
     }
 
     private boolean isDatabaseRunning() {
+        if (!testDatabase(false)) {
+            return false;
+        }
+
+        if (SqlConfig.getInstance().isSplitReadWrite()) {
+            return testDatabase(true);
+        }
+
+        return true;
+    }
+
+    private boolean testDatabase(boolean readOnly) {
         Statement statement = null;
         Connection connection = null;
-        SqlConfig.getSqlSessionManager().startManagedSession();
+        SqlSessionManager manager = (readOnly ? SqlConfig.getInstance().getReadOnlySqlSessionManager() : SqlConfig.getInstance().getSqlSessionManager());
+        manager.startManagedSession();
 
         try {
-            connection = SqlConfig.getSqlSessionManager().getConnection();
+            connection = manager.getConnection();
             statement = connection.createStatement();
             statement.execute("SELECT 1 FROM CHANNEL");
             return true;
@@ -1232,8 +1359,8 @@ public class DefaultConfigurationController extends ConfigurationController {
         } finally {
             DbUtils.closeQuietly(statement);
             DbUtils.closeQuietly(connection);
-            if (SqlConfig.getSqlSessionManager().isManagedSessionStarted()) {
-                SqlConfig.getSqlSessionManager().close();
+            if (manager.isManagedSessionStarted()) {
+                manager.close();
             }
         }
     }

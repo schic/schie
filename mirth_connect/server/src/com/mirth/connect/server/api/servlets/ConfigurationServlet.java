@@ -39,6 +39,7 @@ import com.mirth.connect.model.ChannelTag;
 import com.mirth.connect.model.DriverInfo;
 import com.mirth.connect.model.EncryptionSettings;
 import com.mirth.connect.model.LibraryProperties;
+import com.mirth.connect.model.LicenseInfo;
 import com.mirth.connect.model.MetaData;
 import com.mirth.connect.model.PasswordRequirements;
 import com.mirth.connect.model.ResourceProperties;
@@ -249,6 +250,11 @@ public class ConfigurationServlet extends MirthServlet implements ConfigurationS
     }
 
     @Override
+    public LicenseInfo getLicenseInfo() {
+        return LicenseInfo.INSTANCE;
+    }
+
+    @Override
     public String getGuid() {
         return configurationController.generateGuid();
     }
@@ -378,5 +384,20 @@ public class ConfigurationServlet extends MirthServlet implements ConfigurationS
         map.put(MirthSSLUtil.KEY_ENABLED_SERVER_PROTOCOLS, MirthSSLUtil.getEnabledHttpsProtocols(configurationController.getHttpsServerProtocols()));
         map.put(MirthSSLUtil.KEY_ENABLED_CIPHER_SUITES, MirthSSLUtil.getEnabledHttpsCipherSuites(configurationController.getHttpsCipherSuites()));
         return map;
+    }
+
+    @Override
+    public int getRhinoLanguageVersion() {
+        int languageVersion = org.mozilla.javascript.Context.VERSION_DEFAULT;
+        Integer rhinoLanguageVersion = configurationController.getRhinoLanguageVersion();
+        if (rhinoLanguageVersion != null) {
+            try {
+                org.mozilla.javascript.Context.checkLanguageVersion(rhinoLanguageVersion);
+                languageVersion = rhinoLanguageVersion;
+            } catch (Exception e) {
+                // Ignore
+            }
+        }
+        return languageVersion;
     }
 }

@@ -214,6 +214,11 @@ public class PassthruDao implements DonkeyDao {
     public void createChannel(String channelId, long localChannelId) {}
 
     @Override
+    public boolean initTableStructure() {
+        return false;
+    }
+
+    @Override
     public void checkAndCreateChannelTables() {}
 
     @Override

@@ -127,13 +127,11 @@
 			<attribute name="javadoc_location" value="http://www.jarvana.com/jarvana/view/org/swinglabs/swingx-core/1.6.2-2/swingx-core-1.6.2-2-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Server/lib/extensions/dimse/dcm4che-core-2.0.28.jar"/>
+	<classpathentry kind="lib" path="/Server/lib/extensions/dimse/dcm4che-core-2.0.29.jar"/>
 	<classpathentry kind="lib" path="/Server/lib/extensions/dimse/slf4j-api-1.6.1.jar"/>
 	<classpathentry kind="lib" path="/Server/lib/extensions/dimse/slf4j-log4j12-1.6.1.jar"/>
 	<classpathentry kind="lib" path="/Server/setup/client-lib/userutil-sources.jar"/>
-	<classpathentry kind="lib" path="lib/not-yet-commons-ssl-0.3.11.jar"/>
 	<classpathentry kind="lib" path="lib/mirth-crypto.jar"/>
-	<classpathentry kind="lib" path="lib/commons-compress-1.4.1.jar"/>
 	<classpathentry kind="lib" path="lib/miglayout-swing-4.2.jar"/>
 	<classpathentry kind="lib" path="lib/miglayout-core-4.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-beanutils-1.9.3.jar"/>
@@ -167,18 +165,24 @@
 	<classpathentry kind="lib" path="lib/guava-18.0.jar"/>
 	<classpathentry kind="lib" path="lib/javassist-3.19.0-GA.jar"/>
 	<classpathentry kind="lib" path="lib/javax.inject-2.4.0-b31.jar"/>
-	<classpathentry kind="lib" path="lib/javax.annotation-api-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/jersey-media-multipart-2.22.1.jar"/>
-	<classpathentry kind="lib" path="lib/mimepull-1.9.6.jar"/>
-	<classpathentry kind="lib" path="lib/zip4j_1.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/mimepull-1.9.7.jar"/>
+	<classpathentry kind="lib" path="lib/zip4j_1.3.3.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-2.9.9.jar"/>
 	<classpathentry kind="lib" path="lib/bcpkix-jdk15on-157.jar"/>
 	<classpathentry kind="lib" path="lib/bcprov-ext-jdk15on-157.jar"/>
 	<classpathentry kind="lib" path="lib/bcprov-jdk15on-157.jar"/>
-	<classpathentry kind="lib" path="lib/rhino-1.7.7.1.jar"/>
+	<classpathentry kind="lib" path="lib/rhino-1.7.9.jar"/>
 	<classpathentry kind="lib" path="/Server/lib/extensions/file/aws-java-sdk-core-1.11.194.jar"/>
 	<classpathentry kind="lib" path="lib/commons-vfs2-2.1.jar"/>
 	<classpathentry kind="lib" path="lib/staxon-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/jetty-util-9.4.6.v20170531.jar"/>
+	<classpathentry kind="lib" path="lib/commons-compress-1.17.jar"/>
+	<classpathentry kind="lib" path="lib/javax.activation-1.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/javax.activation-api-1.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/javax.annotation-api-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/openjfx.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb-api-2.4.0-b180725.0427.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb-runtime-2.4.0-b180725.0644.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

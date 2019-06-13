@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +31,11 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -71,6 +68,7 @@ import com.mirth.connect.plugins.ServerPlugin;
 import com.mirth.connect.plugins.ServicePlugin;
 import com.mirth.connect.plugins.TransmissionModeProvider;
 import com.mirth.connect.server.ExtensionLoader;
+import com.mirth.connect.server.extprops.ExtensionStatuses;
 import com.mirth.connect.server.migration.Migrator;
 import com.mirth.connect.server.util.DatabaseUtil;
 import com.mirth.connect.server.util.ServerUUIDGenerator;
@@ -92,8 +90,7 @@ public class DefaultExtensionController extends ExtensionController {
     private MultiFactorAuthenticationPlugin multiFactorAuthenticationPlugin = null;
     private AuthorizationPlugin authorizationPlugin = null;
     private ExtensionLoader extensionLoader = ExtensionLoader.getInstance();
-
-    private static PropertiesConfiguration extensionProperties = null;
+    private ExtensionStatuses extensionStatuses = ExtensionStatuses.getInstance();
 
     // singleton pattern
     private static ExtensionController instance = null;
@@ -105,7 +102,6 @@ public class DefaultExtensionController extends ExtensionController {
 
                 if (instance == null) {
                     instance = new DefaultExtensionController();
-                    ((DefaultExtensionController) instance).initialize();
                 }
             }
 
@@ -113,22 +109,8 @@ public class DefaultExtensionController extends ExtensionController {
         }
     }
 
-    private DefaultExtensionController() {
+    DefaultExtensionController() {
 
-    }
-
-    private void initialize() {
-        try {
-            extensionProperties = new PropertiesConfiguration(new File(configurationController.getApplicationDataDir(), "extension.properties"));
-            extensionProperties.setDelimiterParsingDisabled(true);
-
-            // Auto reload changes
-            FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
-            fileChangedReloadingStrategy.setRefreshDelay(1000);
-            extensionProperties.setReloadingStrategy(fileChangedReloadingStrategy);
-        } catch (ConfigurationException e) {
-            logger.error("There was an error loading extension.properties", e);
-        }
     }
 
     @Override
@@ -154,24 +136,14 @@ public class DefaultExtensionController extends ExtensionController {
     @Override
     public void setDefaultExtensionStatus() {
         for (MetaData metaData : getPluginMetaData().values()) {
-            if (!extensionProperties.containsKey(metaData.getName())) {
-                extensionProperties.setProperty(metaData.getName(), true);
-                try {
-                    extensionProperties.save();
-                } catch (ConfigurationException e) {
-                    logger.error("Could not save default enabled status for plugin: " + metaData.getName(), e);
-                }
+            if (!extensionStatuses.containsKey(metaData.getName())) {
+                extensionStatuses.setEnabled(metaData.getName(), true);
             }
         }
 
         for (MetaData metaData : getConnectorMetaData().values()) {
-            if (!extensionProperties.containsKey(metaData.getName())) {
-                extensionProperties.setProperty(metaData.getName(), true);
-                try {
-                    extensionProperties.save();
-                } catch (ConfigurationException e) {
-                    logger.error("Could not save default enabled status for connector: " + metaData.getName(), e);
-                }
+            if (!extensionStatuses.containsKey(metaData.getName())) {
+                extensionStatuses.setEnabled(metaData.getName(), true);
             }
         }
 
@@ -179,19 +151,13 @@ public class DefaultExtensionController extends ExtensionController {
          * Remove extensions from the extensionProperties if they are not in the pluginMetaDataMap
          * or connectorMetaDataMap
          */
-        @SuppressWarnings("unchecked")
-        Iterator<String> keys = extensionProperties.getKeys();
-        while (keys.hasNext()) {
-            String key = keys.next();
+        for (String key : extensionStatuses.keySet()) {
             if (!getPluginMetaData().containsKey(key) && !getConnectorMetaData().containsKey(key)) {
-                extensionProperties.clearProperty(key);
-                try {
-                    extensionProperties.save();
-                } catch (ConfigurationException e) {
-                    logger.error("Could not remove extension status for extension: " + key);
-                }
+                extensionStatuses.remove(key);
             }
         }
+
+        extensionStatuses.save();
     }
 
     @Override
@@ -386,17 +352,13 @@ public class DefaultExtensionController extends ExtensionController {
 
     @Override
     public void setExtensionEnabled(String extensionName, boolean enabled) throws ControllerException {
-        extensionProperties.setProperty(extensionName, enabled);
-        try {
-            extensionProperties.save();
-        } catch (ConfigurationException e) {
-            logger.error("Could not save enabled status " + enabled + " for extension: " + extensionName, e);
-        }
+        extensionStatuses.setEnabled(extensionName, enabled);
+        extensionStatuses.save();
     }
 
     @Override
     public boolean isExtensionEnabled(String extensionName) {
-        return extensionProperties.getBoolean(extensionName, true);
+        return extensionStatuses.isEnabled(extensionName);
     }
 
     @Override
@@ -492,23 +454,7 @@ public class DefaultExtensionController extends ExtensionController {
 
                 while (entries.hasMoreElements()) {
                     ZipEntry entry = entries.nextElement();
-
-                    if (entry.isDirectory()) {
-                        /*
-                         * assume directories are stored parents first then children.
-                         * 
-                         * TODO: this is not robust, just for demonstration purposes.
-                         */
-                        File directory = new File(installTempDir, entry.getName());
-                        directory.mkdir();
-                    } else {
-                        // otherwise, write the file out to the install temp dir
-                        InputStream zipInputStream = zipFile.getInputStream(entry);
-                        OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(installTempDir, entry.getName())));
-                        IOUtils.copy(zipInputStream, outputStream);
-                        IOUtils.closeQuietly(zipInputStream);
-                        IOUtils.closeQuietly(outputStream);
-                    }
+                    extractZipEntry(entry, installTempDir, zipFile);
                 }
             }
         } catch (Throwable t) {
@@ -744,5 +690,32 @@ public class DefaultExtensionController extends ExtensionController {
 
     public List<ServerPlugin> getServerPlugins() {
         return serverPlugins;
+    }
+
+    void extractZipEntry(ZipEntry entry, File installTempDir, ZipFile zipFile) throws IOException {
+        String canonicalDestinationDirPath = installTempDir.getCanonicalPath();
+        File destinationfile = new File(installTempDir, entry.getName());
+        String canonicalDestinationFile = destinationfile.getCanonicalPath();
+
+        if (!canonicalDestinationFile.startsWith(canonicalDestinationDirPath + File.separator)) {
+            throw new ZipException("Zip file is attempting to traverse out of base directory");
+        }
+
+        if (entry.isDirectory()) {
+            /*
+             * assume directories are stored parents first then children.
+             * 
+             * TODO: this is not robust, just for demonstration purposes.
+             */
+            File directory = new File(installTempDir, entry.getName());
+            directory.mkdir();
+        } else {
+            // otherwise, write the file out to the install temp dir
+            InputStream zipInputStream = zipFile.getInputStream(entry);
+            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(installTempDir, entry.getName())));
+            IOUtils.copy(zipInputStream, outputStream);
+            IOUtils.closeQuietly(zipInputStream);
+            IOUtils.closeQuietly(outputStream);
+        }
     }
 }

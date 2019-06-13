@@ -33,7 +33,7 @@ import com.mirth.connect.server.util.javascript.MirthContextFactory;
 public class DefaultContextFactoryController extends ContextFactoryController {
 
     private Logger logger = Logger.getLogger(getClass());
-    private ExtensionController extensionController = ControllerFactory.getFactory().createExtensionController();
+    private ExtensionController extensionController;
     private Map<String, LibraryProperties> libraryResources = new ConcurrentHashMap<String, LibraryProperties>();
     private Map<String, List<URL>> libraryCache = new ConcurrentHashMap<String, List<URL>>();
     private volatile Set<String> globalScriptResourceIds = new LinkedHashSet<String>();
@@ -41,7 +41,13 @@ public class DefaultContextFactoryController extends ContextFactoryController {
 
     private static ContextFactoryController instance = null;
 
-    protected DefaultContextFactoryController() {}
+    public DefaultContextFactoryController() {
+        extensionController = ControllerFactory.getFactory().createExtensionController();
+    }
+
+    protected DefaultContextFactoryController(ExtensionController extensionController) {
+        this.extensionController = extensionController;
+    }
 
     public static ContextFactoryController create() {
         synchronized (DefaultContextFactoryController.class) {
@@ -51,6 +57,16 @@ public class DefaultContextFactoryController extends ContextFactoryController {
                 if (instance == null) {
                     instance = new DefaultContextFactoryController();
                 }
+            }
+
+            return instance;
+        }
+    }
+
+    public static ContextFactoryController create(ExtensionController extensionController) {
+        synchronized (DefaultContextFactoryController.class) {
+            if (instance == null) {
+                instance = new DefaultContextFactoryController(extensionController);
             }
 
             return instance;

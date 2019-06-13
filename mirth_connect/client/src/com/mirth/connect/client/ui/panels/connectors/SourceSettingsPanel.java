@@ -71,6 +71,19 @@ public class SourceSettingsPanel extends JPanel {
         this.channelSetup = channelSetup;
     }
 
+    public void enableMaxProcessingThreads() {
+        processingThreadsLabel.setEnabled(true);
+        processingThreadsField.setEnabled(true);
+    }
+
+    public void disableMaxProcessingThreads(Integer value) {
+        processingThreadsLabel.setEnabled(false);
+        processingThreadsField.setEnabled(false);
+        if (value != null) {
+            processingThreadsField.setText(String.valueOf(value));
+        }
+    }
+
     public void setProperties(SourceConnectorPropertiesInterface propertiesInterface) {
         SourceConnectorProperties properties = propertiesInterface.getSourceConnectorProperties();
 
@@ -109,6 +122,7 @@ public class SourceSettingsPanel extends JPanel {
             batchResponseLastRadio.setSelected(true);
         }
 
+        enableMaxProcessingThreads();
         processingThreadsField.setText(String.valueOf(properties.getProcessingThreads()));
     }
 
@@ -123,10 +137,10 @@ public class SourceSettingsPanel extends JPanel {
         variables.addAll(Arrays.asList(SourceConnectorProperties.QUEUE_OFF_RESPONSES));
 
         List<Rule> rulesToCheck = new ArrayList<Rule>();
-        rulesToCheck.addAll(channel.getSourceConnector().getFilter().getElements());
+        rulesToCheck.addAll(channel.getSourceConnector().getFilter().getEnabledElements());
 
         List<Step> stepsToCheck = new ArrayList<Step>();
-        stepsToCheck.addAll(channel.getSourceConnector().getTransformer().getElements());
+        stepsToCheck.addAll(channel.getSourceConnector().getTransformer().getEnabledElements());
 
         List<String> scripts = new ArrayList<String>();
 

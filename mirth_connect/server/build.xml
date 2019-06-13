@@ -116,12 +116,12 @@
 			<include name="org/mozilla/**" />
 			<include name="org/glassfish/jersey/**" />
 			<include name="de/**" />
+			<include name="net/lingala/zip4j/unzip/**" />
 
 			<include name="version.properties" />
 		</jar>
 
 		<copy file="${lib}/mirth-crypto.jar" todir="${setup.server.lib}" />
-		<copy file="${lib}/commons/not-yet-commons-ssl-0.3.11.jar" todir="${setup.server.lib}/commons" />
 	</target>
 
 	<target name="create-connectors" depends="create-client-core">
@@ -947,6 +947,7 @@
 		<mkdir dir="${setup.cli.lib}" />
 		<mkdir dir="${setup.logs}" />
 		<mkdir dir="${setup.docs}" />
+		<mkdir dir="${setup.server.launcher.lib}" />
 
 		<!-- copy lib -->
 		<copy todir="${setup.server.lib}">
@@ -1010,10 +1011,11 @@
 		<!-- create the mirth-launcher jar -->
 		<jar destfile="${setup}/${mirth-launcher.jar}" basedir="${classes}">
 			<include name="com/mirth/connect/server/launcher/**" />
+			<include name="com/mirth/connect/server/extprops/**" />
 
 			<manifest>
 				<attribute name="Main-Class" value="com.mirth.connect.server.launcher.MirthLauncher" />
-				<attribute name="Class-Path" value="server-lib/log4j-1.2.16.jar server-lib/commons/commons-io-2.3.jar conf/" />
+				<attribute name="Class-Path" value="server-lib/commons/commons-io-2.3.jar conf/" />
 			</manifest>
 		</jar>
 		

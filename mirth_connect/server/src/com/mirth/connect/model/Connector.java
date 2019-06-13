@@ -143,11 +143,9 @@ public class Connector implements Serializable, Migratable, Purgable {
         this.waitForPrevious = waitForPrevious;
     }
 
-    @Override
-    public void migrate3_0_1(DonkeyElement element) {}
-
-    @Override
-    public void migrate3_0_2(DonkeyElement element) {}
+    // @formatter:off
+    @Override public void migrate3_0_1(DonkeyElement element) {}
+    @Override public void migrate3_0_2(DonkeyElement element) {} // @formatter:on
 
     @Override
     public void migrate3_1_0(DonkeyElement element) {
@@ -193,21 +191,14 @@ public class Connector implements Serializable, Migratable, Purgable {
         }
     }
 
-    @Override
-    public void migrate3_2_0(DonkeyElement element) {}
+    // @formatter:off
+    @Override public void migrate3_2_0(DonkeyElement element) {}
+    @Override public void migrate3_3_0(DonkeyElement element) {}
+    @Override public void migrate3_4_0(DonkeyElement element) {}
+    @Override public void migrate3_5_0(DonkeyElement element) {}
+    @Override public void migrate3_6_0(DonkeyElement element) {}
+    @Override public void migrate3_7_0(DonkeyElement element) {} // @formatter:on
 
-    @Override
-    public void migrate3_3_0(DonkeyElement element) {}
-
-    @Override
-    public void migrate3_4_0(DonkeyElement element) {}
-
-    @Override
-    public void migrate3_5_0(DonkeyElement element) {}
-
-    @Override
-    public void migrate3_6_0(DonkeyElement element) {}
-    
     @Override
     public Map<String, Object> getPurgedProperties() {
         Map<String, Object> purgedProperties = new HashMap<String, Object>();

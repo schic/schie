@@ -12,38 +12,56 @@ package com.mirth.connect.server;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.security.KeyStore;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.DispatcherType;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.FalseFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.entity.ContentType;
+import org.apache.http.protocol.HTTP;
 import org.apache.ibatis.session.SqlSessionManager;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpVersion;
+import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.LowResourceMonitor;
+import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -206,6 +224,9 @@ public class MirthWebServer extends Server {
         publicContextHandler.setResourceBase(publicPath);
         publicContextHandler.setHandler(new ResourceHandler());
         handlers.addHandler(publicContextHandler);
+
+        // Create Administrator Launcher installer contexts
+        addLauncherInstallerContextHandlers(contextPath);
 
         // Create the javadocs context
         ContextHandler javadocsContextHandler = new ContextHandler();
@@ -497,30 +518,32 @@ public class MirthWebServer extends Server {
 
         // Add JAX-RS providers from extensions
         for (MetaData metaData : CollectionUtils.union(extensionController.getPluginMetaData().values(), extensionController.getConnectorMetaData().values())) {
-            for (ApiProvider apiProvider : metaData.getApiProviders(version)) {
-                try {
-                    switch (apiProvider.getType()) {
-                        case SERVLET_INTERFACE_PACKAGE:
-                            servletInterfacePackages.add(apiProvider.getName());
-                            break;
-                        case SERVLET_INTERFACE:
-                            servletInterfaces.add(Class.forName(apiProvider.getName()));
-                            break;
-                        case CORE_PACKAGE:
-                            coreProviderPackages.add(apiProvider.getName());
-                            break;
-                        case SERVER_PACKAGE:
-                            serverProviderPackages.add(apiProvider.getName());
-                            break;
-                        case CORE_CLASS:
-                            coreProviderClasses.add(Class.forName(apiProvider.getName()));
-                            break;
-                        case SERVER_CLASS:
-                            serverProviderClasses.add(Class.forName(apiProvider.getName()));
-                            break;
+            if (extensionController.isExtensionEnabled(metaData.getName())) {
+                for (ApiProvider apiProvider : metaData.getApiProviders(version)) {
+                    try {
+                        switch (apiProvider.getType()) {
+                            case SERVLET_INTERFACE_PACKAGE:
+                                servletInterfacePackages.add(apiProvider.getName());
+                                break;
+                            case SERVLET_INTERFACE:
+                                servletInterfaces.add(Class.forName(apiProvider.getName()));
+                                break;
+                            case CORE_PACKAGE:
+                                coreProviderPackages.add(apiProvider.getName());
+                                break;
+                            case SERVER_PACKAGE:
+                                serverProviderPackages.add(apiProvider.getName());
+                                break;
+                            case CORE_CLASS:
+                                coreProviderClasses.add(Class.forName(apiProvider.getName()));
+                                break;
+                            case SERVER_CLASS:
+                                serverProviderClasses.add(Class.forName(apiProvider.getName()));
+                                break;
+                        }
+                    } catch (Throwable t) {
+                        logger.error("Error adding API provider to web server: " + apiProvider);
                     }
-                } catch (Throwable t) {
-                    logger.error("Error adding API provider to web server: " + apiProvider);
                 }
             }
         }
@@ -659,7 +682,7 @@ public class MirthWebServer extends Server {
             }
         };
 
-        SqlSessionManager sqlSessionManager = SqlConfig.getSqlSessionManager();
+        SqlSessionManager sqlSessionManager = SqlConfig.getInstance().getSqlSessionManager();
         sqlSessionManager.startManagedSession();
         Connection connection = sqlSessionManager.getConnection();
         try {
@@ -673,5 +696,106 @@ public class MirthWebServer extends Server {
         jdbcSDSFactory.setDatabaseAdaptor(dbAdapter);
 
         return jdbcSDSFactory;
+    }
+
+    private void addLauncherInstallerContextHandlers(String contextPath) {
+        File installersDirectory = new File(ControllerFactory.getFactory().createConfigurationController().getBaseDir() + File.separator + "public_html" + File.separator + "installers");
+
+        Collection<File> installerFiles;
+        if (installersDirectory.exists() && installersDirectory.isDirectory()) {
+            installerFiles = FileUtils.listFiles(installersDirectory, TrueFileFilter.TRUE, FalseFileFilter.FALSE);
+        } else {
+            installerFiles = new ArrayList<File>();
+        }
+
+        MimeTypes mimeTypes = new MimeTypes();
+        mimeTypes.addMimeMapping("dmg", "application/x-apple-diskimage");
+        mimeTypes.addMimeMapping("sh", "text/x-sh");
+        mimeTypes.addMimeMapping("exe", "application/octet-stream");
+
+        addLauncherInstallerContextHandler(contextPath, "macos", "macos", ".dmg", installerFiles, mimeTypes);
+        addLauncherInstallerContextHandler(contextPath, "linux", "unix", ".sh", installerFiles, mimeTypes);
+        addLauncherInstallerContextHandler(contextPath, "windows", "windows", ".exe", installerFiles, mimeTypes);
+        addLauncherInstallerContextHandler(contextPath, "windows-x64", "windows-x64", ".exe", installerFiles, mimeTypes);
+    }
+
+    private void addLauncherInstallerContextHandler(String contextPath, String os, String fileSuffix, String fileExt, Collection<File> installers, MimeTypes mimeTypes) {
+        File installerFile = null;
+        for (File file : installers) {
+            if (StringUtils.endsWithIgnoreCase(file.getName(), fileSuffix + fileExt)) {
+                installerFile = file;
+                break;
+            }
+        }
+
+        ContextHandler contextHandler = new ContextHandler();
+        contextHandler.setContextPath(contextPath + "/launcher/" + os + fileExt);
+        contextHandler.setAllowNullPathInfo(true);
+        contextHandler.setHandler(new InstallerFileHandler(installerFile, mimeTypes));
+        handlers.addHandler(contextHandler);
+    }
+
+    private class InstallerFileHandler extends AbstractHandler {
+
+        private File file;
+        private String contentType;
+
+        public InstallerFileHandler(File file, MimeTypes mimeTypes) {
+            this.file = file;
+
+            if (file != null) {
+                contentType = mimeTypes.getMimeByExtension(file.getName());
+            }
+            if (StringUtils.isBlank(contentType)) {
+                contentType = ContentType.APPLICATION_OCTET_STREAM.getMimeType();
+            }
+        }
+
+        @Override
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            // Only allow GET/HEAD requests, otherwise pass to the next request handler
+            if (!baseRequest.getMethod().equalsIgnoreCase(HttpMethod.GET.asString()) && !baseRequest.getMethod().equalsIgnoreCase(HttpMethod.HEAD.asString())) {
+                return;
+            }
+
+            if (file != null && file.exists()) {
+                response.setStatus(HttpStatus.SC_OK);
+
+                if (baseRequest.getMethod().equalsIgnoreCase(HttpMethod.GET.asString())) {
+                    FileInputStream fis = null;
+                    try {
+                        response.setContentType(contentType);
+                        response.addHeader("Content-Disposition", "attachment; filename=" + file.getName());
+
+                        OutputStream responseOutputStream = response.getOutputStream();
+
+                        // If the client accepts GZIP compression, compress the content
+                        for (Enumeration<String> en = request.getHeaders("Accept-Encoding"); en.hasMoreElements();) {
+                            if (StringUtils.contains(en.nextElement(), "gzip")) {
+                                response.setHeader(HTTP.CONTENT_ENCODING, "gzip");
+                                responseOutputStream = new GZIPOutputStream(responseOutputStream);
+                                break;
+                            }
+                        }
+
+                        fis = new FileInputStream(file);
+                        IOUtils.copy(fis, responseOutputStream);
+
+                        // If we gzipped, we need to finish the stream now
+                        if (responseOutputStream instanceof GZIPOutputStream) {
+                            ((GZIPOutputStream) responseOutputStream).finish();
+                        }
+                    } catch (Throwable t) {
+                        IOUtils.closeQuietly(fis);
+                        response.reset();
+                        response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+                    }
+                }
+            } else {
+                response.setStatus(HttpStatus.SC_NOT_FOUND);
+            }
+
+            baseRequest.setHandled(true);
+        }
     }
 }

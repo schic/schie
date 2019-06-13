@@ -48,6 +48,7 @@ import com.mirth.connect.model.Connector;
 import com.mirth.connect.model.DeployedChannelInfo;
 import com.mirth.connect.model.InvalidChannel;
 import com.mirth.connect.model.ServerEventContext;
+import com.mirth.connect.model.codetemplates.CodeTemplateLibrary;
 import com.mirth.connect.plugins.ChannelPlugin;
 import com.mirth.connect.server.ExtensionLoader;
 import com.mirth.connect.server.util.DatabaseUtil;
@@ -55,8 +56,8 @@ import com.mirth.connect.server.util.SqlConfig;
 import com.mirth.connect.server.util.StatementLock;
 
 public class DefaultChannelController extends ChannelController {
-    private static final String VACUUM_LOCK_CHANNEL_STATEMENT_ID = "Channel.vacuumChannelTable";
-    private static final String VACUUM_LOCK_CHANNEL_GROUP_STATEMENT_ID = "Channel.vacuumChannelGroupTable";
+    public static final String VACUUM_LOCK_CHANNEL_STATEMENT_ID = "Channel.vacuumChannelTable";
+    public static final String VACUUM_LOCK_CHANNEL_GROUP_STATEMENT_ID = "Channel.vacuumChannelGroupTable";
 
     private Logger logger = Logger.getLogger(this.getClass());
     private ExtensionController extensionController = ControllerFactory.getFactory().createExtensionController();
@@ -150,13 +151,19 @@ public class DefaultChannelController extends ChannelController {
                 donkey = Donkey.getInstance();
             }
 
-            DonkeyDao dao = donkey.getDaoFactory().getDao();
+            DonkeyDao dao = donkey.getReadOnlyDaoFactory().getDao();
 
             try {
                 localChannelIds = dao.getLocalChannelIds();
             } finally {
                 dao.close();
             }
+
+            /*
+             * Select the code template libraries once beforehand so they can be used with multiple
+             * channels without having to re-select them every time
+             */
+            List<CodeTemplateLibrary> codeTemplateLibraries = codeTemplateController.getLibraries(null, true);
 
             /*
              * Iterate through the cached channel list and check if a channel with the id exists on
@@ -201,7 +208,7 @@ public class DefaultChannelController extends ChannelController {
                             addSummary = true;
                         }
 
-                        summary.getChannelStatus().setCodeTemplatesChanged(!codeTemplateController.getCodeTemplateRevisionsForChannel(cachedChannelId).equals(deployedChannelInfo.getCodeTemplateRevisions()));
+                        summary.getChannelStatus().setCodeTemplatesChanged(!codeTemplateController.getCodeTemplateRevisionsForChannel(cachedChannelId, codeTemplateLibraries).equals(deployedChannelInfo.getCodeTemplateRevisions()));
                         if (summary.getChannelStatus().isCodeTemplatesChanged() != header.isCodeTemplatesChanged()) {
                             addSummary = true;
                         }
@@ -224,7 +231,7 @@ public class DefaultChannelController extends ChannelController {
                 if (!clientChannels.containsKey(serverChannelId)) {
                     ChannelSummary summary = new ChannelSummary(serverChannelId);
                     summary.getChannelStatus().setChannel(serverChannels.get(serverChannelId));
-                    summary.getChannelStatus().setLocalChannelId(com.mirth.connect.donkey.server.controllers.ChannelController.getInstance().getLocalChannelId(serverChannelId));
+                    summary.getChannelStatus().setLocalChannelId(com.mirth.connect.donkey.server.controllers.ChannelController.getInstance().getLocalChannelId(serverChannelId, true));
 
                     DeployedChannelInfo deployedChannelInfo = getDeployedChannelInfoById(serverChannelId);
                     boolean serverChannelDeployed = deployedChannelInfo != null;
@@ -232,7 +239,7 @@ public class DefaultChannelController extends ChannelController {
                         summary.getChannelStatus().setDeployedRevisionDelta(serverChannels.get(serverChannelId).getRevision() - deployedChannelInfo.getDeployedRevision());
                         summary.getChannelStatus().setDeployedDate(deployedChannelInfo.getDeployedDate());
 
-                        if (!codeTemplateController.getCodeTemplateRevisionsForChannel(serverChannelId).equals(deployedChannelInfo.getCodeTemplateRevisions())) {
+                        if (!codeTemplateController.getCodeTemplateRevisionsForChannel(serverChannelId, codeTemplateLibraries).equals(deployedChannelInfo.getCodeTemplateRevisions())) {
                             summary.getChannelStatus().setCodeTemplatesChanged(true);
                         }
                     }
@@ -304,7 +311,7 @@ public class DefaultChannelController extends ChannelController {
 
                         // Update the new channel in the database
                         logger.debug("updating channel");
-                        SqlConfig.getSqlSessionManager().update("Channel.updateChannel", params);
+                        SqlConfig.getInstance().getSqlSessionManager().update("Channel.updateChannel", params);
 
                         // invoke the channel plugins
                         for (ChannelPlugin channelPlugin : extensionController.getChannelPlugins().values()) {
@@ -414,10 +421,10 @@ public class DefaultChannelController extends ChannelController {
             // Put the new channel in the database
             if (getChannelById(channel.getId()) == null) {
                 logger.debug("adding channel");
-                SqlConfig.getSqlSessionManager().insert("Channel.insertChannel", params);
+                SqlConfig.getInstance().getSqlSessionManager().insert("Channel.insertChannel", params);
             } else {
                 logger.debug("updating channel");
-                SqlConfig.getSqlSessionManager().update("Channel.updateChannel", params);
+                SqlConfig.getInstance().getSqlSessionManager().update("Channel.updateChannel", params);
             }
 
             // invoke the channel plugins
@@ -511,7 +518,7 @@ public class DefaultChannelController extends ChannelController {
             // Delete the "d_" tables and the channel record from "d_channels"
             com.mirth.connect.donkey.server.controllers.ChannelController.getInstance().removeChannel(channel.getId());
             // Delete the channel record from the "channel" table
-            SqlConfig.getSqlSessionManager().delete("Channel.deleteChannel", channel.getId());
+            SqlConfig.getInstance().getSqlSessionManager().delete("Channel.deleteChannel", channel.getId());
 
             if (DatabaseUtil.statementExists("Channel.vacuumChannelTable")) {
                 vacuumChannelTable();
@@ -584,7 +591,7 @@ public class DefaultChannelController extends ChannelController {
     public void vacuumChannelTable() {
         SqlSession session = null;
         try {
-            session = SqlConfig.getSqlSessionManager().openSession(false);
+            session = SqlConfig.getInstance().getSqlSessionManager().openSession(false);
             if (DatabaseUtil.statementExists("Channel.lockChannelTable")) {
                 session.update("Channel.lockChannelTable");
             }
@@ -605,7 +612,7 @@ public class DefaultChannelController extends ChannelController {
     public void vacuumChannelGroupTable() {
         SqlSession session = null;
         try {
-            session = SqlConfig.getSqlSessionManager().openSession(false);
+            session = SqlConfig.getInstance().getSqlSessionManager().openSession(false);
             if (DatabaseUtil.statementExists("Channel.lockChannelGroupTable")) {
                 session.update("Channel.lockChannelGroupTable");
             }
@@ -624,7 +631,7 @@ public class DefaultChannelController extends ChannelController {
     public Map<String, Integer> getChannelRevisions() throws ControllerException {
         StatementLock.getInstance(VACUUM_LOCK_CHANNEL_STATEMENT_ID).readLock();
         try {
-            List<Map<String, Object>> results = SqlConfig.getSqlSessionManager().selectList("Channel.getChannelRevision");
+            List<Map<String, Object>> results = SqlConfig.getInstance().getReadOnlySqlSessionManager().selectList("Channel.getChannelRevision");
 
             Map<String, Integer> channelRevisions = new HashMap<String, Integer>();
             for (Map<String, Object> result : results) {
@@ -865,7 +872,7 @@ public class DefaultChannelController extends ChannelController {
         StatementLock.getInstance(VACUUM_LOCK_CHANNEL_GROUP_STATEMENT_ID).readLock();
         try {
             for (ChannelGroup group : groupsToRemove) {
-                SqlConfig.getSqlSessionManager().delete("Channel.deleteChannelGroup", group.getId());
+                SqlConfig.getInstance().getSqlSessionManager().delete("Channel.deleteChannelGroup", group.getId());
             }
         } catch (Exception e) {
             throw new ControllerException(e);
@@ -901,10 +908,10 @@ public class DefaultChannelController extends ChannelController {
                     // If its a new group, insert it, otherwise, update it
                     if (channelGroupCache.getCachedItemById(group.getId()) == null) {
                         logger.debug("Inserting channel group");
-                        SqlConfig.getSqlSessionManager().insert("Channel.insertChannelGroup", params);
+                        SqlConfig.getInstance().getSqlSessionManager().insert("Channel.insertChannelGroup", params);
                     } else {
                         logger.debug("Updating channel group");
-                        SqlConfig.getSqlSessionManager().update("Channel.updateChannelGroup", params);
+                        SqlConfig.getInstance().getSqlSessionManager().update("Channel.updateChannelGroup", params);
                     }
                 }
             }

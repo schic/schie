@@ -9,6 +9,7 @@
 
 package com.mirth.connect.model.alert;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,7 +22,7 @@ import com.mirth.connect.donkey.util.purge.Purgable;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("alertChannels")
-public class AlertChannels implements Migratable, Purgable {
+public class AlertChannels implements Serializable, Migratable, Purgable {
 
     private boolean newChannelSource = false;
     private boolean newChannelDestination = false;
@@ -128,29 +129,16 @@ public class AlertChannels implements Migratable, Purgable {
         }
     }
 
-    @Override
-    public void migrate3_0_1(DonkeyElement element) {}
-
-    @Override
-    public void migrate3_0_2(DonkeyElement element) {}
-
-    @Override
-    public void migrate3_1_0(DonkeyElement element) {}
-
-    @Override
-    public void migrate3_2_0(DonkeyElement element) {}
-
-    @Override
-    public void migrate3_3_0(DonkeyElement element) {}
-
-    @Override
-    public void migrate3_4_0(DonkeyElement element) {}
-
-    @Override
-    public void migrate3_5_0(DonkeyElement element) {}
-    
-    @Override
-    public void migrate3_6_0(DonkeyElement element) {}
+    // @formatter:off
+    @Override public void migrate3_0_1(DonkeyElement element) {}
+    @Override public void migrate3_0_2(DonkeyElement element) {}
+    @Override public void migrate3_1_0(DonkeyElement element) {}
+    @Override public void migrate3_2_0(DonkeyElement element) {}
+    @Override public void migrate3_3_0(DonkeyElement element) {}
+    @Override public void migrate3_4_0(DonkeyElement element) {}
+    @Override public void migrate3_5_0(DonkeyElement element) {}
+    @Override public void migrate3_6_0(DonkeyElement element) {} 
+    @Override public void migrate3_7_0(DonkeyElement element) {}// @formatter:on
 
     @Override
     public Map<String, Object> getPurgedProperties() {

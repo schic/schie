@@ -95,6 +95,7 @@ import com.mirth.connect.model.DashboardStatus;
 import com.mirth.connect.model.DatabaseTask;
 import com.mirth.connect.model.DriverInfo;
 import com.mirth.connect.model.EncryptionSettings;
+import com.mirth.connect.model.LicenseInfo;
 import com.mirth.connect.model.LoginStatus;
 import com.mirth.connect.model.MessageImportResult;
 import com.mirth.connect.model.MetaData;
@@ -704,6 +705,16 @@ public class Client implements UserServletInterface, ConfigurationServletInterfa
     }
 
     /**
+     * Returns a LicenseInfo object with the expiration date and other information.
+     * 
+     * @see ConfigurationServletInterface#getLicenseInfo
+     */
+    @Override
+    public LicenseInfo getLicenseInfo() throws ClientException {
+        return getServlet(ConfigurationServletInterface.class).getLicenseInfo();
+    }
+
+    /**
      * Returns a globally unique id.
      * 
      * @see ConfigurationServletInterface#getGuid
@@ -873,6 +884,16 @@ public class Client implements UserServletInterface, ConfigurationServletInterfa
         getServlet(ConfigurationServletInterface.class).setChannelTags(channelTags);
     }
 
+    /**
+     * Returns the language version that the Rhino engine should use.
+     * 
+     * @see ConfigurationServletInterface#getRhinoLanguageVersion
+     */
+    @Override
+    public int getRhinoLanguageVersion() throws ClientException {
+        return getServlet(ConfigurationServletInterface.class).getRhinoLanguageVersion();
+    }
+
     /*******************
      * Channel Servlet *
      *******************/
@@ -957,6 +978,16 @@ public class Client implements UserServletInterface, ConfigurationServletInterfa
     @Override
     public List<MetaDataColumn> getMetaDataColumns(String channelId) throws ClientException {
         return getServlet(ChannelServletInterface.class).getMetaDataColumns(channelId);
+    }
+
+    /**
+     * Returns a map of all channel IDs and names.
+     * 
+     * @see ChannelServletInterface#getChannelIdsAndNames
+     */
+    @Override
+    public Map<String, String> getChannelIdsAndNames() throws ClientException {
+        return getServlet(ChannelServletInterface.class).getChannelIdsAndNames();
     }
 
     /**

@@ -12,14 +12,15 @@ package com.mirth.connect.donkey.server.data.passthru;
 import com.mirth.connect.donkey.server.data.DonkeyDao;
 import com.mirth.connect.donkey.server.data.DonkeyDaoFactory;
 import com.mirth.connect.donkey.server.data.StatisticsUpdater;
+import com.mirth.connect.donkey.server.data.jdbc.ConnectionPool;
 import com.mirth.connect.donkey.util.SerializerProvider;
 
 public class PassthruDaoFactory implements DonkeyDaoFactory {
-    
+
     private StatisticsUpdater statisticsUpdater;
-    
+
     public PassthruDaoFactory() {}
-    
+
     public PassthruDaoFactory(StatisticsUpdater statisticsUpdater) {
         this.statisticsUpdater = statisticsUpdater;
     }
@@ -29,7 +30,7 @@ public class PassthruDaoFactory implements DonkeyDaoFactory {
 
     @Override
     public void setDecryptData(boolean decryptData) {}
-    
+
     @Override
     public void setStatisticsUpdater(StatisticsUpdater statisticsUpdater) {
         this.statisticsUpdater = statisticsUpdater;
@@ -45,5 +46,10 @@ public class PassthruDaoFactory implements DonkeyDaoFactory {
     @Override
     public DonkeyDao getDao(SerializerProvider serializerProvider) {
         return getDao();
+    }
+
+    @Override
+    public ConnectionPool getConnectionPool() {
+        return null;
     }
 }

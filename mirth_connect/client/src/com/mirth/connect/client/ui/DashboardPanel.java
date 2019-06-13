@@ -63,6 +63,7 @@ import org.jdesktop.swingx.treetable.MutableTreeTableNode;
 import org.jdesktop.swingx.treetable.TreeTableNode;
 
 import com.mirth.connect.client.core.ClientException;
+import com.mirth.connect.client.core.TaskConstants;
 import com.mirth.connect.client.ui.components.IconToggleButton;
 import com.mirth.connect.client.ui.components.MirthTreeTable;
 import com.mirth.connect.client.ui.components.tag.ChannelNameFilterCompletion;
@@ -73,7 +74,6 @@ import com.mirth.connect.client.ui.components.tag.TagFilterCompletion;
 import com.mirth.connect.donkey.model.channel.DeployedState;
 import com.mirth.connect.model.Channel;
 import com.mirth.connect.model.ChannelGroup;
-import com.mirth.connect.model.ChannelStatus;
 import com.mirth.connect.model.ChannelTag;
 import com.mirth.connect.model.DashboardStatus;
 import com.mirth.connect.model.DashboardStatus.StatusType;
@@ -105,6 +105,7 @@ public class DashboardPanel extends JPanel {
     private Preferences userPreferences;
     private boolean tagTextModeSelected = false;
     private boolean tagIconModeSelected = false;
+    private boolean canViewChannelGroups = AuthorizationControllerFactory.getAuthorizationController().checkTask(TaskConstants.CHANNEL_GROUP_KEY, TaskConstants.CHANNEL_GROUP_EXPORT_GROUP);
 
     private Set<String> defaultVisibleColumns;
     private Set<DeployedState> haltableStates = new HashSet<DeployedState>();
@@ -148,7 +149,7 @@ public class DashboardPanel extends JPanel {
 
         DashboardTreeTableModel model = (DashboardTreeTableModel) dashboardTable.getTreeTableModel();
 
-        if (userPreferences.getBoolean("channelGroupViewEnabled", true)) {
+        if (canViewChannelGroups && userPreferences.getBoolean("channelGroupViewEnabled", true)) {
             tableModeGroupsButton.setSelected(true);
             tableModeGroupsButton.setContentFilled(true);
             tableModeChannelsButton.setContentFilled(false);
@@ -158,6 +159,10 @@ public class DashboardPanel extends JPanel {
             tableModeChannelsButton.setContentFilled(true);
             tableModeGroupsButton.setContentFilled(false);
             model.setGroupModeEnabled(false);
+        }
+
+        if (!canViewChannelGroups) {
+            tableModeGroupsButton.setEnabled(false);
         }
 
         updateTagButtons(userPreferences.getBoolean("showTags", true), userPreferences.getBoolean("tagTextMode", false), false);
@@ -251,7 +256,7 @@ public class DashboardPanel extends JPanel {
     }
 
     public void switchPanel() {
-        boolean groupViewEnabled = userPreferences.getBoolean("channelGroupViewEnabled", true);
+        boolean groupViewEnabled = canViewChannelGroups && userPreferences.getBoolean("channelGroupViewEnabled", true);
         switchTableMode(groupViewEnabled);
 
         if (groupViewEnabled) {
@@ -266,12 +271,7 @@ public class DashboardPanel extends JPanel {
 
         updateTagButtons(userPreferences.getBoolean("showTags", true), userPreferences.getBoolean("tagTextMode", false), false);
 
-        Map<String, String> channelNameMap = new HashMap<String, String>();
-        for (ChannelStatus status : parent.channelPanel.getCachedChannelStatuses().values()) {
-            channelNameMap.put(status.getChannel().getId(), status.getChannel().getName());
-        }
-
-        updateTags(new HashSet<String>(channelNameMap.values()), true);
+        updateTags(new HashSet<String>(parent.channelPanel.getCachedChannelIdsAndNames().values()), true);
         tagField.setUserPreferenceTags();
     }
 
@@ -1120,6 +1120,10 @@ public class DashboardPanel extends JPanel {
     }
 
     private void switchTableMode(boolean groupModeEnabled) {
+        if (!canViewChannelGroups) {
+            groupModeEnabled = false;
+        }
+
         DashboardTreeTableModel model = (DashboardTreeTableModel) dashboardTable.getTreeTableModel();
         if (model.isGroupModeEnabled() != groupModeEnabled) {
             userPreferences.putBoolean("channelGroupViewEnabled", groupModeEnabled);
@@ -1265,8 +1269,8 @@ public class DashboardPanel extends JPanel {
             @Override
             public void run() {
                 /*
-                 * When setting selection paths the ListSelectionListener will be invoked
-                 * multiple times for each row, so remove and re-add it afterwards.
+                 * When setting selection paths the ListSelectionListener will be invoked multiple
+                 * times for each row, so remove and re-add it afterwards.
                  */
                 dashboardTable.getSelectionModel().removeListSelectionListener(listSelectionListener);
 

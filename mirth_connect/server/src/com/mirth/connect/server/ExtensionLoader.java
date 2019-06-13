@@ -29,17 +29,20 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
 import com.mirth.connect.model.ConnectorMetaData;
 import com.mirth.connect.model.MetaData;
 import com.mirth.connect.model.PluginClass;
 import com.mirth.connect.model.PluginClassCondition;
 import com.mirth.connect.model.PluginMetaData;
 import com.mirth.connect.model.converters.ObjectXMLSerializer;
+import com.mirth.connect.server.extprops.ExtensionStatuses;
 import com.mirth.connect.server.tools.ClassPathResource;
 import com.mirth.connect.server.util.ResourceUtil;
 
-public final class ExtensionLoader {
-    private final static ExtensionLoader instance = new ExtensionLoader();
+public class ExtensionLoader {
+    @Inject
+    private static ExtensionLoader instance = new ExtensionLoader();
 
     public static ExtensionLoader getInstance() {
         return instance;
@@ -80,31 +83,35 @@ public final class ExtensionLoader {
         Class<T> overrideClass = null;
         PluginClass highestPluginClassModel = null;
 
+        ExtensionStatuses extensionStatuses = ExtensionStatuses.getInstance();
+
         for (PluginMetaData pluginMetaData : getPluginMetaData().values()) {
-            List<PluginClass> controllerClasses = pluginMetaData.getControllerClasses();
+            if (extensionStatuses.isEnabled(pluginMetaData.getName())) {
+                List<PluginClass> controllerClasses = pluginMetaData.getControllerClasses();
 
-            if (controllerClasses != null) {
-                for (PluginClass controllerClassModel : controllerClasses) {
-                    boolean accept = true;
-                    String conditionClass = controllerClassModel.getConditionClass();
-                    if (StringUtils.isNotBlank(conditionClass)) {
-                        try {
-                            accept = ((PluginClassCondition) Class.forName(conditionClass).newInstance()).accept(controllerClassModel);
-                        } catch (Exception e) {
-                            logger.warn("Error instantiating plugin condition class \"" + conditionClass + "\".");
-                        }
-                    }
-
-                    if (accept) {
-                        try {
-                            Class<?> pluginClass = Class.forName(controllerClassModel.getName());
-
-                            if (abstractClass.isAssignableFrom(pluginClass) && (highestPluginClassModel == null || highestPluginClassModel.getWeight() < controllerClassModel.getWeight())) {
-                                highestPluginClassModel = controllerClassModel;
-                                overrideClass = (Class<T>) pluginClass;
+                if (controllerClasses != null) {
+                    for (PluginClass controllerClassModel : controllerClasses) {
+                        boolean accept = true;
+                        String conditionClass = controllerClassModel.getConditionClass();
+                        if (StringUtils.isNotBlank(conditionClass)) {
+                            try {
+                                accept = ((PluginClassCondition) Class.forName(conditionClass).newInstance()).accept(controllerClassModel);
+                            } catch (Exception e) {
+                                logger.warn("Error instantiating plugin condition class \"" + conditionClass + "\".");
                             }
-                        } catch (Exception e) {
-                            logger.error("An error occurred while attempting to load \"" + controllerClassModel.getName() + "\" from plugin: " + pluginMetaData.getName(), e);
+                        }
+
+                        if (accept) {
+                            try {
+                                Class<?> pluginClass = Class.forName(controllerClassModel.getName());
+
+                                if (abstractClass.isAssignableFrom(pluginClass) && (highestPluginClassModel == null || highestPluginClassModel.getWeight() < controllerClassModel.getWeight())) {
+                                    highestPluginClassModel = controllerClassModel;
+                                    overrideClass = (Class<T>) pluginClass;
+                                }
+                            } catch (Exception e) {
+                                logger.error("An error occurred while attempting to load \"" + controllerClassModel.getName() + "\" from plugin: " + pluginMetaData.getName(), e);
+                            }
                         }
                     }
                 }

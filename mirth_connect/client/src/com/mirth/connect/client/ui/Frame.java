@@ -110,6 +110,7 @@ import com.mirth.connect.client.ui.components.rsta.ac.js.MirthJavaScriptLanguage
 import com.mirth.connect.client.ui.dependencies.ChannelDependenciesWarningDialog;
 import com.mirth.connect.client.ui.extensionmanager.ExtensionManagerPanel;
 import com.mirth.connect.client.ui.tag.SettingsPanelTags;
+import com.mirth.connect.client.ui.util.DisplayUtil;
 import com.mirth.connect.donkey.model.channel.DeployedState;
 import com.mirth.connect.donkey.model.channel.DestinationConnectorPropertiesInterface;
 import com.mirth.connect.donkey.model.channel.MetaDataColumn;
@@ -143,7 +144,9 @@ import com.mirth.connect.plugins.DashboardColumnPlugin;
 import com.mirth.connect.plugins.DataTypeClientPlugin;
 import com.mirth.connect.util.ChannelDependencyException;
 import com.mirth.connect.util.ChannelDependencyGraph;
+import com.mirth.connect.util.CharsetUtils;
 import com.mirth.connect.util.DirectedAcyclicGraphNode;
+import com.mirth.connect.util.JavaScriptSharedUtil;
 import com.mirth.connect.util.MigrationUtil;
 
 /**
@@ -242,6 +245,10 @@ public class Frame extends JXFrame {
 
         StringBuilder titleText = new StringBuilder();
 
+        if (!StringUtils.isBlank(PlatformUI.ENVIRONMENT_NAME)) {
+            titleText.append(PlatformUI.ENVIRONMENT_NAME + " - ");
+        }
+
         if (!StringUtils.isBlank(PlatformUI.SERVER_NAME)) {
             titleText.append(PlatformUI.SERVER_NAME);
         } else {
@@ -317,12 +324,16 @@ public class Frame extends JXFrame {
         }
     }
 
+    public void setupCharsetEncodingForConnector(javax.swing.JComboBox charsetEncodingCombobox) {
+        setupCharsetEncodingForConnector(charsetEncodingCombobox, false);
+    }
+
     /**
      * Creates all the items in the combo box for the connectors.
      * 
      * This method is called from each connector.
      */
-    public void setupCharsetEncodingForConnector(javax.swing.JComboBox charsetEncodingCombobox) {
+    public void setupCharsetEncodingForConnector(javax.swing.JComboBox charsetEncodingCombobox, boolean allowNone) {
         if (this.availableCharsetEncodings == null) {
             this.setCharsetEncodings();
         }
@@ -333,14 +344,23 @@ public class Frame extends JXFrame {
         charsetEncodingCombobox.removeAllItems();
         for (int i = 0; i < this.availableCharsetEncodings.size(); i++) {
             charsetEncodingCombobox.addItem(this.availableCharsetEncodings.get(i));
+
+            // Insert the NONE option after the default option
+            if (allowNone && i == 0) {
+                charsetEncodingCombobox.addItem(new CharsetEncodingInformation(CharsetUtils.NONE, "None"));
+            }
         }
+    }
+
+    public void setPreviousSelectedEncodingForConnector(javax.swing.JComboBox charsetEncodingCombobox, String selectedCharset) {
+        setPreviousSelectedEncodingForConnector(charsetEncodingCombobox, selectedCharset, false);
     }
 
     /**
      * Sets the combobox for the string previously selected. If the server can't support the
      * encoding, the default one is selected. This method is called from each connector.
      */
-    public void setPreviousSelectedEncodingForConnector(javax.swing.JComboBox charsetEncodingCombobox, String selectedCharset) {
+    public void setPreviousSelectedEncodingForConnector(javax.swing.JComboBox charsetEncodingCombobox, String selectedCharset, boolean allowNone) {
         if (this.availableCharsetEncodings == null) {
             this.setCharsetEncodings();
         }
@@ -350,11 +370,16 @@ public class Frame extends JXFrame {
         }
         if ((selectedCharset == null) || (selectedCharset.equalsIgnoreCase(UIConstants.DEFAULT_ENCODING_OPTION))) {
             charsetEncodingCombobox.setSelectedIndex(0);
+        } else if (allowNone && selectedCharset.equalsIgnoreCase(CharsetUtils.NONE)) {
+            charsetEncodingCombobox.setSelectedIndex(1);
         } else if (this.charsetEncodings.contains(selectedCharset)) {
             int index = this.availableCharsetEncodings.indexOf(new CharsetEncodingInformation(selectedCharset, selectedCharset));
             if (index < 0) {
                 logger.error("Synchronization lost in the list of the encoding characters.");
                 index = 0;
+            }
+            if (allowNone && index > 0) {   // need to increment since this.availableCharsetEncodings does not include the None option
+                index++;
             }
             charsetEncodingCombobox.setSelectedIndex(index);
         } else {
@@ -480,6 +505,12 @@ public class Frame extends JXFrame {
             alertError(this, "Could not get server information.");
         }
 
+        try {
+            JavaScriptSharedUtil.setRhinoLanguageVersion(mirthClient.getRhinoLanguageVersion());
+        } catch (ClientException e) {
+            alertError(this, "Could not get Rhino language version.");
+        }
+
         // Display the server timezone information
         statusBar.setTimezoneText(PlatformUI.SERVER_TIMEZONE);
         statusBar.setServerTime(PlatformUI.SERVER_TIME);
@@ -514,6 +545,8 @@ public class Frame extends JXFrame {
         // Refresh code templates after extensions have been loaded
         codeTemplatePanel.doRefreshCodeTemplates(false);
 
+        LicenseClient.start();
+
         // DEBUGGING THE UIDefaults:
 
 //         UIDefaults uiDefaults = UIManager.getDefaults(); Enumeration enum1 =
@@ -543,17 +576,19 @@ public class Frame extends JXFrame {
 
         for (Object extensionMetaData : CollectionUtils.union(loadedPlugins.values(), loadedConnectors.values())) {
             MetaData metaData = (MetaData) extensionMetaData;
-            for (ApiProvider provider : metaData.getApiProviders(Version.getLatest())) {
-                switch (provider.getType()) {
-                    case SERVLET_INTERFACE_PACKAGE:
-                    case CORE_PACKAGE:
-                        apiProviderPackages.add(provider.getName());
-                        break;
-                    case SERVLET_INTERFACE:
-                    case CORE_CLASS:
-                        apiProviderClasses.add(provider.getName());
-                        break;
-                    default:
+            if (mirthClient.isExtensionEnabled(metaData.getName())) {
+                for (ApiProvider provider : metaData.getApiProviders(Version.getLatest())) {
+                    switch (provider.getType()) {
+                        case SERVLET_INTERFACE_PACKAGE:
+                        case CORE_PACKAGE:
+                            apiProviderPackages.add(provider.getName());
+                            break;
+                        case SERVLET_INTERFACE:
+                        case CORE_CLASS:
+                            apiProviderClasses.add(provider.getName());
+                            break;
+                        default:
+                    }
                 }
             }
         }
@@ -1995,6 +2030,8 @@ public class Frame extends JXFrame {
             return false;
         }
 
+        LicenseClient.stop();
+
         // MIRTH-3074 Remove the keyEventDispatcher to prevent memory leak.
         KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyEventDispatcher);
 
@@ -3319,29 +3356,41 @@ public class Frame extends JXFrame {
             channelId = messageBrowser.getChannelId();
         }
 
-        /*
-         * If the user has not yet navigated to channels at this point, the cache (channelStatuses
-         * object) will return null, and the resulting block will pull down the channelStatus for
-         * the given id.
-         */
-        ChannelStatus channelStatus = channelPanel.getCachedChannelStatuses().get(channelId);
-        if (channelStatus == null) {
-            try {
-                Map<String, ChannelHeader> channelHeaders = new HashMap<String, ChannelHeader>();
-                channelHeaders.put(channelId, new ChannelHeader(0, null, true));
-                channelPanel.updateChannelStatuses(mirthClient.getChannelSummary(channelHeaders, true));
-                channelStatus = channelPanel.getCachedChannelStatuses().get(channelId);
-            } catch (ClientException e) {
-                alertThrowable(PlatformUI.MIRTH_FRAME, e);
-            }
-        }
-
-        if (channelId == null || channelStatus == null) {
-            alertError(this, "Channel no longer exists!");
+        if (channelId == null) {
+            alertError(this, "Could not find channel ID!");
             return;
         }
 
-        editMessageDialog.setPropertiesAndShow("", channelStatus.getChannel().getSourceConnector().getTransformer().getInboundDataType(), channelStatus.getChannel().getId(), dashboardPanel.getDestinationConnectorNames(channelId), selectedMetaDataIds, new HashMap<String, Object>());
+        String dataType = "RAW";
+
+        if (AuthorizationControllerFactory.getAuthorizationController().checkTask(TaskConstants.VIEW_KEY, TaskConstants.VIEW_CHANNEL)) {
+            /*
+             * If the user has not yet navigated to channels at this point, the cache
+             * (channelStatuses object) will return null, and the resulting block will pull down the
+             * channelStatus for the given id.
+             */
+            ChannelStatus channelStatus = channelPanel.getCachedChannelStatuses().get(channelId);
+
+            if (channelStatus == null) {
+                try {
+                    Map<String, ChannelHeader> channelHeaders = new HashMap<String, ChannelHeader>();
+                    channelHeaders.put(channelId, new ChannelHeader(0, null, true));
+                    channelPanel.updateChannelStatuses(mirthClient.getChannelSummary(channelHeaders, true));
+                    channelStatus = channelPanel.getCachedChannelStatuses().get(channelId);
+                } catch (ClientException e) {
+                    alertThrowable(PlatformUI.MIRTH_FRAME, e);
+                }
+            }
+
+            if (channelStatus == null) {
+                alertError(this, "Channel no longer exists!");
+                return;
+            } else {
+                dataType = channelStatus.getChannel().getSourceConnector().getTransformer().getInboundDataType();
+            }
+        }
+
+        editMessageDialog.setPropertiesAndShow("", dataType, channelId, dashboardPanel.getDestinationConnectorNames(channelId), selectedMetaDataIds, new HashMap<String, Object>());
     }
 
     public void doExportMessages() {
@@ -3457,7 +3506,7 @@ public class Frame extends JXFrame {
     public void doRemoveFilteredMessages() {
         if (alertOption(this, "<html><font color=\"red\"><b>Warning:</b></font> This will remove <b>all</b> results for the current search criteria,<br/>including those not listed on the current page. To see how many messages will<br/>be removed, close this dialog and click the Count button in the upper-right.<br/><font size='1'><br/></font><font color=\"red\"><b>Warning:</b></font> Removing a Source message will remove all of its destinations.<br/><font size='1'><br/></font>Are you sure you would like to remove all messages that match<br/>the current search criteria (including QUEUED) in this channel?<br/>Channel must be stopped for unfinished messages to be removed.</html>")) {
             if (userPreferences.getBoolean("showReprocessRemoveMessagesWarning", true)) {
-                String result = JOptionPane.showInputDialog(this, "<html>This will remove all messages that match the current search criteria.<br/>To see how many messages will be removed, close this dialog and<br/>click the Count button in the upper-right.<br><font size='1'><br></font>Type REMOVEALL and click the OK button to continue.</html>", "Remove Results", JOptionPane.WARNING_MESSAGE);
+                String result = DisplayUtil.showInputDialog(this, "<html>This will remove all messages that match the current search criteria.<br/>To see how many messages will be removed, close this dialog and<br/>click the Count button in the upper-right.<br><font size='1'><br></font>Type REMOVEALL and click the OK button to continue.</html>", "Remove Results", JOptionPane.WARNING_MESSAGE);
                 if (!StringUtils.equals(result, "REMOVEALL")) {
                     alertWarning(this, "You must type REMOVEALL to remove results.");
                     return;
@@ -4056,7 +4105,7 @@ public class Frame extends JXFrame {
                 if (!checkAlertName(alertName)) {
                     if (!alertOption(this, "Would you like to overwrite the existing alert?  Choose 'No' to create a new alert.")) {
                         do {
-                            alertName = JOptionPane.showInputDialog(this, "Please enter a new name for the channel.", alertName);
+                            alertName = DisplayUtil.showInputDialog(this, "Please enter a new name for the channel.", alertName);
                             if (alertName == null) {
                                 return;
                             }
@@ -4476,12 +4525,18 @@ public class Frame extends JXFrame {
         if (settingsPane == null) {
             settingsPane = new SettingsPane();
         }
+
+        List<ResourceProperties> resourceProperties = null;
+
         SettingsPanelResources resourcesPanel = (SettingsPanelResources) settingsPane.getSettingsPanel(SettingsPanelResources.TAB_NAME);
-        List<ResourceProperties> resourceProperties = resourcesPanel.getCachedResources();
-        if (resourceProperties == null) {
-            resourcesPanel.refresh();
+        if (resourcesPanel != null) {
             resourceProperties = resourcesPanel.getCachedResources();
+            if (resourceProperties == null) {
+                resourcesPanel.refresh();
+                resourceProperties = resourcesPanel.getCachedResources();
+            }
         }
+
         return resourceProperties;
     }
 

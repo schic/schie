@@ -67,7 +67,7 @@ public class ChannelWriter extends ConnectorSettingsPanel {
             }
 
         });
-        
+
         class CustomTableCellEditor extends TextFieldCellEditor {
 
             @Override
@@ -75,11 +75,11 @@ public class ChannelWriter extends ConnectorSettingsPanel {
                 if ((value.length() == 0 || checkUniqueProperty(value))) {
                     return false;
                 }
-                
+
                 parent.setSaveEnabled(true);
                 return true;
             }
-            
+
             protected boolean checkUniqueProperty(String property) {
                 boolean exists = false;
 
@@ -96,7 +96,7 @@ public class ChannelWriter extends ConnectorSettingsPanel {
         mapVariablesTable.getColumnModel().getColumn(0).setCellEditor(new CustomTableCellEditor());
         mapVariablesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         mapVariablesTable.setToolTipText("The following map variables will be included in the source map of the destination channel's message.");
-        
+
         mapVariablesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
             public void valueChanged(ListSelectionEvent evt) {
@@ -164,14 +164,16 @@ public class ChannelWriter extends ConnectorSettingsPanel {
 
         String selectedChannelName = "None";
 
-        for (ChannelStatus channelStatus : parent.channelPanel.getCachedChannelStatuses().values()) {
-            Channel channel = channelStatus.getChannel();
-            if (props.getChannelId().equalsIgnoreCase(channel.getId())) {
-                selectedChannelName = channel.getName();
+        for (Entry<String, String> entry : parent.channelPanel.getCachedChannelIdsAndNames().entrySet()) {
+            String channnelId = entry.getKey();
+            String channelName = entry.getValue();
+
+            if (props.getChannelId().equalsIgnoreCase(channnelId)) {
+                selectedChannelName = channelName;
             }
 
-            channelList.put(channel.getName(), channel.getId());
-            channelNameArray.add(channel.getName());
+            channelList.put(channelName, channnelId);
+            channelNameArray.add(channelName);
         }
 
         // sort the channels in alpha-numeric order.
@@ -188,14 +190,14 @@ public class ChannelWriter extends ConnectorSettingsPanel {
         channelIdField.setText((channelId.equals("none")) ? "" : channelId);
         channelNames.setSelectedItem(selectedChannelName);
         template.setText(props.getChannelTemplate());
-        
+
         setMapVariableTableValues(props.getMapVariables());
 
-        if(mapVariablesTable.getRowCount() > 0) {
+        if (mapVariablesTable.getRowCount() > 0) {
             mapVariablesTable.setRowSelectionInterval(0, 0);
         }
         deleteButton.setEnabled(mapVariablesTable.getRowCount() > 0);
-        
+
         parent.setSaveEnabled(enabled);
     }
 
@@ -212,6 +214,7 @@ public class ChannelWriter extends ConnectorSettingsPanel {
     @Override
     public void resetInvalidProperties() {}
 
+    // @formatter:off
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -334,6 +337,7 @@ public class ChannelWriter extends ConnectorSettingsPanel {
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
     }// </editor-fold>//GEN-END:initComponents
+    // @formatter:on
 
     private void channelNamesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_channelNamesActionPerformed
         try {
@@ -381,7 +385,7 @@ public class ChannelWriter extends ConnectorSettingsPanel {
 
         int rowSelectionNumber = mapVariablesTable.getRowCount() - 1;
         mapVariablesTable.setRowSelectionInterval(rowSelectionNumber, rowSelectionNumber);
-        
+
         Boolean enabled = deleteButton.isEnabled();
         if (!enabled) {
             deleteButton.setEnabled(true);

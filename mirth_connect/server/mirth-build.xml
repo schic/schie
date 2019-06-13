@@ -71,7 +71,6 @@
 		<copy file="${donkey.setup}/donkey-model.jar" todir="${manager}/lib" />
 		<copy file="${server.setup}/server-lib/mirth-client-core.jar" todir="${manager}/lib" />
 		<copy file="${server.setup}/server-lib/mirth-crypto.jar" todir="${manager}/lib" />
-		<copy file="${server.setup}/server-lib/commons/not-yet-commons-ssl-0.3.11.jar" todir="${manager}/lib" />
 
 		<ant antfile="${manager}/ant-build.xml" dir="${manager}" target="build" />
 
@@ -183,6 +182,7 @@
 		<ant antfile="${donkey}/build.xml" dir="${donkey}" target="test-run"/>
 		<ant antfile="${server}/build.xml" dir="${server}" target="test-run"/>
 		<ant antfile="${client}/ant-build.xml" dir="${client}" target="test-run"/>
+		<ant antfile="${cli}/build.xml" dir="${cli}" target="test-run"/>
 	</target>
 
 	<target name="remove-classes" depends="init">
