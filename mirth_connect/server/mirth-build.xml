@@ -131,7 +131,7 @@
 			<fileset dir="${server.setup}/client-lib" />
 		</copy>
 		
-		<antcall target="test-run" />
+		<!-- <antcall target="test-run" /> -->
 	</target>
 
 	<target name="dist" depends="build-manager, build-cli, build-webadmin">

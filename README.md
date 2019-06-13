@@ -7,5 +7,11 @@
 ### [开发规范](https://github.com/schic/schie/tree/master/doc/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83)
 
 ### [集成网关](https://github.com/schic/schie/tree/master/mirth_connect/)
+
+### [开发环境搭建](https://github.com/schic/schie/tree/master/doc/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.md)
+
 ### 插件开发文档
+学习整理中...
+
+### web开发文档
 学习整理中...
