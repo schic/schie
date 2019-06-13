@@ -6,5 +6,6 @@
 
 ### [开发规范](https://github.com/schic/schie/tree/master/doc/%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83)
 
+### [集成网关](https://github.com/schic/schie/tree/master/mirth_connect/)
 ### 插件开发文档
 学习整理中...
