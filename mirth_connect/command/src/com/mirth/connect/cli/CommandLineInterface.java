@@ -1723,7 +1723,7 @@ public class CommandLineInterface {
             return false;
         }
 
-        Pattern alphaNumericPattern = Pattern.compile("^[a-zA-Z_0-9\\-\\s]*$");
+        Pattern alphaNumericPattern = Pattern.compile("^[a-zA-Z_0-9\u2e80-\u9fff\\-\\s]*$");
         Matcher matcher = alphaNumericPattern.matcher(name);
 
         if (!matcher.find()) {
@@ -2052,7 +2052,7 @@ public class CommandLineInterface {
             return false;
         }
 
-        Pattern alphaNumericPattern = Pattern.compile("^[a-zA-Z_0-9\\-\\s]*$");
+        Pattern alphaNumericPattern = Pattern.compile("^[a-zA-Z_0-9\u2e80-\u9fff\\-\\s]*$");
         Matcher matcher = alphaNumericPattern.matcher(name);
 
         if (!matcher.find()) {
