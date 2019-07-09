@@ -378,7 +378,7 @@ public class Frame extends JXFrame {
                 logger.error("Synchronization lost in the list of the encoding characters.");
                 index = 0;
             }
-            if (allowNone && index > 0) {   // need to increment since this.availableCharsetEncodings does not include the None option
+            if (allowNone && index > 0) { // need to increment since this.availableCharsetEncodings does not include the None option
                 index++;
             }
             charsetEncodingCombobox.setSelectedIndex(index);
@@ -468,15 +468,23 @@ public class Frame extends JXFrame {
 
         buildContentPanel(rightContainer, contentPane, false);
 
-        // Set task pane container background painter
-        MattePainter taskPanePainter = new MattePainter(new GradientPaint(0f, 0f, UIConstants.JX_CONTAINER_BACKGROUND_COLOR, 0f, 1f, UIConstants.JX_CONTAINER_BACKGROUND_COLOR));
-        taskPanePainter.setPaintStretched(true);
-        taskPaneContainer.setBackgroundPainter(taskPanePainter);
-
-        // Set main content container title painter
-        MattePainter contentTitlePainter = new MattePainter(new GradientPaint(0f, 0f, UIConstants.JX_CONTAINER_BACKGROUND_COLOR, 0f, 1f, UIConstants.JX_CONTAINER_BACKGROUND_COLOR));
-        contentTitlePainter.setPaintStretched(true);
-        rightContainer.setTitlePainter(contentTitlePainter);
+        // Determine background color from user preference if available
+        Color backgroundColor = PlatformUI.DEFAULT_BACKGROUND_COLOR;
+        try {
+            User currentUser = getCurrentUser(this);
+            if (currentUser != null) {
+                String backgroundColorStr = mirthClient.getUserPreference(currentUser.getId(), UIConstants.USER_PREF_KEY_BACKGROUND_COLOR);
+                if (StringUtils.isNotBlank(backgroundColorStr)) {
+                    Color backgroundColorPreference = ObjectXMLSerializer.getInstance().deserialize(backgroundColorStr, Color.class);
+                    if (backgroundColorPreference != null) {
+                        backgroundColor = backgroundColorPreference;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            alertThrowable(this, e);
+        }
+        setupBackgroundPainters(backgroundColor);
 
         splitPane.add(rightContainer, JSplitPane.RIGHT);
         splitPane.add(taskPane, JSplitPane.LEFT);
@@ -558,6 +566,18 @@ public class Frame extends JXFrame {
 
     }
 
+    public void setupBackgroundPainters(Color color) {
+        // Set task pane container background painter
+        MattePainter taskPanePainter = new MattePainter(new GradientPaint(0f, 0f, color, 0f, 1f, color));
+        taskPanePainter.setPaintStretched(true);
+        taskPaneContainer.setBackgroundPainter(taskPanePainter);
+
+        // Set main content container title painter
+        MattePainter contentTitlePainter = new MattePainter(new GradientPaint(0f, 0f, color, 0f, 1f, color));
+        contentTitlePainter.setPaintStretched(true);
+        rightContainer.setTitlePainter(contentTitlePainter);
+    }
+
     @Override
     public void dispose() {
         super.dispose();
@@ -602,7 +622,7 @@ public class Frame extends JXFrame {
     private void buildContentPanel(JXTitledPanel container, JScrollPane component, boolean opaque) {
         container.getContentContainer().setLayout(new BorderLayout());
         container.setBorder(null);
-        container.setTitleFont(new Font("Tahoma", Font.BOLD, 18));
+        container.setTitleFont(new Font("宋体", Font.BOLD, 18));
         container.setTitleForeground(UIConstants.HEADER_TITLE_TEXT_COLOR);
         JLabel mirthConnectImage = new JLabel();
         mirthConnectImage.setIcon(UIConstants.MIRTHCONNECT_LOGO_GRAY);
@@ -1080,13 +1100,13 @@ public class Frame extends JXFrame {
         otherPane.setTitle("Other");
         otherPane.setName(TaskConstants.OTHER_KEY);
         otherPane.setFocusable(false);
-        addTask(TaskConstants.OTHER_NOTIFICATIONS, UIConstants.VIEW_NOTIFICATIONS, "View notifications from Mirth.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/flag_orange.png")), otherPane, null);
+        addTask(TaskConstants.OTHER_NOTIFICATIONS, UIConstants.VIEW_NOTIFICATIONS, "View notifications from NextGen Healthcare.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/flag_orange.png")), otherPane, null);
         addTask(TaskConstants.OTHER_VIEW_USER_API, "View User API", "View documentation for the Mirth Connect User API.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/page_white_text.png")), otherPane, null);
         addTask(TaskConstants.OTHER_VIEW_CLIENT_API, "View Client API", "View documentation for the Mirth Connect Client API.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/page_white_text.png")), otherPane, null);
         addTask(TaskConstants.OTHER_HELP, "Help", "View the Mirth Connect wiki.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/help.png")), otherPane, null);
         addTask(TaskConstants.OTHER_ABOUT, "About Mirth Connect", "View the about page for Mirth Connect.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/information.png")), otherPane, null);
-        addTask(TaskConstants.OTHER_VISIT_MIRTH, "Visit mirthcorp.com", "View Mirth's homepage.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/house.png")), otherPane, null);
-        addTask(TaskConstants.OTHER_REPORT_ISSUE, "Report Issue", "Visit Mirth's issue tracker.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/bug.png")), otherPane, null);
+        addTask(TaskConstants.OTHER_VISIT_MIRTH, "Visit nextgen.com", "View Mirth Connect's homepage.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/house.png")), otherPane, null);
+        addTask(TaskConstants.OTHER_REPORT_ISSUE, "Report Issue", "Visit Mirth Connect's issue tracker.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/bug.png")), otherPane, null);
         addTask(TaskConstants.OTHER_LOGOUT, "Logout", "Logout and return to the login screen.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/disconnect.png")), otherPane, null);
         setNonFocusable(otherPane);
         taskPaneContainer.add(otherPane);
@@ -1338,7 +1358,7 @@ public class Frame extends JXFrame {
                     connectionError = true;
                     statusUpdaterExecutor.shutdownNow();
 
-                    alertWarning(parentComponent, "Sorry your connection to Mirth has either timed out or there was an error in the connection.  Please login again.");
+                    alertWarning(parentComponent, "Sorry your connection to Mirth Connect has either timed out or there was an error in the connection.  Please login again.");
                     if (!exportChannelOnError()) {
                         return;
                     }
@@ -1882,7 +1902,7 @@ public class Frame extends JXFrame {
     // --- All bound actions are beneath this point --- //
     // ////////////////////////////////////////////////////////////
     public void goToMirth() {
-        BareBonesBrowserLaunch.openURL("http://www.mirthcorp.com/");
+        BareBonesBrowserLaunch.openURL("https://www.nextgen.com/products-and-services/integration-engine");
     }
 
     public void goToUserAPI() {
@@ -4143,7 +4163,7 @@ public class Frame extends JXFrame {
             return false;
         }
 
-        Pattern alphaNumericPattern = Pattern.compile("^[a-zA-Z_0-9\\-\\s]*$");
+        Pattern alphaNumericPattern = Pattern.compile("^[a-zA-Z_0-9\u2e80-\u9fff\\-\\s]*$");
         Matcher matcher = alphaNumericPattern.matcher(name);
 
         if (!matcher.find()) {
@@ -4427,7 +4447,7 @@ public class Frame extends JXFrame {
             return false;
         }
 
-        Pattern alphaNumericPattern = Pattern.compile("^[a-zA-Z_0-9\\-\\s]*$");
+        Pattern alphaNumericPattern = Pattern.compile("^[a-zA-Z_0-9\u2e80-\u9fff\\-\\s]*$");
         Matcher matcher = alphaNumericPattern.matcher(name);
 
         if (!matcher.find()) {
@@ -4483,12 +4503,12 @@ public class Frame extends JXFrame {
             }
 
             if (comparison > 0) {
-                alertInformation(this, "The " + objectName + " being imported originated from Mirth version " + version + ".\nYou are using Mirth Connect version " + PlatformUI.SERVER_VERSION + ".\nThe " + objectName + " cannot be imported, because it originated from a newer version of Mirth Connect.");
+                alertInformation(this, "The " + objectName + " being imported originated from Mirth Connect version " + version + ".\nYou are using Mirth Connect version " + PlatformUI.SERVER_VERSION + ".\nThe " + objectName + " cannot be imported, because it originated from a newer version of Mirth Connect.");
                 return false;
             }
 
             if (comparison < 0) {
-                message.append("The " + objectName + " being imported originated from Mirth version " + version + ".\n");
+                message.append("The " + objectName + " being imported originated from Mirth Connect version " + version + ".\n");
             }
         }
 

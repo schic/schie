@@ -145,7 +145,7 @@ public class HeapSizeDialog extends JDialog {
         setLayout(new MigLayout("insets 8, novisualpadding, hidemode 3, fill"));
         JPanel panel = new JPanel(new MigLayout("insets 4, novisualpadding, hidemode 3, fill"));
         panel.setBackground(Color.white);
-        panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(204, 204, 204)), "Web Start Settings", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Tahoma", 1, 11)));
+        panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(204, 204, 204)), "Web Start Settings", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("宋体", 1, 11)));
 
         panel.add(new JLabel("Max Heap Size:"), "split");
         panel.add(heapSizeComboBox, "w 75!, left, wrap");

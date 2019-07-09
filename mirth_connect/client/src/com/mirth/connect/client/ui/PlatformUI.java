@@ -9,6 +9,7 @@
 
 package com.mirth.connect.client.ui;
 
+import java.awt.Color;
 import java.util.Calendar;
 
 import javax.swing.ImageIcon;
@@ -40,4 +41,5 @@ public class PlatformUI {
     public static String[] SERVER_HTTPS_ENABLED_SERVER_PROTOCOLS = MirthSSLUtil.DEFAULT_HTTPS_SERVER_PROTOCOLS;
     public static String[] SERVER_HTTPS_SUPPORTED_CIPHER_SUITES = MirthSSLUtil.getSupportedHttpsCipherSuites();
     public static String[] SERVER_HTTPS_ENABLED_CIPHER_SUITES = MirthSSLUtil.DEFAULT_HTTPS_CIPHER_SUITES;
+    public static Color DEFAULT_BACKGROUND_COLOR = new Color(0x9EB1C9);
 }

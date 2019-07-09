@@ -9,6 +9,7 @@
 
 package com.mirth.connect.model;
 
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +58,9 @@ public class ServerSettings extends AbstractSettings implements Serializable, Au
     private Boolean smtpAuth;
     private String smtpUsername;
     private String smtpPassword;
+    
+    public static final Color DEFAULT_COLOR = new Color(0x9EB1C9);
+    private Color defaultAdministratorBackgroundColor;
 
     public ServerSettings() {
 
@@ -244,4 +248,13 @@ public class ServerSettings extends AbstractSettings implements Serializable, Au
         purgedProperties.put("smtpAuth", smtpAuth);
         return purgedProperties;
     }
+
+	public Color getDefaultAdministratorBackgroundColor() {
+		return defaultAdministratorBackgroundColor;
+	}
+
+	public void setDefaultAdministratorBackgroundColor(
+			Color defaultAdministratorBackgroundColor) {
+		this.defaultAdministratorBackgroundColor = defaultAdministratorBackgroundColor;
+	}
 }

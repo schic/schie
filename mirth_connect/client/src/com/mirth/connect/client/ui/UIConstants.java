@@ -32,10 +32,10 @@ public class UIConstants {
     public static final int MIRTH_HEIGHT = 650;
     public static final ImageIcon MIRTHCORP_LOGO = new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/mirthcorp_24h.png"));
     public static final ImageIcon MIRTHCONNECT_LOGO_GRAY = new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/mirthconnect_gray_24h.png"));
-    public static final String MIRTHCORP_TOOLTIP = "Mirth Corporation";
+    public static final String MIRTHCORP_TOOLTIP = "NextGen Healthcare";
     public static final String MIRTHCONNECT_TOOLTIP = "Mirth Connect";
-    public static final String MIRTHCORP_URL = "http://www.mirthcorp.com";
-    public static final String MIRTHCONNECT_URL = "http://www.mirthcorp.com/products/mirth-connect";
+    public static final String MIRTHCORP_URL = "https://www.nextgen.com/products-and-services/integration-engine";
+    public static final String MIRTHCONNECT_URL = "https://www.nextgen.com/products-and-services/integration-engine";
     public static final String EDIT_FILTER = "Edit Filter";
     public static final String EDIT_TRANSFORMER = "Edit Transformer";
     public static final String EDIT_RESPONSE_TRANSFORMER = "Edit Response";
@@ -67,8 +67,8 @@ public class UIConstants {
     public static final int DIVIDER_SIZE = 12;
     // fonts
     public static final String MONOSPACED_FONT_NAME = SystemUtils.IS_OS_MAC ? "Courier" : "Monospaced";
-    public static final Font TEXTFIELD_PLAIN_FONT = new Font("Tahoma", Font.PLAIN, 11);
-    public static final Font TEXTFIELD_BOLD_FONT = new Font("Tahoma", Font.BOLD, 11);
+    public static final Font TEXTFIELD_PLAIN_FONT = new Font("宋体", Font.PLAIN, 11);
+    public static final Font TEXTFIELD_BOLD_FONT = new Font("宋体", Font.BOLD, 11);
     public static final Font BANNER_FONT = new Font("Arial", Font.BOLD, 36);
     public static final Font DIALOG_FONT = new Font("Dialog", Font.PLAIN, 12);
     public static final Font MONOSPACED_FONT = new Font(MONOSPACED_FONT_NAME, Font.PLAIN, 12);
@@ -130,7 +130,7 @@ public class UIConstants {
     public static final ImageIcon ICON_WARNING = new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/error.png"));
     public static final ImageIcon ICON_ERROR = new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/exclamation.png"));
     // for privacy
-    public static final String PRIVACY_URL = "http://www.mirthcorp.com/company/about/privacy";
+    public static final String PRIVACY_URL = "https://www.nextgen.com/legal-notice";
     public static final String PRIVACY_TOOLTIP = "Privacy Information";
 
     // FileUtils reading/writing
@@ -140,4 +140,7 @@ public class UIConstants {
     public static final String DATATYPE_DEFAULT = "HL7V2";
     public static final String DATATYPE_XML = "XML";
     public static final String DATATYPE_JSON = "JSON";
+
+    // User preferences
+    public static final String USER_PREF_KEY_BACKGROUND_COLOR = "backgroundColor";
 }
