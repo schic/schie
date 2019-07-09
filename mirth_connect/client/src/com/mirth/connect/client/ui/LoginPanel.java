@@ -29,6 +29,7 @@ import com.mirth.connect.client.core.UnauthorizedException;
 import com.mirth.connect.client.ui.util.DisplayUtil;
 import com.mirth.connect.model.ExtendedLoginStatus;
 import com.mirth.connect.model.LoginStatus;
+import com.mirth.connect.model.ServerSettings;
 import com.mirth.connect.model.User;
 import com.mirth.connect.model.converters.ObjectXMLSerializer;
 import com.mirth.connect.plugins.MultiFactorAuthenticationClientPlugin;
@@ -189,7 +190,7 @@ public class LoginPanel extends javax.swing.JFrame {
 
         jLabel3.setText("Username:");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("宋体", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Mirth Connect Login");
 
@@ -232,7 +233,7 @@ public class LoginPanel extends javax.swing.JFrame {
 
         errorTextArea.setColumns(20);
         errorTextArea.setEditable(false);
-        errorTextArea.setFont(new java.awt.Font("Tahoma", 0, 11));
+        errorTextArea.setFont(new java.awt.Font("宋体", 0, 11));
         errorTextArea.setLineWrap(true);
         errorTextArea.setText("There was an error connecting to the server at the specified address. Please verify that the server is up and running.");
         errorTextArea.setWrapStyleWord(true);
@@ -306,7 +307,7 @@ public class LoginPanel extends javax.swing.JFrame {
 
         loggingIn.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("宋体", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Mirth Connect Login");
 
@@ -489,16 +490,23 @@ public class LoginPanel extends javax.swing.JFrame {
 
             private void handleSuccess(LoginStatus loginStatus) throws ClientException {
                 try {
-                    String environmentName = client.getServerSettings().getEnvironmentName();
+                    ServerSettings serverSettings = client.getServerSettings();
+
+                    String environmentName = serverSettings.getEnvironmentName();
                     if (!StringUtils.isBlank(environmentName)) {
                         PlatformUI.ENVIRONMENT_NAME = environmentName;
                     }
 
-                    String serverName = client.getServerSettings().getServerName();
+                    String serverName = serverSettings.getServerName();
                     if (!StringUtils.isBlank(serverName)) {
                         PlatformUI.SERVER_NAME = serverName;
                     } else {
                         PlatformUI.SERVER_NAME = null;
+                    }
+
+                    Color defaultBackgroundColor = serverSettings.getDefaultAdministratorBackgroundColor();
+                    if (defaultBackgroundColor != null) {
+                        PlatformUI.DEFAULT_BACKGROUND_COLOR = defaultBackgroundColor;
                     }
                 } catch (ClientException e) {
                     PlatformUI.SERVER_NAME = null;
