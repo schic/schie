@@ -13,7 +13,7 @@ mqserver用于客户端发送数据交换消息，举例：
         "dbpwd":"admin",
         "sql":"select * from ex_db",
         "batchRows":"1000",
-        "mdate":"mdate",
+        "fieldInc":"mdate",
 		"pk":"db_id"
     },
     "target":{

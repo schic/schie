@@ -3,7 +3,7 @@
   <nextMetaDataId>8</nextMetaDataId>
   <name>通用数据交换监听通道</name>
   <description></description>
-  <revision>100</revision>
+  <revision>103</revision>
   <sourceConnector version="3.7.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -139,6 +139,7 @@ var resultData;
 var response;
 var errorMsg;
 var dbNow;
+var valueInc = &apos;&apos;;
 
 try {
 	errorMsg = &apos;创建源数据库连接失败&apos;;
@@ -171,7 +172,11 @@ try {
      var mqObj = getExMqObject(paramobj);
 	while(true){ 
 		if(resultData.next()){
-			listData.add(getResultRow(resultData, resultSetMetaData));
+			var mapRow = getResultRow(resultData, resultSetMetaData);
+			listData.add(mapRow);
+			//获取数据中的增量值，并判断是否替换增量值
+			valueInc = getMaxValueInc(mapRow.get(source.fieldInc), valueInc, dbNow);
+			
 			rows++;
 	 	} else {
 			bEnd = true;
@@ -217,7 +222,10 @@ try {
 		}
 	}
 
-	response = new Response(getServletResponseStr(&apos;执行成功&apos;));
+	var servletResponse = getServletResponseJson(&apos;执行成功&apos;);
+	servletResponse.setValueInc(valueInc);
+
+	response = new Response(JSON.stringify(servletResponse));
 	response.setStatus(Status.SENT);
 	responseMap.put(&apos;response&apos;, response);
 	return response;
@@ -506,7 +514,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1564018686901</time>
+        <time>1564022725902</time>
         <timezone>Asia/Shanghai</timezone>
       </lastModified>
       <pruningSettings>
