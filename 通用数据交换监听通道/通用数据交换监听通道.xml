@@ -3,7 +3,7 @@
   <nextMetaDataId>8</nextMetaDataId>
   <name>通用数据交换监听通道</name>
   <description></description>
-  <revision>103</revision>
+  <revision>118</revision>
   <sourceConnector version="3.7.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -52,14 +52,24 @@
           <sequenceNumber>0</sequenceNumber>
           <enabled>true</enabled>
           <script>try{
+
 	
 	var obdata = JSON.parse(msg);
+	
 	//检查处理参数，对部分字符转大写
 	exCheckParam(obdata);
 	
 	//只解析参数。判断cmd走读取还是走写入
 	var cmd = obdata.cmd;
 	channelMap.put(&apos;paramobj&apos;,obdata);
+	
+	//检查重复执行
+	var checkResult = ExecCheckUtil.checkResAskId(obdata);
+	Thread.sleep(3000);
+	if(checkResult){
+		destinationSet.removeAllExcept([&apos;errorcmd&apos;]);
+		return;
+	}
 	
 	if (cmd == &apos;readdb&apos;) {
 		destinationSet.removeAllExcept([&apos;readdb&apos;]);
@@ -149,7 +159,6 @@ try {
 
 	//获取数据库的当前时间
 	dbNow = DbUtilFactory.get(dbConn).getNow(dbConn);
-	logger.info(&apos;------dbNow:&apos; + dbNow);
 
 	errorMsg = &apos;源数据库执行查询失败&apos;;
 	statement = conn.createStatement();
@@ -174,8 +183,10 @@ try {
 		if(resultData.next()){
 			var mapRow = getResultRow(resultData, resultSetMetaData);
 			listData.add(mapRow);
-			//获取数据中的增量值，并判断是否替换增量值
-			valueInc = getMaxValueInc(mapRow.get(source.fieldInc), valueInc, dbNow);
+			if(source.fieldInc){
+				//获取数据中的增量值，并判断是否替换增量值
+				valueInc = getMaxValueInc(mapRow.get(source.fieldInc), valueInc, dbNow);
+			}
 			
 			rows++;
 	 	} else {
@@ -223,7 +234,9 @@ try {
 	}
 
 	var servletResponse = getServletResponseJson(&apos;执行成功&apos;);
-	servletResponse.setValueInc(valueInc);
+	if(valueInc){
+		servletResponse.setValueInc(valueInc);
+	}
 
 	response = new Response(JSON.stringify(servletResponse));
 	response.setStatus(Status.SENT);
@@ -322,7 +335,7 @@ try {
 	var paramobj = $(&apos;paramobj&apos;);
 	errorMsg = &apos;数据解码错误&apos;;
 	//解码
-	var listData = exDecode(paramobj.source.data);
+	var listData = exDecode(paramobj.source.data, paramobj.source.encodeType);
 	paramobj.source.data = &apos;&apos;;
 
 	errorMsg = &apos;写入数据错误&apos;;
@@ -414,10 +427,15 @@ try {
           <reattachAttachments>true</reattachAttachments>
         </destinationConnectorProperties>
         <script>infoBegin(&quot;dest.errorcmd&quot;);
-
-logger.debug(&apos;错误命令&apos;);
-
-infoEnd(&quot;dest.errorcmd&quot;);</script>
+try{
+	if (responseMap.containsKey(&apos;response&apos;)) {
+		return responseMap.get(&apos;response&apos;);
+	} else {
+		logger.debug(&apos;错误命令&apos;);
+	}
+} finally {
+	infoEnd(&quot;dest.errorcmd&quot;);
+}</script>
       </properties>
       <transformer version="3.7.1">
         <elements/>
@@ -467,8 +485,14 @@ return message;</preprocessingScript>
   <postprocessingScript>// This script executes once after a message has been processed
 // Responses returned from here will be stored as &quot;Postprocessor&quot; in the response map
 
+
 if (!responseMap.containsKey(&apos;response&apos;)) {
 	createExOutcome(&apos;error request URI&apos;);
+}
+
+if(channelMap.containsKey(&apos;paramobj&apos;)){
+	var paramobj = channelMap.get(&apos;paramobj&apos;);
+	ExecCheckUtil.endExec(paramobj);
 }
 
 return;</postprocessingScript>
@@ -514,7 +538,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1564022725902</time>
+        <time>1564041255868</time>
         <timezone>Asia/Shanghai</timezone>
       </lastModified>
       <pruningSettings>
