@@ -1,0 +1,39 @@
+json参数,
+resAskId用于客户端判断重复调用，
+mqserver用于客户端发送数据交换消息，举例：
+	redis:172.16.3.66:6611?85425551 或 rocket:192.168.0.176:5910
+{
+    "cmd":"readdb",
+	"resAskId":"资源申请id",
+	"mqserver":"",
+    "source":{
+		"driverClassName":"org.postgresql.Driver",
+        "jdbcurl":"jdbc:postgresql://127.0.0.1:5432/testdb?currentSchema=src",
+        "dbuser":"postgres",
+        "dbpwd":"admin",
+        "sql":"select * from ex_db",
+        "batchRows":"1000",
+        "fieldInc":"mdate",
+		"pk":"db_id"
+    },
+    "target":{
+		"api":"http://localhost:9088/api/",
+        "driverClassName":"org.postgresql.Driver",
+        "jdbcurl":"jdbc:postgresql://127.0.0.1:5432/testdb?currentSchema=dest",
+        "dbuser":"postgres",
+        "dbpwd":"admin",
+        "table":"ex_db",
+        "pk":"db_id",
+		"deletesql":"delete from ex_db",
+		"fieldsmap":[
+			{"src":"db_id","dest":"db_id"},
+			{"src":"type","dest":"type"},
+			{"src":"db_ip","dest":"db_ip"},
+			{"src":"db_type","dest":"db_type"},
+			{"src":"db_name","dest":"db_name"},
+			{"src":"db_title","dest":"db_title"},
+			{"src":"db_port","dest":"db_port"},
+			{"src":"cdate","dest":"cdate"}
+		]
+    }
+}
