@@ -3,7 +3,7 @@
   <nextMetaDataId>8</nextMetaDataId>
   <name>通用数据交换监听通道</name>
   <description></description>
-  <revision>118</revision>
+  <revision>120</revision>
   <sourceConnector version="3.7.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -65,7 +65,6 @@
 	
 	//检查重复执行
 	var checkResult = ExecCheckUtil.checkResAskId(obdata);
-	Thread.sleep(3000);
 	if(checkResult){
 		destinationSet.removeAllExcept([&apos;errorcmd&apos;]);
 		return;
@@ -339,7 +338,7 @@ try {
 	paramobj.source.data = &apos;&apos;;
 
 	errorMsg = &apos;写入数据错误&apos;;
-	var resultJson = exWriteDb(listData, paramobj);
+	var resultJson = WriteDbUtil.exWriteDb(listData, paramobj);
 	if(resultJson.code &lt; 0){
 		response = new Response(JSON.stringify(resultJson));
 		response.setStatus(Status.ERROR);
@@ -538,7 +537,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1564041255868</time>
+        <time>1564126422909</time>
         <timezone>Asia/Shanghai</timezone>
       </lastModified>
       <pruningSettings>
@@ -576,16 +575,16 @@ return;</undeployScript>
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>CHANNEL_UNDEPLOY</contextType>
-                <contextType>CHANNEL_POSTPROCESSOR</contextType>
-                <contextType>CHANNEL_BATCH</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>CHANNEL_ATTACHMENT</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>CHANNEL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>CHANNEL_UNDEPLOY</contextType>
+                <contextType>CHANNEL_BATCH</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>CHANNEL_DEPLOY</contextType>
                 <contextType>CHANNEL_PREPROCESSOR</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>CHANNEL_ATTACHMENT</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -618,9 +617,9 @@ function infoEnd(arg1) {
       <codeTemplateLibrary version="3.7.1">
         <id>1addf16e-269d-4626-9455-97ed000681f1</id>
         <name>通用数据交换函数</name>
-        <revision>17</revision>
+        <revision>20</revision>
         <lastModified>
-          <time>1563871266341</time>
+          <time>1564036071575</time>
           <timezone>Asia/Shanghai</timezone>
         </lastModified>
         <description></description>
@@ -650,9 +649,9 @@ function infoEnd(arg1) {
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -711,18 +710,18 @@ function callHttpPost(url, bodyStr) {
           <codeTemplate version="3.7.1">
             <id>cfe54723-88b1-48d6-9257-cdf3f4640bd4</id>
             <name>创建异常时http返回资源函数</name>
-            <revision>15</revision>
+            <revision>16</revision>
             <lastModified>
-              <time>1563867964967</time>
+              <time>1564039272501</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>CHANNEL_POSTPROCESSOR</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -773,6 +772,7 @@ function createExOutcome(details, httpStatusCode, e) {
 			mqObj.setError(errorContent);
 		} else {
 			response.setError(details);
+			mqObj.setError(details);
 		}
 	} else {
 		response = new Response(getServletResponseStr(details));
@@ -800,9 +800,9 @@ function createExOutcome(details, httpStatusCode, e) {
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -855,17 +855,17 @@ function exDecode(string, decodeType) {
           <codeTemplate version="3.7.1">
             <id>883c8f59-32e6-4b65-9650-a4569488f456</id>
             <name>参数检查转换函数</name>
-            <revision>3</revision>
+            <revision>4</revision>
             <lastModified>
-              <time>1563527521669</time>
+              <time>1564020137781</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -878,8 +878,8 @@ function exDecode(string, decodeType) {
 	@return 
 */
 function exCheckParam(paramObj) {
-	if(paramObj.source.mdate){
-		paramObj.source.mdate = paramObj.source.mdate.toUpperCase();
+	if(paramObj.source.fieldInc){
+		paramObj.source.fieldInc = paramObj.source.fieldInc.toUpperCase();
 	}
 	if(paramObj.source.pk){
 		paramObj.source.pk = paramObj.source.pk.toUpperCase();
@@ -902,17 +902,17 @@ function exCheckParam(paramObj) {
           <codeTemplate version="3.7.1">
             <id>51aea973-144e-4ef7-ad89-8601c67bfea2</id>
             <name>处理数据函数</name>
-            <revision>19</revision>
+            <revision>23</revision>
             <lastModified>
-              <time>1563781716390</time>
+              <time>1564126420474</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -927,6 +927,8 @@ function exCheckParam(paramObj) {
 function exProcessData(listData, callNum) {
 	var paramobj = channelMap.get(&apos;paramobj&apos;);
 	paramobj.callNum = callNum;
+	//克隆一下，防止cmd后面需要使用
+	var paramClone = JSON.parse(JSON.stringify(paramobj));
 	if(paramobj.target.api){
 		//判断当前字符串是否以str结束
 	     if (typeof String.prototype.endsWith != &apos;function&apos;) {
@@ -937,17 +939,17 @@ function exProcessData(listData, callNum) {
 	     if(!paramobj.target.api.endsWith(&apos;/&apos;)){
 	     	paramobj.target.api = paramobj.target.api + &apos;/&apos;;
 	     }
-		//调用mc接口
-		paramobj.cmd = &apos;recievedata&apos;;
-		return _callHttpPost(listData, paramobj);
+	     //调用mc接口
+		paramClone.cmd = &apos;recievedata&apos;;
+		return _callHttpPost(listData, paramClone);
 	} else {
 		//直写数据库
-		return exWriteDb(listData, paramobj);
+		return WriteDbUtil.exWriteDb(listData, paramClone);
 	}
 }
 
 function _callHttpPost(listData, paramobj){
-	paramobj.source.data = exEncode(listData);
+	paramobj.source.data = exEncode(listData, paramobj.source.encodeType);
 	return callHttpPost(paramobj.target.api, JSON.stringify(paramobj));
 }
 </code>
@@ -955,18 +957,18 @@ function _callHttpPost(listData, paramobj){
           </codeTemplate>
           <codeTemplate version="3.7.1">
             <id>c8e1f8e9-a6c7-44b3-a640-385c6917808d</id>
-            <name>序列号相关函数</name>
-            <revision>1</revision>
+            <name>序列号及base64相关函数</name>
+            <revision>2</revision>
             <lastModified>
-              <time>1563332377788</time>
+              <time>1564025457702</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -1055,20 +1057,20 @@ function base64Str2Object(string) {
           <codeTemplate version="3.7.1">
             <id>474bb3c2-86ff-44aa-8d10-8f2c618c7fe7</id>
             <name>引入包</name>
-            <revision>6</revision>
+            <revision>8</revision>
             <lastModified>
-              <time>1563765945813</time>
+              <time>1564038260751</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>CHANNEL_POSTPROCESSOR</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>CHANNEL_ATTACHMENT</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>CHANNEL_ATTACHMENT</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1087,6 +1089,12 @@ importPackage(Packages.org.apache.http.util);
 importPackage(Packages.org.apache.http.client.utils);
 importPackage(Packages.java.nio.charset);
 
+//检查重复执行
+importPackage(Packages.java.util.concurrent);
+
+//日期类型转换
+importPackage(Packages.com.mirth.connect.util);
+
 //数据交换消息
 </code>
             </properties>
@@ -1094,17 +1102,17 @@ importPackage(Packages.java.nio.charset);
           <codeTemplate version="3.7.1">
             <id>fc7190c8-1277-4c82-8de6-9059d28d9559</id>
             <name>数据写入函数</name>
-            <revision>47</revision>
+            <revision>67</revision>
             <lastModified>
-              <time>1563785119750</time>
+              <time>1564133438554</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -1116,7 +1124,11 @@ importPackage(Packages.java.nio.charset);
 	@param {List} arg1 - 数据
 	@return {none} return 无返回
 */
-function exWriteDb(listData, paramobj) {
+var WriteDbUtil = {
+};
+
+WriteDbUtil.exWriteDb = function(listData, paramobj) {
+	
 	var dbConn;
 	var target = paramobj.target;
 	var errorMsg;
@@ -1128,17 +1140,7 @@ function exWriteDb(listData, paramobj) {
 
 		errorMsg = &apos;写入数据失败&apos;;
 		//根据参数处理
-		_processData(paramobj, dbConn, listData);
-		
-		var servletResponse = getServletResponseJson(&apos;执行成功&apos;);
-		servletResponse.target = {};
-		if(paramobj.target.rowsInsert){
-			servletResponse.target.rowsInsert = paramobj.target.rowsInsert;
-		}
-		if(paramobj.target.rowsUpdate){
-			servletResponse.target.rowsUpdate = paramobj.target.rowsUpdate;
-		}
-		return servletResponse;
+		return _processData(paramobj, dbConn, listData);
 	}catch (e) {
 		return getServletResponseJson(errorMsg + e.toString(), -1);
 	} finally {
@@ -1147,107 +1149,177 @@ function exWriteDb(listData, paramobj) {
 			dbConn.close();
 		}
 	}
-}
 
-
-function _processData(paramobj, dbConn, listData){
-	//1判断是否有删除语句
-	//1.1有则先执行，然后通过fieldsmap生成insert语句
-	//1.2没有，则根据主键生成判断目标表是否存在sql执行，根据结果生成insert语句、update语句、insert数据、update数据
-	if(paramobj.target.deletesql){
-		//只有第一次才删除
-		if(paramobj.callNum &amp;&amp; paramobj.callNum==1){
-			logger.info(&quot;执行删除=&quot; + paramobj.target.deletesql);
-			dbConn.executeUpdate(paramobj.target.deletesql);
-		}
-		var sql = _getInsertSql(paramobj);
-		var listParams = _listInsertParam(paramobj, listData);
-		_exWriteBatch(dbConn.getConnection(), sql, listParams);
-		paramobj.target.rowsInsert = listData.size();
-	} else {
-		
-	}
-}
-
-function _listInsertParam(paramobj, listdata){
-	var list = [];
-	for(var i=0;i&lt;listdata.size();i++){
-		var row = listdata.get(i);
-		var rowParam = [];
-		for(var j=0;j&lt;paramobj.target.fieldsmap.length;j++){
-			var fieldmap = paramobj.target.fieldsmap[j];
-			rowParam.push(row.get(fieldmap.src));
-		}
-		list.push(rowParam);
-	}
-
-	return list;
-}
-
-//返回sql
-function _getInsertSql(paramobj){
-	var fields = &apos;&apos;;
-	var values = &apos;&apos;;
-	for(var i=0;i&lt;paramobj.target.fieldsmap.length;i++){
-		var fieldmap = paramobj.target.fieldsmap[i];
-		if(fields){
-			fields = fields + &apos;,&apos; + fieldmap.dest;
-			values = values + &apos;,&apos; + &apos;?&apos;;
+	
+	//listdata 是java的ArrayList&lt;HashMap&lt;源表字段,data&gt;&gt;
+	function _processData(paramobj, dbConn, listData){
+		//1判断是否有删除语句
+		//1.1有则先执行，然后通过fieldsmap生成insert语句
+		//1.2没有，则根据主键生成判断目标表是否存在sql执行，根据结果生成insert语句、update语句、insert数据、update数据
+		if(paramobj.target.deletesql){
+			//只有第一次才删除
+			if(paramobj.callNum &amp;&amp; paramobj.callNum==1){
+				logger.info(&quot;执行删除=&quot; + paramobj.target.deletesql);
+				dbConn.executeUpdate(paramobj.target.deletesql);
+			}
+			var sql = _getInsertSql(paramobj);
+			var listParams = _listInsertParam(paramobj, listData);
+			_exWriteBatch(dbConn.getConnection(), sql, listParams);
+	
+			var servletResponse = getServletResponseJson(&apos;执行成功&apos;);
+			servletResponse.target = {};
+			servletResponse.target.rowsInsert = listData.size();
+			return servletResponse;
 		} else {
-			fields = fieldmap.dest;
-			values = &apos;?&apos;;
+			//按源、目标的主键匹配关系，生成Map&lt;目标表字段主键值,数据&gt;，把所有的主键生成查询语句在目标库执行
+			//存在的主键，生成更新的Map&lt;目标表字段主键值,数据&gt;，其余的是插入的Map&lt;目标表字段主键值,数据&gt;
+	
+			//源表主键可能是多个，目标表主键只能是一个
+			if (typeof String.prototype.trim != &apos;function&apos;) {
+		       String.prototype.trim = function (str){
+		          return this.replace(/(^\s*)|(\s*$)/g, &quot;&quot;);
+		       };
+		     }
+		     var srcPks = paramobj.source.pk.split(&quot;,&quot;);
+			for (i=0; i&lt;srcPks.length; i++){
+				srcPks[i] = srcPks[i].trim().toUpperCase();
+			}
+
+			//转为目标主键的map
+			var mapDestKeyData = _data2MapKey(listData, srcPks, paramobj.target.pk);
+
+			//获取查询主键存在语句
+			var existsSql = _getExistsSql(mapDestKeyData, paramobj.target.pk, paramobj.target.table);
+
+			var servletResponse = getServletResponseJson(&apos;执行成功&apos;);
+			servletResponse.target = {};
+			servletResponse.target.rowsInsert = listData.size();
+			return servletResponse;
 		}
 	}
-	return &apos;insert into &apos; + paramobj.target.table + &apos;(&apos;+ fields + &apos;) values(&apos; + values+ &apos;)&apos;;
-}
 
-function _getUpdateSql(paramobj){
-	var fieldsvalue = &apos;&apos;;
-	for(var i=0;i&lt;paramobj.target.fieldsmap.length;i++){
-		var fieldmap = paramobj.target.fieldsmap[i];
-		//如果是主键，跳过
-		if(fieldmap.dest == paramobj.target.pk){
-			continue;
+	function _getExistsPkValues(dbConn, existsSql){
+		var cachedRowSet = dbConn.executeCachedQuery(existsSql, new ArrayList());
+		cachedRowSet.next();
+		return cachedRowSet.getString(1);
+	}
+
+	function _getExistsSql(mapDestKeyData, destPk, destTable){
+		var sql = &apos;select &apos;+destPk+&apos; from &apos;+destTable+&apos; where &apos;+destPk+&apos; in (&apos;;
+		var values = &apos;&apos;;
+
+		//字符串自带前后双引号
+		var arrData = mapDestKeyData.keySet().toArray();
+		for(var i=0;i&lt;arrData.length;i++){
+			var str = arrData[i] + &apos;&apos;;
+			if(values){
+				values = values + &apos;,&apos; + str.replace(/&quot;/g, &quot;&apos;&quot;);
+			} else {
+				values = str.replace(/&quot;/g, &quot;&apos;&quot;);
+			}
 		}
-		if(fieldsvalue){
-			fieldsvalue = fieldsvalue + &apos;,&apos; + fieldmap.dest + &apos;=?&apos;;
-		} else {
-			fieldsvalue = fieldmap.dest + &apos;=?&apos;;
+		return sql + values + &apos;)&apos;;
+	}
+
+	function _data2MapKey(listdata, srcPks, destPk){
+		//listdata 是java的ArrayList&lt;HashMap&lt;源表字段,data&gt;&gt;
+		//把listdata转为Map&lt;目标表字段主键值,data&gt;
+		var mapResult = new HashMap();
+		for(var i=0;i&lt;listdata.size();i++){
+			var row = listdata.get(i);
+			var destPkValue = &apos;&apos;;
+			for (j=0; j&lt;srcPks.length; j++){
+				var srcField = srcPks[j];
+				if(srcField){
+					destPkValue = destPkValue + JSON.stringify(row.get(srcField));
+				}
+			}
+			mapResult.put(destPkValue, row);
+		}
+		return mapResult;
+	}
+	
+	function _listInsertParam(paramobj, listdata){
+		var list = [];
+		for(var i=0;i&lt;listdata.size();i++){
+			var row = listdata.get(i);
+			var rowParam = [];
+			for(var j=0;j&lt;paramobj.target.fieldsmap.length;j++){
+				var fieldmap = paramobj.target.fieldsmap[j];
+				rowParam.push(row.get(fieldmap.src));
+			}
+			list.push(rowParam);
+		}
+	
+		return list;
+	}
+	
+	//返回sql
+	function _getInsertSql(paramobj){
+		var fields = &apos;&apos;;
+		var values = &apos;&apos;;
+		for(var i=0;i&lt;paramobj.target.fieldsmap.length;i++){
+			var fieldmap = paramobj.target.fieldsmap[i];
+			if(fields){
+				fields = fields + &apos;,&apos; + fieldmap.dest;
+				values = values + &apos;,&apos; + &apos;?&apos;;
+			} else {
+				fields = fieldmap.dest;
+				values = &apos;?&apos;;
+			}
+		}
+		return &apos;insert into &apos; + paramobj.target.table + &apos;(&apos;+ fields + &apos;) values(&apos; + values+ &apos;)&apos;;
+	}
+	
+	function _getUpdateSql(paramobj){
+		var fieldsvalue = &apos;&apos;;
+		for(var i=0;i&lt;paramobj.target.fieldsmap.length;i++){
+			var fieldmap = paramobj.target.fieldsmap[i];
+			//如果是主键，跳过
+			if(fieldmap.dest == paramobj.target.pk){
+				continue;
+			}
+			if(fieldsvalue){
+				fieldsvalue = fieldsvalue + &apos;,&apos; + fieldmap.dest + &apos;=?&apos;;
+			} else {
+				fieldsvalue = fieldmap.dest + &apos;=?&apos;;
+			}
+		}
+		return &apos;update &apos; + paramobj.target.table + &apos; set &apos;+ fieldsvalue + &apos; where &apos; + paramobj.target.pk + &apos;=?&apos;;
+	}
+	
+	function _exWriteBatch(conn, sql, listValue) {
+		var preparedStatement;
+		try {
+			conn.setAutoCommit(false);
+			preparedStatement = conn.prepareStatement(sql);
+			for (var i=0;i&lt;listValue.length;i++) {
+				var row = listValue[i];
+		          _setPrepareStatementValues(preparedStatement, row);
+		          preparedStatement.addBatch();
+	     	}
+	     	preparedStatement.executeBatch();
+	     	conn.commit();
+		} catch(e) {
+			conn.rollback();
+			throw e;
+		} finally {
+			_exClosePs(preparedStatement);
 		}
 	}
-	return &apos;update &apos; + paramobj.target.table + &apos; set &apos;+ fieldsvalue + &apos; where &apos; + paramobj.target.pk + &apos;=?&apos;;
-}
-
-function _exWriteBatch(conn, sql, listValue) {
-	var preparedStatement;
-	try {
-		conn.setAutoCommit(false);
-		preparedStatement = conn.prepareStatement(sql);
-		for (var i=0;i&lt;listValue.length;i++) {
-			var row = listValue[i];
-	          _setPrepareStatementValues(preparedStatement, row);
-	          preparedStatement.addBatch();
-     	}
-     	preparedStatement.executeBatch();
-     	conn.commit();
-	} catch(e) {
-		conn.rollback();
-		throw e;
-	} finally {
-		_exClosePs(preparedStatement);
+	
+	function _exClosePs(preparedStatement) {
+		if(preparedStatement){
+			DbUtils.closeQuietly(preparedStatement);
+		}
 	}
-}
-
-function _exClosePs(preparedStatement) {
-	if(preparedStatement){
-		DbUtils.closeQuietly(preparedStatement);
+	
+	function _setPrepareStatementValues(stmt, values) {
+		for (var i = 0; i &lt; values.length; i++) {
+			stmt.setObject(i + 1, values[i]);
+		}
 	}
-}
 
-function _setPrepareStatementValues(stmt, values) {
-	for (var i = 0; i &lt; values.length; i++) {
-		stmt.setObject(i + 1, values[i]);
-	}
 }
 </code>
             </properties>
@@ -1255,17 +1327,17 @@ function _setPrepareStatementValues(stmt, values) {
           <codeTemplate version="3.7.1">
             <id>e7c6c0e0-4611-4049-a01f-7ce7c67ae818</id>
             <name>数据库工具工厂类</name>
-            <revision>4</revision>
+            <revision>5</revision>
             <lastModified>
-              <time>1563871496051</time>
+              <time>1564127980151</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -1278,7 +1350,7 @@ function _setPrepareStatementValues(stmt, values) {
 	@param {String} arg1 - arg1 description
 	@return {String} return description
 */
-function DbUtilFactory() {}
+var DbUtilFactory= {};
 
 DbUtilFactory.get = function(dbConn){
 	var driverName = dbConn.getConnection().getMetaData().getDriverName().toUpperCase();
@@ -1296,17 +1368,17 @@ DbUtilFactory.get = function(dbConn){
           <codeTemplate version="3.7.1">
             <id>e57c103f-92bc-4235-a955-ddb6e860f5f1</id>
             <name>数据库方言工具对象-oracle</name>
-            <revision>3</revision>
+            <revision>5</revision>
             <lastModified>
-              <time>1563869726736</time>
+              <time>1564130578888</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -1319,30 +1391,30 @@ DbUtilFactory.get = function(dbConn){
 	@param {String} arg1 - arg1 description
 	@return {String} return description
 */
-function OracleDbUtil() {
+var OracleDbUtil={};
 
-	OracleDbUtil.getNow = function(dbConn){
-		var cachedRowSet = dbConn.executeCachedQuery(&quot;select to_char(sysdate,&apos;yyyy-mm-dd hh24:mi:ss&apos;) gnow from dual&quot;, new ArrayList());
-		cachedRowSet.next();
-		return cachedRowSet.getString(0);
-	}
-}</code>
+OracleDbUtil.getNow = function(dbConn){
+	var cachedRowSet = dbConn.executeCachedQuery(&quot;select to_char(sysdate,&apos;yyyy-mm-dd hh24:mi:ss&apos;) gnow from dual&quot;, new ArrayList());
+	cachedRowSet.next();
+	return cachedRowSet.getString(0);
+}
+</code>
             </properties>
           </codeTemplate>
           <codeTemplate version="3.7.1">
             <id>7180031c-3e75-4368-9484-1327167f5a50</id>
             <name>数据库方言工具对象-postgresql</name>
-            <revision>3</revision>
+            <revision>4</revision>
             <lastModified>
-              <time>1563870393743</time>
+              <time>1564127980200</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -1355,7 +1427,7 @@ function OracleDbUtil() {
 	@param {String} arg1 - arg1 description
 	@return {String} return description
 */
-function PgDbUtil() {}
+var PgDbUtil={};
 
 PgDbUtil.getNow = function(dbConn){
 	var cachedRowSet = dbConn.executeCachedQuery(&quot;SELECT to_char(now(),&apos;yyyy-mm-dd hh24:mi:ss&apos;)&quot;, new ArrayList());
@@ -1367,17 +1439,17 @@ PgDbUtil.getNow = function(dbConn){
           <codeTemplate version="3.7.1">
             <id>ac5e4ea2-956e-454c-a9dc-c7a06b009bc0</id>
             <name>数据库方言工具对象-sqlserver</name>
-            <revision>1</revision>
+            <revision>2</revision>
             <lastModified>
-              <time>1563871266352</time>
+              <time>1564127980220</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -1390,7 +1462,7 @@ PgDbUtil.getNow = function(dbConn){
 	@param {String} arg1 - arg1 description
 	@return {String} return description
 */
-function SqlServerDbUtil() {}
+var SqlServerDbUtil={};
 
 SqlServerDbUtil.getNow = function(dbConn){
 	var cachedRowSet = dbConn.executeCachedQuery(&quot;select convert(varchar(20),getdate(),120) gnow&quot;, new ArrayList());
@@ -1410,9 +1482,9 @@ SqlServerDbUtil.getNow = function(dbConn){
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -1476,9 +1548,9 @@ function getResultCol(resultSet, fieldName, fieldType){
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -1522,10 +1594,10 @@ function testStrJava(result) {
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>CHANNEL_POSTPROCESSOR</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -1608,9 +1680,9 @@ ExMqObject.prototype = {
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -1639,18 +1711,18 @@ function getClassName(obj) {
           <codeTemplate version="3.7.1">
             <id>283fb344-0c24-47c6-ba66-06eb9f0b9db1</id>
             <name>获取ServletResponse返回的json对象函数</name>
-            <revision>3</revision>
+            <revision>4</revision>
             <lastModified>
-              <time>1563442545080</time>
+              <time>1564022673009</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>CHANNEL_POSTPROCESSOR</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
@@ -1663,18 +1735,154 @@ function getClassName(obj) {
 	@return {String} return description
 */
 function getServletResponseJson(msg, code) {
-	var result = {};
 	if(!code){
 		code = 1;
 	}
-	result.code = code;
-	result.msg = msg;
-	return result;
+	var obj = new ServletResponseObj(msg);
+	obj.setCode(code);
+	return obj;
 }
 
 function getServletResponseStr(msg, code) {
 	return JSON.stringify(getServletResponseJson(msg, code));
+}
+
+function ServletResponseObj(msg){
+	this.msg = msg;
+}
+
+
+ServletResponseObj.prototype = {
+	setCode : function(code){
+		this.code = code;
+	},
+	setValueInc : function(valueInc){
+		this.source = {};
+		this.source.valueInc = valueInc;
+	},
+}
+</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.7.1">
+            <id>fa021cb6-4d0b-41e7-95ee-6ece8680a172</id>
+            <name>获取最大增量值</name>
+            <revision>4</revision>
+            <lastModified>
+              <time>1564022270185</time>
+              <timezone>Asia/Shanghai</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	获取最大增量值
+	
+	@param {Object} data - 增量字段值
+	@param {String} valueInc - 原增量值
+	@return {String} return 最大值
+*/
+function getMaxValueInc(data, valueInc, dbNow) {
+	if(data){
+		var dataStr = StringUtil.valueOf(data);
+		if(dataStr.indexOf(&apos;-&apos;)&gt;0){
+			//对日期类型的，需要比较数据库的当前值，大于的忽略
+			if(dataStr&gt;dbNow){
+				//忽略
+			} else {
+				valueInc = dataStr&gt;valueInc ? dataStr: valueInc;
+			}
+		} else {
+			valueInc = dataStr&gt;valueInc ? dataStr: valueInc;
+		}
+		//logger.info(&apos;dataStr:&apos;+dataStr+&apos;,valueInc:&apos;+valueInc);
+		return valueInc;
+	} else {
+		return valueInc;
+	}
 }</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.7.1">
+            <id>058b5078-2e5c-4548-8955-757327c9e0b2</id>
+            <name>防止重复执行</name>
+            <revision>20</revision>
+            <lastModified>
+              <time>1564041165090</time>
+              <timezone>Asia/Shanghai</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>CHANNEL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	执行检查
+
+	@param {String} arg1 - arg1 description
+	@return {String} return description
+*/
+function ExecCheckUtil(){
+	
+}
+
+ExecCheckUtil.checkResAskId = function(paramObj){
+	var key = paramObj.resAskId + paramObj.cmd;
+	var map;
+	if(globalMap.containsKey(&apos;mapExResAskId&apos;)){
+		map = globalMap.get(&apos;mapExResAskId&apos;);
+	} else {
+		//logger.info(&apos;---新建检查重复执行ConcurrentHashMap&apos;);
+		map = new ConcurrentHashMap();
+		globalMap.put(&apos;mapExResAskId&apos;, map);
+	}
+	if(map.containsKey(key)){
+		//logger.info(&apos;---检查失败&apos; + key);
+		//logger.info(&apos;---map:&apos; + map.toString());
+		//map.clear();
+		return createExOutcome(&apos;任务正在执行&apos;, 500);
+	} else {
+		//logger.info(&apos;---检查成功&apos; + key);
+		var execId = UUIDGenerator.getUUID();
+		map.put(key, execId);
+		channelMap.put(&apos;execId&apos;, execId);
+		return null;
+	}
+}
+	
+ExecCheckUtil.endExec = function(paramObj){
+	
+	var key = paramObj.resAskId + paramObj.cmd;
+	var map = globalMap.get(&apos;mapExResAskId&apos;);
+	if(map.containsKey(key)){
+		//检查是否本通道放的
+		if(channelMap.containsKey(&apos;execId&apos;)){
+			var execId = channelMap.get(&apos;execId&apos;);
+			if(map.get(key) == execId){
+				map.remove(key);
+				//logger.info(&apos;-----释放----&apos;+key);
+			}
+		}
+	} else {
+		//logger.info(&apos;-----map不包含key,map:&apos;+map.toString());
+	}
+}
+</code>
             </properties>
           </codeTemplate>
         </codeTemplates>
