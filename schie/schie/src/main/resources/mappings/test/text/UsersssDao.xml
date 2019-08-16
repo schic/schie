@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeespring.modules.test.text.dao.UsersssDao">
+    
+	<sql id="usersssColumns">
+					a.id AS "id",
+					a.name AS "name",
+					a.password AS "password",
+					a.create_date AS "createDate"
+	</sql>
+
+	<sql id="usersssColumnsList">
+					a.id AS "id",
+					a.name AS "name",
+					a.password AS "password",
+					a.create_date AS "createDate"
+	</sql>
+
+	<sql id="usersssJoins">
+	</sql>
+    
+	<select id="get" resultType="Usersss">
+		SELECT 
+			<include refid="usersssColumns"/>
+		FROM usersss a
+		<include refid="usersssJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Usersss">
+		SELECT 
+			<include refid="usersssColumnsList"/>
+		FROM usersss a
+		<include refid="usersssJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="password != null and password != ''">
+				AND a.password = #{password}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null ">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="where !=null and where != ''">
+				AND ${where}
+			</when>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Usersss">
+		SELECT 
+			<include refid="usersssColumnsList"/>
+		FROM usersss a
+		<include refid="usersssJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO usersss(
+			id,
+			name,
+			password,
+			create_date
+		) VALUES (
+			#{id},
+			#{name},
+			#{password},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE usersss SET 	
+			name = #{name},
+			password = #{password}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM usersss
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE usersss SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="findUniqueByProperty" resultType="Usersss" statementType="STATEMENT">
+		select * FROM usersss  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="total" resultType="Usersss">
+		SELECT
+			<choose>
+				<when test=" totalType != null and totalType != ''">
+					to_char(a.create_date,'${totalType}') as totalDate,
+				</when>
+				<otherwise>
+				 </otherwise>
+			</choose>
+			count(*) as totalCount
+		FROM
+			usersss a
+		<where>
+			1=1
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+					<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="password != null and password != ''">
+				AND a.password = #{password}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null ">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test=" groupBy != null and groupBy != '' and totalType != null and totalType != '' ">
+				GROUP BY to_char(a.create_date,'${totalType}'),${groupBy}
+			</when>
+			<when test=" groupBy != null and groupBy != ''">
+				GROUP BY ${groupBy}
+			</when>
+			<when test=" totalType != null and totalType != ''">
+				GROUP BY to_char(a.create_date,'${totalType}')
+			</when>
+			<otherwise>
+			 </otherwise>
+		</choose>
+		<choose>
+			<when test=" orderBy != null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeespring.modules.exchange.dao.ExDbStandardDao">
+
+	<sql id="exDbStandardColumns">
+					a.id AS "id",
+					a.parent_id AS "parent.id",
+					a.parent_ids AS "parentIds",
+					a.f_type AS "fType",
+					a.name AS "name",
+					a.in_id AS "inId",
+					a.name_cn AS "nameCn",
+					a.field_name AS "fieldName",
+					a.datatype AS "datatype",
+					a.datalength AS "datalength",
+					a.f_require AS "fRequire",
+					a.sort AS "sort",
+					a.create_date AS "createDate",
+					a.create_by AS "createBy.id",
+					a.update_date AS "updateDate",
+					a.update_by AS "updateBy.id",
+					a.orgid AS "orgid",
+					a.extabid AS "exTabId"
+	</sql>
+
+	<sql id="exDbStandardColumnsList">
+					a.id AS "id",
+					a.parent_id AS "parent.id",
+					substr(a.parent_ids,1,30) AS "parentIds",
+					a.f_type AS "fType",
+					a.name AS "name",
+					a.in_id AS "inId",
+					a.name_cn AS "nameCn",
+					a.field_name AS "fieldName",
+					a.datatype AS "datatype",
+					a.datalength AS "datalength",
+					a.f_require AS "fRequire",
+					a.sort AS "sort",
+					a.create_date AS "createDate",
+					a.create_by AS "createBy.id",
+					a.update_date AS "updateDate",
+					a.update_by AS "updateBy.id"
+	</sql>
+
+	<sql id="exDbStandardJoins">
+	</sql>
+
+	<select id="get" resultType="ExDbStandard">
+		SELECT
+		<include refid="exDbStandardColumns"/>
+		FROM ex_db_standard a
+		<include refid="exDbStandardJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="ExDbStandard">
+		SELECT
+		<include refid="exDbStandardColumnsList"/>
+		FROM ex_db_standard a
+		<include refid="exDbStandardJoins"/>
+		<where>
+
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="parent != null and parent.id != null and parent.id != ''">
+				AND a.parent_id = #{parent.id}
+			</if>
+			<if test="parentIds != null and parentIds != ''">
+				AND a.parent_ids LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{parentIds}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{parentIds}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{parentIds},'%')</if>
+			</if>
+			<if test="fType != null and fType != ''">
+				AND a.f_type = #{fType}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="inId != null and inId != ''">
+				AND a.in_id = #{inId}
+			</if>
+			<if test="nameCn != null and nameCn != ''">
+				AND a.name_cn LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{nameCn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{nameCn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{nameCn},'%')</if>
+			</if>
+			<if test="fieldName != null and fieldName != ''">
+				AND a.field_name LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{fieldName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{fieldName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{fieldName},'%')</if>
+			</if>
+			<if test="datatype != null and datatype != ''">
+				AND a.datatype = #{datatype}
+			</if>
+			<if test="datalength != null and datalength != ''">
+				AND a.datalength = #{datalength}
+			</if>
+			<if test="fRequire != null and fRequire != ''">
+				AND a.f_require = #{fRequire}
+			</if>
+			<if test="sort != null and sort != ''">
+				AND a.sort = #{sort}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null ">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+			<if test="orgid != null and orgid != ''">
+				AND a.orgid = #{orgid}
+			</if>
+			<if test="exTabId != null and exTabId != ''">
+				AND a.extabid = #{exTabId}
+			</if>
+		</where>
+		<choose>
+			<when test="where !=null and where != ''">
+				AND ${where}
+			</when>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="ExDbStandard">
+		SELECT
+		<include refid="exDbStandardColumnsList"/>
+		FROM ex_db_standard a
+		<include refid="exDbStandardJoins"/>
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO ex_db_standard(
+			id,
+			parent_id,
+			parent_ids,
+			f_type,
+			name,
+			in_id,
+			name_cn,
+			field_name,
+			datatype,
+			datalength,
+			f_require,
+			sort,
+			create_date,
+			create_by,
+			update_date,
+			update_by,
+			orgid,
+			extabid
+		) VALUES (
+			#{id},
+			#{parent.id},
+			#{parentIds},
+			#{fType},
+			#{name},
+			#{inId},
+			#{nameCn},
+			#{fieldName},
+			#{datatype},
+			#{datalength},
+			#{fRequire},
+			#{sort},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id},
+			#{orgid},
+			#{exTabId}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE ex_db_standard SET 	
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds},
+			f_type = #{fType},
+			name = #{name},
+			in_id = #{inId},
+			name_cn = #{nameCn},
+			field_name = #{fieldName},
+			datatype = #{datatype},
+			datalength = #{datalength},
+			f_require = #{fRequire},
+			sort = #{sort},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id},
+			orgid = #{orgid},
+			extabid = #{exTabId}
+		WHERE id = #{id}
+	</update>
+
+
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM ex_db_standard
+		WHERE id = #{id}
+	</update>
+
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE ex_db_standard SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="findUniqueByProperty" resultType="ExDbStandard" statementType="STATEMENT">
+		select * FROM ex_db_standard  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="total" resultType="ExDbStandard">
+		SELECT
+		<choose>
+			<when test=" totalType != null and totalType != ''">
+				to_char(a.create_date,'${totalType}') as totalDate,
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		count(*) as totalCount
+		FROM
+		ex_db_standard a
+		<where>
+			1=1
+
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="parent != null and parent.id != null and parent.id != ''">
+				AND a.parent_id = #{parent.id}
+			</if>
+			<if test="parentIds != null and parentIds != ''">
+				AND a.parent_ids LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{parentIds}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{parentIds}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{parentIds},'%')</if>
+			</if>
+			<if test="fType != null and fType != ''">
+				AND a.f_type = #{fType}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="inId != null and inId != ''">
+				AND a.in_id = #{inId}
+			</if>
+			<if test="nameCn != null and nameCn != ''">
+				AND a.name_cn LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{nameCn}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{nameCn}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{nameCn},'%')</if>
+			</if>
+			<if test="fieldName != null and fieldName != ''">
+				AND a.field_name LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{fieldName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{fieldName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{fieldName},'%')</if>
+			</if>
+			<if test="datatype != null and datatype != ''">
+				AND a.datatype = #{datatype}
+			</if>
+			<if test="datalength != null and datalength != ''">
+				AND a.datalength = #{datalength}
+			</if>
+			<if test="fRequire != null and fRequire != ''">
+				AND a.f_require = #{fRequire}
+			</if>
+			<if test="sort != null and sort != ''">
+				AND a.sort = #{sort}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null ">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by = #{createBy.id}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by = #{updateBy.id}
+			</if>
+
+			<if test="exTabId != null and exTabId != ''">
+				AND a.extabid = #{exTabId}
+			</if>
+
+		</where>
+		<choose>
+			<when test=" groupBy != null and groupBy != '' and totalType != null and totalType != '' ">
+				GROUP BY to_char(a.create_date,'${totalType}'),${groupBy}
+			</when>
+			<when test=" groupBy != null and groupBy != ''">
+				GROUP BY ${groupBy}
+			</when>
+			<when test=" totalType != null and totalType != ''">
+				GROUP BY to_char(a.create_date,'${totalType}')
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		<choose>
+			<when test=" orderBy != null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+</mapper>
