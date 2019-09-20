@@ -37,11 +37,11 @@
 
 <div class="wrapper wrapper-content">
     <div class="row">
-        <div class="col-sm-4">
+        <%-- <div class="col-sm-4">
 
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>公告通知</h5>
+                    <h5>公告通知1</h5>
                     <div style="text-align: center;font-size: 14px;color: #666;">${oaNotify.title}</div><br/>
                 </div>
                 <div class="ibox-content">
@@ -56,7 +56,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div> --%>
         
         <div class="col-sm-4">
             <div class="ibox float-e-margins">

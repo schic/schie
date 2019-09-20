@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.modules.monitor.entity;
 
 import org.apache.shiro.session.mgt.SimpleSession;
@@ -7,8 +10,7 @@ import org.apache.shiro.session.mgt.SimpleSession;
  * 
  * @author JeeSpring
  */
-public class OnlineSession extends SimpleSession
-{
+public class OnlineSession extends SimpleSession {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,117 +39,95 @@ public class OnlineSession extends SimpleSession
     private transient boolean attributeChanged = false;
 
     @Override
-    public String getHost()
-    {
+    public String getHost() {
         return host;
     }
 
     @Override
-    public void setHost(String host)
-    {
+    public void setHost(String host) {
         this.host = host;
     }
 
-    public String getBrowser()
-    {
+    public String getBrowser() {
         return browser;
     }
 
-    public void setBrowser(String browser)
-    {
+    public void setBrowser(String browser) {
         this.browser = browser;
     }
 
-    public String getOs()
-    {
+    public String getOs() {
         return os;
     }
 
-    public void setOs(String os)
-    {
+    public void setOs(String os) {
         this.os = os;
     }
 
-    public String getUserId()
-    {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId)
-    {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public String getLoginName()
-    {
+    public String getLoginName() {
         return loginName;
     }
 
-    public void setLoginName(String loginName)
-    {
+    public void setLoginName(String loginName) {
         this.loginName = loginName;
     }
 
-    public String getDeptName()
-    {
+    public String getDeptName() {
         return deptName;
     }
 
-    public void setDeptName(String deptName)
-    {
+    public void setDeptName(String deptName) {
         this.deptName = deptName;
     }
 
-    public OnlineStatus getStatus()
-    {
+    public OnlineStatus getStatus() {
         return status;
     }
 
-    public void setStatus(OnlineStatus status)
-    {
+    public void setStatus(OnlineStatus status) {
         this.status = status;
     }
 
-    public void markAttributeChanged()
-    {
+    public void markAttributeChanged() {
         this.attributeChanged = true;
     }
 
-    public void resetAttributeChanged()
-    {
+    public void resetAttributeChanged() {
         this.attributeChanged = false;
     }
 
-    public boolean isAttributeChanged()
-    {
+    public boolean isAttributeChanged() {
         return attributeChanged;
     }
 
     @Override
-    public void setAttribute(Object key, Object value)
-    {
+    public void setAttribute(Object key, Object value) {
         super.setAttribute(key, value);
     }
 
     @Override
-    public Object removeAttribute(Object key)
-    {
+    public Object removeAttribute(Object key) {
         return super.removeAttribute(key);
     }
 
-    public static enum OnlineStatus
-    {
+    public static enum OnlineStatus {
         /** 用户状态 */
         on_line("在线"), off_line("离线");
         private final String info;
 
-        private OnlineStatus(String info)
-        {
+        private OnlineStatus(String info) {
             this.info = info;
         }
 
-        public String getInfo()
-        {
+        public String getInfo() {
             return info;
         }
     }

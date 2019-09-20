@@ -48,8 +48,7 @@ public class PaginationMapperMethod {
 
     private boolean hasNamedParameters;
 
-    public PaginationMapperMethod(Class<?> declaringInterface, Method method,
-                                  SqlSession sqlSession) {
+    public PaginationMapperMethod(Class<?> declaringInterface, Method method, SqlSession sqlSession) {
         paramNames = new ArrayList<String>();
         paramPositions = new ArrayList<Integer>();
         this.sqlSession = sqlSession;
@@ -71,12 +70,15 @@ public class PaginationMapperMethod {
      */
     @SuppressWarnings("unchecked")
     public Object execute(Object[] args) {
+        if (args == null) {
+            return null;
+        }
         final Object param = getParam(args);
         Page<Object> page;
         RowBounds rowBounds;
         if (paginationIndex != null) {
             page = (Page<Object>) args[paginationIndex];
-            rowBounds =  new RowBounds(page.getFirstResult(), page.getMaxResults());
+            rowBounds = new RowBounds(page.getFirstResult(), page.getMaxResults());
         } else if (rowBoundsIndex != null) {
             rowBounds = (RowBounds) args[rowBoundsIndex];
             page = new Page<Object>();

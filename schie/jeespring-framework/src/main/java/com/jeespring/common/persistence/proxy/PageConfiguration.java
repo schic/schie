@@ -17,7 +17,7 @@ import org.apache.ibatis.session.SqlSession;
  * @since JDK 1.5
  */
 public class PageConfiguration extends Configuration {
-	
+
     protected MapperRegistry mapperRegistry = new PaginationMapperRegistry(this);
 
     @Override

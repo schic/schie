@@ -169,7 +169,7 @@ public class SystemService extends AbstractService implements InitializingBean {
 
     @Transactional(readOnly = false)
     public void deleteUser(User user) {
-        userDao.delete(user);
+        userDao.deleteByLogic(user);
         // 清除用户缓存
         UserUtils.clearCache(user);
 //		// 清除权限缓存
@@ -266,6 +266,10 @@ public class SystemService extends AbstractService implements InitializingBean {
     public void saveRole(Role role) {
         if (StringUtils.isBlank(role.getId())) {
             role.preInsert();
+            //前端隐藏了角色类型，如果为空，则默认为user
+            if(StringUtils.isBlank(role.getRoleType())) {
+                role.setRoleType(Role.ROLE_TYPE_USER);
+            }
             roleDao.insert(role);
         } else {
             role.preUpdate();

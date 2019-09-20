@@ -10,8 +10,7 @@ import org.apache.ibatis.annotations.Param;
 /**
  * DAO支持类实现
  *
- * @param <T>
- * * * * @author 黄炳桂 516821420@qq.com
+ * @param <T> * * * @author 黄炳桂 516821420@qq.com
  * @version 2014-05-16
  */
 public interface InterfaceBaseDao<T> extends InterfaceDao {
@@ -32,15 +31,15 @@ public interface InterfaceBaseDao<T> extends InterfaceDao {
      */
     T get(T entity);
 
-	/**
-	 * 根据实体名称和字段名称和字段值获取唯一记录
-	 * 
-	 * @param <T>
-	 * @param entityClass
-	 * @param propertyName
-	 * @param value
-	 * @return
-	 */
+    /**
+     * 根据实体名称和字段名称和字段值获取唯一记录
+     * 
+     * @param
+     * @param
+     * @param propertyName
+     * @param value
+     * @return
+     */
     T findUniqueByProperty(@Param(value = "propertyName") String propertyName, @Param(value = "value") Object value);
 
     /**
@@ -102,15 +101,16 @@ public interface InterfaceBaseDao<T> extends InterfaceDao {
     @Deprecated
     int delete(String id);
 
-	/**
-	 * 删除数据（逻辑删除，更新del_flag字段为1,在表包含字段del_flag时，可以调用此方法，将数据隐藏）
-	 * @param id
-	 * @see public int delete(T entity)
-	 * @return
-	 */
-	@Deprecated
+    /**
+     * 删除数据（逻辑删除，更新del_flag字段为1,在表包含字段del_flag时，可以调用此方法，将数据隐藏）
+     * 
+     * @param id
+     * @see public int delete(T entity)
+     * @return
+     */
+    @Deprecated
     int deleteByLogic(String id);
-	
+
     /**
      * 删除数据（一般为逻辑删除，更新del_flag字段为1）
      *
@@ -118,12 +118,13 @@ public interface InterfaceBaseDao<T> extends InterfaceDao {
      * @return
      */
     int delete(T entity);
-    
-	/**
-	 * 删除数据（逻辑删除，更新del_flag字段为1,在表包含字段del_flag时，可以调用此方法，将数据隐藏）
-	 * @param entity
-	 * @return
-	 */
+
+    /**
+     * 删除数据（逻辑删除，更新del_flag字段为1,在表包含字段del_flag时，可以调用此方法，将数据隐藏）
+     * 
+     * @param entity
+     * @return
+     */
     int deleteByLogic(T entity);
 
 }

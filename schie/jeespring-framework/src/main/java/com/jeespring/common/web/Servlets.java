@@ -6,6 +6,7 @@
 package com.jeespring.common.web;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
@@ -85,7 +86,7 @@ public class Servlets {
      * @param lastModified 内容的最后修改时间.
      */
     public static boolean checkIfModifiedSince(HttpServletRequest request, HttpServletResponse response,
-                                               long lastModified) {
+            long lastModified) {
         long ifModifiedSince = request.getDateHeader(HttpHeaders.IF_MODIFIED_SINCE);
         if ((ifModifiedSince != -1) && (lastModified < ifModifiedSince + 1000)) {
             response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -135,7 +136,7 @@ public class Servlets {
     public static void setFileDownloadHeader(HttpServletResponse response, String fileName) {
         try {
             // 中文文件名支持
-            String encodedfileName = new String(fileName.getBytes(), "ISO8859-1");
+            String encodedfileName = new String(fileName.getBytes("ISO8859-1"), "ISO8859-1");
             response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedfileName + "\"");
         } catch (UnsupportedEncodingException e) {
             e.getMessage();
@@ -162,8 +163,7 @@ public class Servlets {
                 String unprefixed = paramName.substring(pre.length());
                 String[] values = request.getParameterValues(paramName);
                 if (values == null || values.length == 0) {
-                    values = new String[]{};
-                    // Do nothing, no values found at all.
+                    //
                 } else if (values.length > 1) {
                     params.put(unprefixed, values);
                 } else {
@@ -200,7 +200,7 @@ public class Servlets {
      */
     public static String encodeHttpBasic(String userName, String password) {
         String encode = userName + ":" + password;
-        return "Basic " + Encodes.encodeBase64(encode.getBytes());
+        return "Basic " + Encodes.encodeBase64(encode.getBytes(Charset.defaultCharset()));
     }
 
     /**
@@ -240,7 +240,9 @@ public class Servlets {
      */
     public static boolean isStaticFile(String uri) {
         if (staticFiles == null) {
-            staticFiles = StringUtils.split(Global.getConfig("web.staticFile"), ",");
+            synchronized (Servlets.class) {
+                staticFiles = StringUtils.split(Global.getConfig("web.staticFile"), ",");
+            }
         }
         return StringUtils.endsWithAny(uri, staticFiles) && !StringUtils.endsWithAny(uri, ".html")
                 && !StringUtils.endsWithAny(uri, ".jsp") && !StringUtils.endsWithAny(uri, ".java");

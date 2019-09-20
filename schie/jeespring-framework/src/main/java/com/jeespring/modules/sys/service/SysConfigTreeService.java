@@ -15,6 +15,7 @@ import com.jeespring.modules.sys.dao.SysConfigTreeDao;
 
 /**
  * 系统配置Service
+ * 
  * @author JeeSpring
  * @version 2018-08-22
  */
@@ -22,29 +23,29 @@ import com.jeespring.modules.sys.dao.SysConfigTreeDao;
 @Transactional(readOnly = true)
 public class SysConfigTreeService extends TreeService<SysConfigTreeDao, SysConfigTree> {
 
-	@Override
+    @Override
     public SysConfigTree get(String id) {
-		return super.get(id);
-	}
-	
-	@Override
+        return super.get(id);
+    }
+
+    @Override
     public List<SysConfigTree> findList(SysConfigTree sysConfig) {
-		if (StringUtils.isNotBlank(sysConfig.getParentIds())){
-			sysConfig.setParentIds(","+sysConfig.getParentIds()+",");
-		}
-		return super.findList(sysConfig);
-	}
-	
-	@Override
+        if (StringUtils.isNotBlank(sysConfig.getParentIds())) {
+            sysConfig.setParentIds("," + sysConfig.getParentIds() + ",");
+        }
+        return super.findList(sysConfig);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void save(SysConfigTree sysConfig) {
-		super.save(sysConfig);
-	}
-	
-	@Override
+    public void save(SysConfigTree sysConfig) {
+        super.save(sysConfig);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void delete(SysConfigTree sysConfig) {
-		super.delete(sysConfig);
-	}
-	
+    public void delete(SysConfigTree sysConfig) {
+        super.delete(sysConfig);
+    }
+
 }

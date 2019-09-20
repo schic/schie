@@ -9,39 +9,40 @@ import com.jeespring.common.persistence.TreeEntity;
 
 /**
  * 区域Entity
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2013-05-15
  */
 public class Area extends TreeEntity<Area> {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 //	private Area parent;	// 父级编号
 //	private String parentIds; // 所有父级编号
-	private String code; 	// 区域编码
+    private String code; // 区域编码
 //	private String name; 	// 区域名称
 //	private Integer sort;		// 排序
-	private String type; 	// 区域类型（1：国家；2：省份、直辖市；3：地市；4：区县）
-	
-	public Area(){
-		super();
-		this.sort = 30;
-	}
+    private String type; // 区域类型（1：国家；2：省份、直辖市；3：地市；4：区县）
 
-	public Area(String id){
-		super(id);
-	}
-	
+    public Area() {
+        super();
+        this.sort = 30;
+    }
+
+    public Area(String id) {
+        super(id);
+    }
+
 //	@JsonBackReference
 //	@NotNull
-	@Override
+    @Override
     public Area getParent() {
-		return parent;
-	}
+        return parent;
+    }
 
-	@Override
+    @Override
     public void setParent(Area parent) {
-		this.parent = parent;
-	}
+        this.parent = parent;
+    }
 //
 //	@Length(min=1, max=2000)
 //	public String getParentIds() {
@@ -69,30 +70,30 @@ public class Area extends TreeEntity<Area> {
 //		this.sort = sort;
 //	}
 
-	@Length(min=1, max=1)
-	public String getType() {
-		return type;
-	}
+    @Length(min = 1, max = 1)
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	@Length(min=0, max=100)
-	public String getCode() {
-		return code;
-	}
+    @Length(min = 0, max = 100)
+    public String getCode() {
+        return code;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 //
 //	public String getParentId() {
 //		return parent != null && parent.getId() != null ? parent.getId() : "0";
 //	}
-	
-	@Override
-	public String toString() {
-		return name;
-	}
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

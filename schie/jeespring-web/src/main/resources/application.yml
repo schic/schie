@@ -2,7 +2,7 @@ JeeSpringVersion: 3.2.2
 demoMode: false
 demoModeDescription: 演示版启用，为系统能正常演示，暂时不允许操作！系统配置可开启正式版！功能全开源！每周周一再更新！
 server:
-  port: 8888
+  port: 10001
   tomcat:
     uri-encoding: UTF-8
     basedir: /data/jeespring/tomcat
@@ -26,10 +26,10 @@ logging:
   level:
     root: INFO
     #WARN、DEBUG、INFO;DEBUG: 设置为DEBUG会打印SQL语句
-    com.jeespring: WARN
-    com.jeespring.modules.cms: DEBUG
+    com.jeespring: DEBUG
     com.company: DEBUG
     com.schic: DEBUG
+    com.schic.schie.modules.exjob: INFO
     org.apache.shiro.cache.ehcache.EhCacheManager: WARN
 #如果不需要启用安全验证 spring boot admin
 management:
@@ -75,7 +75,7 @@ spring:
     #password: 85425551
     
     #oracle
-    #driverClassName: oracle.jdbc.driver.OracleDriver
+    #driverClassName: oracle.jdbc.OracleDriver
     #jdbc:oracle:thin:@127.0.0.1:1521:orcl
     #SqlServer
     #driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
@@ -83,9 +83,11 @@ spring:
     
     #pgsql
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://127.0.0.1:5432/yinhai?currentSchema=jee
+    #url: jdbc:postgresql://127.0.0.1:5432/schie?currentSchema=public
+    url: jdbc:postgresql://192.168.17.39:5432/exchange?currentSchema=public
     username: postgres
-    password: admin
+    #password: admin
+    password: jiushi5
     
     # 下面为连接池的补充设置，应用到上面所有数据源中
     # 初始化大小，最小，最大
@@ -130,7 +132,7 @@ spring:
   redis:
     hostName: 127.0.0.1
     port: 6379
-    password: 85425551
+    password: 123456
     pool:
       maxActive: 8
       maxWait: -1
@@ -157,12 +159,41 @@ spring:
       expiry-timeout: 0 # Connection expiration timeout in milliseconds.
       idle-timeout: 30000 # Connection idle timeout in milliseconds.
       max-connections: 1 # Maximum number of pooled connections.
+      
+  quartz:
+    #相关属性配置
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: SchieScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.simpl.RAMJobStore
+            #misfireThreshold: 6000
+          #jobStore:
+            #class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            #driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            #driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            #tablePrefix: QRTZ_
+            #isClustered: true
+            #clusterCheckinInterval: 10000
+            #useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 11
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+          #数据库方式
+          #job-store-type: jdbc
+          job-store-type: memory
+  
 #mybatis的配置
 mybatis:
   config-location: classpath:/mybatis-config.xml
   mapper-locations: classpath*:/mappings/**/*.xml
   type-aliases-package: com.jeespring,com.company,com.schic
-#admin页面管理Path
+#admin页面管理Path, admin不能改，代码上还是有几个地方写死的admin
 adminPath: /admin
 frontPath: /cms
 urlSuffix: .html
@@ -190,7 +221,7 @@ shiro:
     # 设置Cookie的域名, 默认空，即当前访问的域名
     domain:
     # 设置cookie的有效访问路径
-    path: /schie
+    path: /
     # 设置HttpOnly属性
     httpOnly: true
     # 设置Cookie的过期时间，天为单位
@@ -199,7 +230,7 @@ shiro:
     # Session超时时间（默认30分钟）
     expireTime: 30
     # 同步session到数据库的周期（默认1分钟）
-    dbSyncPeriod: 1
+    dbSyncPeriod: 5
     # 相隔多久检查一次session的有效性，默认就是10分钟
     validationInterval: 10
 #dubbo客户端,使用dubbo时,请启动zookeeper
@@ -226,3 +257,12 @@ dubbo:
 security:
   basic:
     enabled: false
+
+
+#交换计划任务
+exjob:
+  enabled: false
+  messageServer: http://127.0.0.1:8085/rest/exBatchLog/save
+  mcApiPort: 9088
+  scanCron: 0 0/1 * * * ? *
+  

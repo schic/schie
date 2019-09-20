@@ -18,7 +18,10 @@
 			AND id = #{id}
 		</if>
 		<if test="type != null and type != ''">
-			AND type = #{type}
+			AND type LIKE
+			<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{type}||'%'</if>
+			<if test="dbName == 'mssql'">'%'+#{type}+'%'</if>
+			<if test="dbName == 'mysql'">CONCAT('%', #{type}, '%')</if>
 		</if>
 		<if test="value != null and value != ''">
 			AND value in (#{value})

@@ -19,7 +19,7 @@
                 <!-- 内容盒子头部 -->
                 <div class="box-header">
                     <div class="box-title">
-                        <i class="fa fa-edit"></i>部门
+                        <i class="fa fa-edit"></i>机构
                     </div>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" id="btnExpand" title="展开" style="display:none;">

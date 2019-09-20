@@ -27,7 +27,6 @@ import java.util.Set;
  */
 public class PaginationMapperProxy implements InvocationHandler {
 
-
     private static final Set<String> OBJECT_METHODS = new HashSet<String>() {
         private static final long serialVersionUID = -1782950882770203583L;
         {
@@ -52,8 +51,7 @@ public class PaginationMapperProxy implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args)
-            throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (isObjectMethod(method)) {
             return null;
         }
@@ -66,13 +64,9 @@ public class PaginationMapperProxy implements InvocationHandler {
         final MapperMethod mapperMethod = new MapperMethod(declaringInterface, method, sqlSession.getConfiguration());
         final Object result = mapperMethod.execute(sqlSession, args);
         if (result == null && method.getReturnType().isPrimitive()) {
-            throw new BindingException(
-                    "Mapper method '"
-                            + method.getName()
-                            + "' ("
-                            + method.getDeclaringClass()
-                            + ") attempted to return null from a method with a primitive return type ("
-                            + method.getReturnType() + ").");
+            throw new BindingException("Mapper method '" + method.getName() + "' (" + method.getDeclaringClass()
+                    + ") attempted to return null from a method with a primitive return type (" + method.getReturnType()
+                    + ").");
         }
         return result;
     }
@@ -80,16 +74,13 @@ public class PaginationMapperProxy implements InvocationHandler {
     private Class<?> findDeclaringInterface(Object proxy, Method method) {
         Class<?> declaringInterface = null;
         for (Class<?> mapperFaces : proxy.getClass().getInterfaces()) {
-            Method m = Reflections.getAccessibleMethod(mapperFaces,
-                    method.getName(),
-                    method.getParameterTypes());
+            Method m = Reflections.getAccessibleMethod(mapperFaces, method.getName(), method.getParameterTypes());
             if (m != null) {
                 declaringInterface = mapperFaces;
             }
         }
         if (declaringInterface == null) {
-            throw new BindingException(
-                    "Could not find interface with the given method " + method);
+            throw new BindingException("Could not find interface with the given method " + method);
         }
         return declaringInterface;
     }
@@ -97,7 +88,7 @@ public class PaginationMapperProxy implements InvocationHandler {
     @SuppressWarnings("unchecked")
     public static <T> T newMapperProxy(Class<T> mapperInterface, SqlSession sqlSession) {
         ClassLoader classLoader = mapperInterface.getClassLoader();
-        Class<?>[] interfaces = new Class[]{mapperInterface};
+        Class<?>[] interfaces = new Class[] { mapperInterface };
         PaginationMapperProxy proxy = new PaginationMapperProxy(sqlSession);
         return (T) Proxy.newProxyInstance(classLoader, interfaces, proxy);
     }

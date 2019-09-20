@@ -60,9 +60,10 @@ $(function() {
                 now = new Date(now - 3600000);
             }
         },error: function(XMLHttpRequest, textStatus, errorThrown) {
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
+            //alert(XMLHttpRequest.status);
+            //alert(XMLHttpRequest.readyState);
+            //alert(textStatus);
+        	layer.msg('获取错误：'+textStatus);
         }
     });
 	option = {

@@ -44,9 +44,9 @@ import org.springframework.web.bind.annotation.*;
  * @author JeeSpring
  * @version 2018-10-12
  */
-@RestController
-@RequestMapping(value = "/rest/test/onetomany/testDataMain")
-@Api(value="订票接口", description="订票接口")
+//@RestController
+//@RequestMapping(value = "/rest/test/onetomany/testDataMain")
+//@Api(value="订票接口", description="订票接口")
 public class TestDataMainRestController extends AbstractBaseController {
 
 	@Autowired

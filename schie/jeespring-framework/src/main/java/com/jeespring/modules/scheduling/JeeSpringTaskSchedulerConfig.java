@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.modules.scheduling;
 
 import org.springframework.context.annotation.ComponentScan;

@@ -23,8 +23,8 @@
                     <a id="btnAdd" href="${ctx}/sys/sysDictTree/form" class="btn btn-default btn-sm" title="新增"><i
                             class="fa fa-plus"></i>新增</a>
                 </shiro:hasPermission>
-                <button data-placement="left" onclick="refresh()"
-                        class="btn btn-default btn-sm" title="刷新"><i class="glyphicon glyphicon-repeat"></i>刷新
+                <button id="btnRefresh" data-placement="left" class="btn btn-default btn-sm" title="刷新"><i
+                        class="glyphicon glyphicon-repeat"></i>刷新
                 </button>
                 <a class="btn btn-default btn-sm " data-toggle="tooltip" data-placement="left"
                         href="${ctx}/sys/dict/" title="字典列表"><i class="glyphicon glyphicon-repeat"></i>字典列表
@@ -38,6 +38,7 @@
             <!--查询条件-->
             <form:form id="searchForm" modelAttribute="sysDictTree" action="${ctx}/sys/sysDictTree/"
                        method="post" class="form-inline">
+                <input id="isShowSearchForm" name="isShowSearchForm" type="hidden" value="${isShowSearchForm}"/>
                 <div class="form-group">
                     <label class="control-label">数据值：</label>
                     <div class="control-inline">
@@ -92,7 +93,7 @@
 <script src="/staticViews/viewBase.js"></script>
 <script type="text/template" id="treeTableTpl">
     <tr id="{{row.id}}" pId="{{pid}}">
-        <td><a href="${ctx}/sys/sysDictTree/form?id={{row.id}}">
+        <td><a href="${ctx}/sys/sysDictTree/form?id={{row.id}}&action=view">
             {{row.value}}
         </a></td>
         <td>
@@ -112,7 +113,7 @@
         </td>
         <td>
             <shiro:hasPermission name="sys:sysDict:view">
-                <a href="${ctx}/sys/sysDictTree/form?id={{row.id}}" title="查看"><i class="fa fa-search-plus"></i></a>
+                <a href="${ctx}/sys/sysDictTree/form?id={{row.id}}&action=view" title="查看"><i class="fa fa-search-plus"></i></a>
             </shiro:hasPermission>
             <shiro:hasPermission name="sys:sysDict:edit">
                 <a href="${ctx}/sys/sysDictTree/form?id={{row.id}}" title="修改"><i class="fa fa-pencil"></i></a>

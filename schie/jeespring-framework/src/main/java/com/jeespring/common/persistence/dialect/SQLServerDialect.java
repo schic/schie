@@ -32,6 +32,7 @@ public class SQLServerDialect implements Dialect {
 
     /**
      * 将sql变成分页sql语句,提供将offset及limit使用占位符号(placeholder)替换.
+     * 
      * <pre>
      * 如mysql
      * dialect.getLimitString("select * from user", 12, ":offset",0,":limit") 将返回
@@ -47,11 +48,8 @@ public class SQLServerDialect implements Dialect {
         if (offset > 0) {
             throw new UnsupportedOperationException("sql server has no offset");
         }
-        return new StringBuffer(sql.length() + 8)
-                .append(sql)
-                .insert(getAfterSelectInsertPoint(sql), " top " + limit)
+        return new StringBuffer(sql.length() + 8).append(sql).insert(getAfterSelectInsertPoint(sql), " top " + limit)
                 .toString();
     }
-
 
 }

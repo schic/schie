@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schic.schie.modules.exjob.dao.ExJobDao">
+
+	<select id="findAllList" resultType="ExJob">
+		select 
+			a.ask_id as "resAsk.id",
+			a.company_id as "resAsk.companyId",
+			a.res_id as "resAsk.resId",
+			a.ip as "resAsk.ip",
+			a.port as "resAsk.port",
+			a.use_type as "resAsk.useType",
+			a.sub_type as "resAsk.subType",
+			a.sub_json as "resAsk.subJson",
+			a.map_json as "resAsk.mapJson",
+			a.dbres_sub_now as "resAsk.dbres_sub_now",
+			b.res_id as "res.id",
+			b.name as "res.name",
+			b.res_type as "res.resType",
+			b.node_id as "res.nodeId",
+			b.res_json as "res.resJson",
+			b.sub_json as "res.subJson",
+			c.srv_url as "resNode.srvUrl",
+			c.mon_url as "resNode.monUrl",
+			d.srv_url as "resAskNode.srvUrl",
+			d.mon_url as "resAskNode.monUrl",
+			dso.name as "askOffice.name",
+			dso.code as "askOffice.code",
+			dso.zzjgbm as "askOffice.zzjgbm",
+			dso.shxydm as "askOffice.shxydm"
+		from ex_res_ask a
+		join ex_resources b on a.res_id=b.res_id
+		join ex_node c on b.node_id=c.node_id and c.del_flag='0'
+		left join ex_node d on a.node_id=d.node_id and d.del_flag='0'
+		join sys_office dso on a.company_id=dso.id and dso.useable='1' and dso.del_flag='0'
+		where a.enabled='1' and a.del_flag='0' and a.status='9'
+			and b.enabled='1' and b.del_flag='0' and b.status='9'
+			
+	</select>
+	
+</mapper>

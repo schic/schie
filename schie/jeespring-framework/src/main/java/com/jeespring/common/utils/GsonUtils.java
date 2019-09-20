@@ -1,5 +1,7 @@
+/**
+ * 
+ */
 package com.jeespring.common.utils;
-
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,4 +27,3 @@ public class GsonUtils {
         return (T) gson.fromJson(json, typeOfT);
     }
 }
-

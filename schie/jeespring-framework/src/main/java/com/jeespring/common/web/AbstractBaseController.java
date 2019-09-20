@@ -3,12 +3,20 @@
  */
 package com.jeespring.common.web;
 
-import com.jeespring.common.mapper.JsonMapper;
-import com.jeespring.common.redis.RedisUtils;
-import com.jeespring.common.utils.DateUtils;
-import com.jeespring.common.validator.BeanValidators;
-import com.jeespring.modules.oauth.service.OauthService;
-import com.jeespring.modules.utils.service.EmailService;
+import java.beans.PropertyEditorSupport;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
+import javax.validation.Validator;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.slf4j.Logger;
@@ -18,18 +26,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
-import javax.validation.Validator;
-import java.beans.PropertyEditorSupport;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
+import com.jeespring.common.mapper.JsonMapper;
+import com.jeespring.common.redis.RedisUtils;
+import com.jeespring.common.utils.DateUtils;
+import com.jeespring.common.utils.http.HttpUtils;
+import com.jeespring.common.validator.BeanValidators;
+import com.jeespring.modules.oauth.service.OauthService;
+import com.jeespring.modules.utils.service.EmailService;
 
 /**
  * 控制器支持类
@@ -74,7 +82,7 @@ public abstract class AbstractBaseController {
         } catch (ConstraintViolationException ex) {
             List<String> list = BeanValidators.extractPropertyAndMessageAsList(ex, ": ");
             list.add(0, "数据验证失败：");
-            addMessage(model, list.toArray(new String[]{}));
+            addMessage(model, list.toArray(new String[] {}));
             return false;
         }
         return true;
@@ -93,7 +101,7 @@ public abstract class AbstractBaseController {
         } catch (ConstraintViolationException ex) {
             List<String> list = BeanValidators.extractPropertyAndMessageAsList(ex, ": ");
             list.add(0, "数据验证失败：");
-            addMessage(redirectAttributes, list.toArray(new String[]{}));
+            addMessage(redirectAttributes, list.toArray(new String[] {}));
             return false;
         }
         return true;
@@ -125,6 +133,20 @@ public abstract class AbstractBaseController {
     }
 
     /**
+     * 添加Model消息
+     *
+     * @param model
+     * @param messages
+     */
+    protected void addMessage(Model model, Map<String, String> map) {
+        Iterator<Entry<String, String>> iterator = map.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Entry<String, String> entry = iterator.next();
+            model.addAttribute(entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
      * 添加Flash消息
      */
     protected void addMessage(RedirectAttributes redirectAttributes, String... messages) {
@@ -133,6 +155,32 @@ public abstract class AbstractBaseController {
             sb.append(message).append(messages.length > 1 ? "<br/>" : "");
         }
         redirectAttributes.addFlashAttribute("message", sb.toString());
+    }
+
+    /**
+     * 添加Flash消息
+     */
+    protected void addMessage(RedirectAttributes redirectAttributes, Map<String, String> map) {
+        Iterator<Entry<String, String>> iterator = map.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Entry<String, String> entry = iterator.next();
+            redirectAttributes.addAttribute(entry.getKey(), entry.getValue());
+            //使用addFlashAttribute，参数可以到Model，但是不会到Model.user对象中，无法实现过滤
+        }
+    }
+
+    /**
+     * 添加Flash消息
+     */
+    protected void addOldSearchMessage(Model model, HttpServletRequest request) {
+        addMessage(model, HttpUtils.getUrlParams(request.getParameter(HttpUtils.OLDSEARCH)));
+    }
+
+    /**
+     * 添加Flash消息
+     */
+    protected void addOldSearchMessage(RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        addMessage(redirectAttributes, HttpUtils.getUrlParams(request.getParameter(HttpUtils.OLDSEARCH)));
     }
 
     /**
@@ -168,20 +216,24 @@ public abstract class AbstractBaseController {
     /**
      * 参数绑定异常
      */
-    @ExceptionHandler({Exception.class,BindException.class, ConstraintViolationException.class, ValidationException.class})
-    public String bindException(Exception ex,HttpServletRequest request) {
-        //if(ex instanceof  IOException){
-        //    return "error/400";
-        //}
+    @ExceptionHandler({ Exception.class, BindException.class, ConstraintViolationException.class,
+            ValidationException.class })
+    public String bindException(Exception ex, HttpServletRequest request) {
+        // if(ex instanceof IOException){
+        // return "error/400";
+        // }
         try {
-            mailService.sendMailException("Java后台异常", "URL:" + request.getRequestURL() + "<br>QueryString:" + request.getQueryString() + "<br>Exception:" + ex.getMessage() + "<br>");
-        }catch (Exception exception){}
+            mailService.sendMailException("Java后台异常", "URL:" + request.getRequestURL() + "<br>QueryString:"
+                    + request.getQueryString() + "<br>Exception:" + ex.getMessage() + "<br>");
+        } catch (Exception exception) {
+        }
         return "error/400";
     }
+
     /**
      * 授权登录异常
      */
-    @ExceptionHandler({AuthenticationException.class})
+    @ExceptionHandler({ AuthenticationException.class })
     public String authenticationException() {
         return "error/403";
     }
@@ -191,38 +243,42 @@ public abstract class AbstractBaseController {
      */
     @ModelAttribute
     protected void APIHandler(HttpServletRequest request, HttpServletResponse response) {
-        try{
-            if(!RedisUtils.isShireRedis()){ return;}
-            if(!oauthService.isOauthOpen()){ return;}
-            //if(request.getRequestURI().indexOf("/rest/")<0) return;
-            if(request.getRequestURI().indexOf("/rest/oauth/apiTimeLimiFaild")>=0) {
+        try {
+            if (!RedisUtils.isShireRedis()) {
                 return;
             }
-            if(request.getRequestURI().indexOf("/admin?login")>=0) {
+            if (!oauthService.isOauthOpen()) {
                 return;
             }
-            if(request.getRequestURI().indexOf("/admin/login")>=0) {
+            // if(request.getRequestURI().indexOf("/rest/")<0) return;
+            if (request.getRequestURI().indexOf("/rest/oauth/apiTimeLimiFaild") >= 0) {
                 return;
             }
-            if("/admin".equals(request.getRequestURI())){
-                Result result=oauthService.userOnlineAmount();
-                if("-1".equals(result.getResultCode())) {
+            if (request.getRequestURI().indexOf("/admin?login") >= 0) {
+                return;
+            }
+            if (request.getRequestURI().indexOf("/admin/login") >= 0) {
+                return;
+            }
+            if ("/admin".equals(request.getRequestURI())) {
+                Result result = oauthService.userOnlineAmount();
+                if ("-1".equals(result.getResultCode())) {
                     response.sendRedirect("/rest/oauth/userOnlineAmountFaild");
                 }
                 return;
             }
             oauthService.setApiTime();
             Result result = oauthService.ApiTimeLimi(request.getRemoteAddr());
-            if(result.getResultCoe().toString()=="-1"){
-                //response.sendRedirect("../error/403");
-                if(request.getRequestURI().indexOf("/rest/")>0) {
+            if (result.getResultCoe().toString() == "-1") {
+                // response.sendRedirect("../error/403");
+                if (request.getRequestURI().indexOf("/rest/") >= 0) {
                     response.sendRedirect("/rest/oauth/apiTimeLimiFaild?apiTimeLimi=" + result.getResultObject());
                 } else {
                     response.sendRedirect("/rest/oauth/apiTimeLimiFaild?apiTimeLimi=" + result.getResultObject());
                 }
-                //response.sendRedirect("/rest/oauth/apiTimeLimifaild");
+                // response.sendRedirect("/rest/oauth/apiTimeLimifaild");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 
@@ -231,34 +287,36 @@ public abstract class AbstractBaseController {
      */
     @ModelAttribute
     protected void RestHandler(HttpServletRequest request, HttpServletResponse response) {
-        try{
-            if(!RedisUtils.isShireRedis()){ return;}
-            if(!oauthService.isOauthOpen()){ return;}
-            if(request.getRequestURI().indexOf("/rest/")<0) {
+        try {
+            if (!RedisUtils.isShireRedis()) {
                 return;
             }
-            if(request.getRequestURI().indexOf("/rest/oauth/token")>=0) {
+            if (!oauthService.isOauthOpen()) {
                 return;
             }
-            if(request.getRequestURI().indexOf("/rest/oauth/faild")>=0) {
+            if (request.getRequestURI().indexOf("/rest/") < 0) {
                 return;
             }
-            if(request.getRequestURI().indexOf("/rest/oauth/checkToken")>=0) {
+            if (request.getRequestURI().indexOf("/rest/oauth/token") >= 0) {
                 return;
             }
-            Result result = oauthService.checkToken(request.getParameter("token"),request.getRemoteAddr());
-            if(result.getResultCoe().toString()=="-1"){
-                //response.sendRedirect("../error/403");
+            if (request.getRequestURI().indexOf("/rest/oauth/faild") >= 0) {
+                return;
+            }
+            if (request.getRequestURI().indexOf("/rest/oauth/checkToken") >= 0) {
+                return;
+            }
+            Result result = oauthService.checkToken(request.getParameter("token"), request.getRemoteAddr());
+            if (result.getResultCoe().toString() == "-1") {
+                // response.sendRedirect("../error/403");
                 response.sendRedirect("/rest/oauth/faild");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 
     /**
-     * 初始化数据绑定
-     * 1. 将所有传递进来的String进行HTML编码，防止XSS攻击
-     * 2. 将字段中Date类型转换为String类型
+     * 初始化数据绑定 1. 将所有传递进来的String进行HTML编码，防止XSS攻击 2. 将字段中Date类型转换为String类型
      */
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -266,17 +324,18 @@ public abstract class AbstractBaseController {
         binder.registerCustomEditor(String.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
-                //过滤，进行html转码
-                setValue(text == null ? null : StringEscapeUtils.unescapeHtml4(StringEscapeUtils.escapeHtml4(text.trim())));
-                //不过滤，不进行html转码
-                //setValue(text == null ? null : text.trim());
+                // 过滤，进行html转码
+                setValue(text == null ? null
+                        : StringEscapeUtils.unescapeHtml4(StringEscapeUtils.escapeHtml4(text.trim())));
+                // 不过滤，不进行html转码
+                // setValue(text == null ? null : text.trim());
             }
 
             @Override
             public String getAsText() {
                 Object value = getValue();
                 return value != null ? StringEscapeUtils.unescapeHtml4(value.toString()) : "";
-                //return value != null ? value.toString() : "";
+                // return value != null ? value.toString() : "";
             }
         });
         // Date 类型转换
@@ -285,11 +344,11 @@ public abstract class AbstractBaseController {
             public void setAsText(String text) {
                 setValue(DateUtils.parseDate(text));
             }
-//			@Override
-//			public String getAsText() {
-//				Object value = getValue();
-//				return value != null ? DateUtils.formatDateTime((Date)value) : "";
-//			}
+            //			@Override
+            //			public String getAsText() {
+            //				Object value = getValue();
+            //				return value != null ? DateUtils.formatDateTime((Date)value) : "";
+            //			}
         });
     }
 

@@ -24,9 +24,9 @@
                 <shiro:hasPermission name="sys:user:add">
                     <a id="btnAdd" href="${ctx}/sys/user/form" data-addTab="true" title="新增"  class="btn btn-default btn-sm" ><i class="fa fa-plus"></i>新增</a>
                 </shiro:hasPermission>
-                <shiro:hasPermission name="sys:user:del">
+                <%-- <shiro:hasPermission name="sys:user:del">
                     <a id="btnDeleteAll" href="${ctx}/sys/user/deleteAll" title="删除"  class="btn btn-default btn-sm" ><i class="fa fa-trash-o"></i>删除</a>
-                </shiro:hasPermission>
+                </shiro:hasPermission> --%>
                 <shiro:hasPermission name="sys:user:import">
                     <table:importExcel url="${ctx}/sys/user/import"></table:importExcel><!-- 导入按钮 -->
                 </shiro:hasPermission>
@@ -42,6 +42,7 @@
             <!-- 查询条件 -->
             <form:form id="searchForm" modelAttribute="user" action="${ctx}/sys/user/list" method="post"
                        class="form-inline">
+                <input id="isShowSearchForm" name="isShowSearchForm" type="hidden" value="${isShowSearchForm}"/>
                 <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
                 <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
                 <input id="orderBy" name="orderBy" type="hidden" value="${page.orderBy}"/>
@@ -100,8 +101,8 @@
                 <c:forEach items="${page.list}" var="user">
                     <tr>
                         <td><input type="checkbox" id="${user.id}" class="i-checks"></td>
-                        <td><a href="#"
-                               onclick="openDialogView('查看用户', '${ctx}/sys/user/form?id=${user.id}','800px', '680px')">${user.loginName}</a>
+                        <td><a href="${ctx}/sys/user/form?id=${user.id}&action=view"
+                               >${user.loginName}</a>
                         </td>
                         <td>${user.name}</td>
                         <td>${user.phone}</td>

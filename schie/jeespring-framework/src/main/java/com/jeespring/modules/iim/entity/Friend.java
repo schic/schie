@@ -1,35 +1,38 @@
+/**
+ * 
+ */
 package com.jeespring.modules.iim.entity;
 
 public class Friend {
-	
-	private String id;
-	
-	private String name;
-	
-	private String face;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    private String id;
 
-	public String getId() {
-		return id;
-	}
+    private String name;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String face;
 
-	public String getName() {
-		return name;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setFace(String face) {
-		this.face = face;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getFace() {
-		return face;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setFace(String face) {
+        this.face = face;
+    }
+
+    public String getFace() {
+        return face;
+    }
 
 }

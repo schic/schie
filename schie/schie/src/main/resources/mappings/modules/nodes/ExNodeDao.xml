@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jeespring.modules.nodes.dao.ExNodeDao">
-    
+<mapper namespace="com.schic.schie.modules.nodes.dao.ExNodeDao">
 	<sql id="exNodeColumns">
 					a.node_id AS "id",
 					a.name AS "name",
@@ -13,7 +12,11 @@
 					a.srv_url AS "srvUrl",
 					a.mon_url AS "monUrl",
 					a.del_flag AS "delFlag",
-					a.company_id AS "companyId"
+					a.company_id AS "companyId",
+					a.username AS "username",
+					a.password AS "password",
+					a.encryption AS "encryption",
+					a.extabid AS "exTabId"
 	</sql>
 
 	<sql id="exNodeColumnsList">
@@ -27,23 +30,27 @@
 					a.srv_url AS "srvUrl",
 					a.mon_url AS "monUrl",
 					a.del_flag AS "delFlag",
-					a.company_id AS "companyId"
+					a.company_id AS "companyId",
+					a.username AS "username",
+					a.password AS "password",
+					a.encryption AS "encryption",
+					a.extabid AS "exTabId"
 	</sql>
 
 	<sql id="exNodeJoins">
 	</sql>
-    
+
 	<select id="get" resultType="ExNode">
-		SELECT 
-			<include refid="exNodeColumns"/>
+		SELECT
+		<include refid="exNodeColumns"/>
 		FROM ex_node a
 		<include refid="exNodeJoins"/>
 		WHERE a.node_id = #{id}
 	</select>
-	
+
 	<select id="findList" resultType="ExNode">
-		SELECT 
-			<include refid="exNodeColumnsList"/>
+		SELECT
+		<include refid="exNodeColumnsList"/>
 		FROM ex_node a
 		<include refid="exNodeJoins"/>
 		<where>
@@ -52,10 +59,10 @@
 				AND a.node_id = #{id}
 			</if>
 			<if test="name != null and name != ''">
-				AND a.name LIKE 
-					<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{name}||'%'</if>
-					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
-					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+				AND a.name LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
 			</if>
 			<if test="sort != null and sort != ''">
 				AND a.sort = #{sort}
@@ -64,25 +71,31 @@
 				AND a.cdate BETWEEN #{beginCdate} AND #{endCdate}
 			</if>
 			<if test="cuser != null and cuser != ''">
-				AND a.cuser = #{cuser}
+				AND a.cuser LIKE '%'||#{cuser}||'%'
 			</if>
-			<if test="beginMdate != null and endMdate != null ">
-				AND a.mdate BETWEEN #{beginMdate} AND #{endMdate}
+			<if test="beginMdate != null">
+				AND a.mdate >= #{beginMdate}
+			</if>
+			<if test=" endMdate != null ">
+				AND a.mdate &gt;= #{endMdate}
 			</if>
 			<if test="muser != null and muser != ''">
-				AND a.muser = #{muser}
+				AND a.muser LIKE '%'||#{muser}||'%'
 			</if>
 			<if test="srvUrl != null and srvUrl != ''">
-				AND a.srv_url = #{srvUrl}
+				AND a.srv_url LIKE '%'||#{srvUrl}||'%'
 			</if>
 			<if test="monUrl != null and monUrl != ''">
-				AND a.mon_url = #{monUrl}
+				AND a.mon_url LIKE '%'||#{monUrl}||'%'
 			</if>
 			<if test="delFlag != null and delFlag != ''">
 				AND a.del_flag = #{delFlag}
 			</if>
 			<if test="companyId != null and companyId != ''">
 				AND a.company_id = #{companyId}
+			</if>
+			<if test="exTabId != null and exTabId != ''">
+				AND a.extabid = #{exTabId}
 			</if>
 		</where>
 		<choose>
@@ -93,18 +106,19 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY sort ASC
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<select id="findAllList" resultType="ExNode">
-		SELECT 
-			<include refid="exNodeColumnsList"/>
+		SELECT
+		<include refid="exNodeColumnsList"/>
 		FROM ex_node a
 		<include refid="exNodeJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
-		</where>		
+		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
@@ -113,7 +127,7 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<insert id="insert">
 		INSERT INTO ex_node(
 			node_id,
@@ -126,7 +140,11 @@
 			srv_url,
 			mon_url,
 			del_flag,
-			company_id
+			company_id,
+			username,
+			password,
+			encryption,
+			exTabId
 		) VALUES (
 			#{id},
 			#{name},
@@ -138,10 +156,14 @@
 			#{srvUrl},
 			#{monUrl},
 			#{delFlag},
-			#{companyId}
+			#{companyId},
+			#{username},
+			#{password},
+			#{encryption},
+			#{exTabId}
 		)
 	</insert>
-	
+
 	<update id="update">
 		UPDATE ex_node SET 	
 			node_id = #{id},
@@ -151,17 +173,22 @@
 			muser = #{muser},
 			srv_url = #{srvUrl},
 			mon_url = #{monUrl},
-			company_id = #{companyId}
+			company_id = #{companyId},
+			username = #{username},
+		<if test="password != null and password != ''">
+			password = #{password},encryption= #{encryption}
+		</if>
+
 		WHERE node_id = #{id}
 	</update>
-	
-	
+
+
 	<!--物理删除-->
 	<update id="delete">
 		DELETE FROM ex_node
 		WHERE node_id = #{id}
 	</update>
-	
+
 	<!--逻辑删除-->
 	<update id="deleteByLogic">
 		UPDATE ex_node SET 
@@ -175,16 +202,16 @@
 
 	<select id="total" resultType="ExNode">
 		SELECT
-			<choose>
-				<when test=" totalType != null and totalType != ''">
-					to_char(a.create_date,'${totalType}') as totalDate,
-				</when>
-				<otherwise>
-				 </otherwise>
-			</choose>
-			count(*) as totalCount
+		<choose>
+			<when test=" totalType != null and totalType != ''">
+				to_char(a.create_date,'${totalType}') as totalDate,
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		count(*) as totalCount
 		FROM
-			ex_node a
+		ex_node a
 		<where>
 			1=1
 			and a.del_flag = #{DEL_FLAG_NORMAL}
@@ -193,9 +220,9 @@
 			</if>
 			<if test="name != null and name != ''">
 				AND a.name LIKE
-					<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{name}||'%'</if>
-					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
-					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
 			</if>
 			<if test="sort != null and sort != ''">
 				AND a.sort = #{sort}
@@ -218,8 +245,8 @@
 			<if test="monUrl != null and monUrl != ''">
 				AND a.mon_url = #{monUrl}
 			</if>
-			<if test="delFlag != null and delFlag != ''">
-				AND a.del_flag = #{delFlag}
+			<if test="exTabId != null and exTabId != ''">
+				AND a.extabid= #{exTabId}
 			</if>
 			<if test="companyId != null and companyId != ''">
 				AND a.company_id = #{companyId}
@@ -236,7 +263,7 @@
 				GROUP BY to_char(a.create_date,'${totalType}')
 			</when>
 			<otherwise>
-			 </otherwise>
+			</otherwise>
 		</choose>
 		<choose>
 			<when test=" orderBy != null and orderBy != ''">

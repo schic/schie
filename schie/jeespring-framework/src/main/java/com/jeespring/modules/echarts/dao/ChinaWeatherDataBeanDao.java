@@ -9,11 +9,11 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 城市气温DAO接口
+ * 
  * @author lgf
  * @version 2016-06-02
  */
 @Mapper
 public interface ChinaWeatherDataBeanDao extends InterfaceBaseDao<ChinaWeatherDataBean> {
 
-	
 }

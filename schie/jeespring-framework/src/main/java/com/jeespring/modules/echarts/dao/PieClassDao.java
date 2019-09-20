@@ -9,11 +9,11 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 班级DAO接口
+ * 
  * @author lgf
  * @version 2016-05-26
  */
 @Mapper
 public interface PieClassDao extends InterfaceBaseDao<PieClass> {
 
-	
 }

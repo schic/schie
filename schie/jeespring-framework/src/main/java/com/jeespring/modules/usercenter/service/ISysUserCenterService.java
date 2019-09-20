@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.modules.usercenter.service;
 
 import com.jeespring.common.persistence.InterfaceBaseService;

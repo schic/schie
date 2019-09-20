@@ -10,7 +10,7 @@ public class SubJson {
     private String dateText;  //增量日期字段
     private String days;  //数据增量天数
     private String key;  //主键
-    private String corn;  //corn表达式
+    private String cron;  //cron表达式
 
 
     public String getBatch() {
@@ -45,11 +45,11 @@ public class SubJson {
         this.key = key;
     }
 
-    public String getCorn() {
-        return corn;
+    public String getCron() {
+        return cron;
     }
 
-    public void setCorn(String corn) {
-        this.corn = corn;
+    public void setCron(String cron) {
+        this.cron = cron;
     }
 }

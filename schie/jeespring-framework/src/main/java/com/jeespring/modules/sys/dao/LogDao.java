@@ -10,11 +10,12 @@ import com.jeespring.modules.sys.entity.Log;
 
 /**
  * 日志DAO接口
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2014-05-16
  */
 @Mapper
 public interface LogDao extends InterfaceBaseDao<Log> {
 
-	void empty();
+    void empty();
 }

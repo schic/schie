@@ -16,33 +16,35 @@ import com.jeespring.modules.sys.utils.DictUtils;
 
 /**
  * 字典Service
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2014-05-16
  */
 @Service
 @Transactional(readOnly = true)
 public class DictService extends AbstractBaseService<DictDao, Dict> {
-	
-	/**
-	 * 查询字段类型列表
-	 * @return
-	 */
-	public List<String> findTypeList(){
-		return dao.findTypeList(new Dict());
-	}
 
-	@Override
-    @Transactional(readOnly = false)
-	public void save(Dict dict) {
-		super.save(dict);
-		CacheUtils.remove(DictUtils.CACHE_DICT_MAP);
-	}
+    /**
+     * 查询字段类型列表
+     * 
+     * @return
+     */
+    public List<String> findTypeList() {
+        return dao.findTypeList(new Dict());
+    }
 
-	@Override
+    @Override
     @Transactional(readOnly = false)
-	public void delete(Dict dict) {
-		super.delete(dict);
-		CacheUtils.remove(DictUtils.CACHE_DICT_MAP);
-	}
+    public void save(Dict dict) {
+        super.save(dict);
+        CacheUtils.remove(DictUtils.CACHE_DICT_MAP);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void delete(Dict dict) {
+        super.delete(dict);
+        CacheUtils.remove(DictUtils.CACHE_DICT_MAP);
+    }
 
 }

@@ -1,0 +1,72 @@
+
+dsquid:S3027"JPut single-quotes around ',' to use the faster "lastIndexOf(char)" method.(Ğ áÏÿÿÿÿÿ
+Bsquid:S1125"(Remove the literal "true" boolean value.(«Êó«üÿÿÿÿ
+_squid:S1192"JDefine a constant instead of duplicating this literal "redirect:" 9 times.(óÏß
+Csquid:S2208".Explicitly import the specific classes needed.(÷Í¾Û
+Isquid:S2864"4Iterate over the "entrySet" instead of the "keySet".(«—‡ä
+`squid:S3027"FPut single-quotes around ',' to use the faster "indexOf(char)" method.(éòŞòıÿÿÿÿ
+\squid:S1192"GDefine a constant instead of duplicating this literal "action" 4 times.(ÇÚèæ
+Bsquid:S1125"(Remove the literal "true" boolean value.(«Êó«üÿÿÿÿ
+[squid:S3027"FPut single-quotes around ',' to use the faster "indexOf(char)" method.(°øàİ
+k
+squid:S109"RAssign this magic number 5 to a well-named constant, and use the constant instead.(äƒ¥üÿÿÿÿ
+gsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 28 to the 15 allowed.(›‰íı
+¬squid:S1200"‘Split this class into smaller and more specialized ones to reduce its dependencies on other classes from 32 to the maximum authorized 20 or less.(³™Îèùÿÿÿÿ
+k
+squid:S109"RAssign this magic number 5 to a well-named constant, and use the constant instead.(®éˆ¢şÿÿÿÿ
+fsquid:S00103"KSplit this 130 characters long line (which is greater than 120 authorized).(Ÿ½´Éıÿÿÿÿ
+isquid:S00100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ùãèöıÿÿÿÿ
+fsquid:S00103"KSplit this 122 characters long line (which is greater than 120 authorized).(ÒæªŠúÿÿÿÿ
+ssquid:S1192"^Define a constant instead of duplicating this literal "/resource/exResources/?repage" 6 times.(óÏß
+”squid:S2159"zRemove this call to "equals"; comparisons against null always return false; consider using '== null' to check for nullity.(³åĞ¹üÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(„¸êÅ
+fsquid:S00103"KSplit this 121 characters long line (which is greater than 120 authorized).(›Ø¥£øÿÿÿÿ
+`squid:S3027"FPut single-quotes around ',' to use the faster "indexOf(char)" method.(Ğ¸éÀùÿÿÿÿ
+`squid:S3027"FPut single-quotes around ',' to use the faster "indexOf(char)" method.(ÉñÁøÿÿÿÿ
+fsquid:S00103"KSplit this 124 characters long line (which is greater than 120 authorized).(Ÿ±ûÿÿÿÿ
+Rsquid:S1197"8Move the array designator from the variable to the type.(ÑˆÔ¾ıÿÿÿÿ
+Rsquid:S2589"8Remove this expression which always evaluates to "false"(³åĞ¹üÿÿÿÿ
+b
+squid:S134"NRefactor this code to not nest more than 3 if/for/while/switch/try statements.(«—‡ä
+9squid:S1258"Add a constructor to the class.(³™Îèùÿÿÿÿ
+asquid:S00103"KSplit this 159 characters long line (which is greater than 120 authorized).(ããô®
+`squid:S1132"FMove the "" string literal on the left side of this string comparison.(³åĞ¹üÿÿÿÿ
+_squid:S3027"JPut single-quotes around ',' to use the faster "lastIndexOf(char)" method.(Æ¶“Ó
+`squid:S3027"FPut single-quotes around ',' to use the faster "indexOf(char)" method.(ù’©Øøÿÿÿÿ
+asquid:S00103"KSplit this 142 characters long line (which is greater than 120 authorized).(û®Ø
+Rsquid:S1197"8Move the array designator from the variable to the type.(ÑˆÔ¾ıÿÿÿÿ
+Usquid:S00105"EReplace all tab characters in this file by sequences of white-spaces.
+[squid:S3027"FPut single-quotes around ',' to use the faster "indexOf(char)" method.(‹´éµ
+:squid:S1166"%Either log or rethrow this exception.(”ı¾
+vsquid:S1192"aDefine a constant instead of duplicating this literal "/resource111/exResources/?repage" 3 times.(ïë«ô
+k
+squid:S109"RAssign this magic number 5 to a well-named constant, and use the constant instead.(øÇ½ÿÿÿÿÿ
+fsquid:S00103"KSplit this 130 characters long line (which is greater than 120 authorized).(Ÿ½´Éıÿÿÿÿ
+Isquid:S2221"4Catch a list of specific exception subtypes instead.(”ı¾
+dsquid:S00100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ŸŒĞŞ
+nsquid:S1192"YDefine a constant instead of duplicating this literal "åˆ é™¤æ“ä½œæˆåŠŸæˆåŠŸ" 3 times.(Ä¤Û˜
+„ squid:MethodCyclomaticComplexity"ZThe Cyclomatic Complexity of this method "form" is 13 which is greater than 10 authorized.(›‰íı
+:squid:S1166"%Either log or rethrow this exception.(”ı¾
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(üäÆ
+`squid:S3027"FPut single-quotes around ',' to use the faster "indexOf(char)" method.(éòŞòıÿÿÿÿ
+jsquid:S1132"PMove the "httpèµ„æº" string literal on the left side of this string comparison.(ñÉƒ“şÿÿÿÿ
+asquid:S00103"KSplit this 163 characters long line (which is greater than 120 authorized).(ëİ§Ö
+Isquid:S2221"4Catch a list of specific exception subtypes instead.(”ı¾
+_squid:S3027"JPut single-quotes around ',' to use the faster "lastIndexOf(char)" method.(–‘ÿ¤
+asquid:S00103"KSplit this 152 characters long line (which is greater than 120 authorized).(Èò´°
+_squid:S3027"JPut single-quotes around ',' to use the faster "lastIndexOf(char)" method.(ĞíÏ€
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(Óí´
+k
+squid:S109"RAssign this magic number 5 to a well-named constant, and use the constant instead.(¸ñÒÍûÿÿÿÿ
+Csquid:S2208".Explicitly import the specific classes needed.(Î€ŒÙ
+_squid:S3027"JPut single-quotes around ',' to use the faster "lastIndexOf(char)" method.(Âş›³
+fsquid:S00103"KSplit this 131 characters long line (which is greater than 120 authorized).(Í¬áµûÿÿÿÿ
+_squid:S3027"JPut single-quotes around ',' to use the faster "lastIndexOf(char)" method.(±‹
+asquid:S1192"LDefine a constant instead of duplicating this literal "exResources" 3 times.(ãÀ”Í
+Isquid:S2221"4Catch a list of specific exception subtypes instead.(”ı¾
+lsquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÊÃ‚üÿÿÿÿ
+Bsquid:S1125"(Remove the literal "true" boolean value.(«Êó«üÿÿÿÿ
+\squid:S1132"GMove the "0" string literal on the left side of this string comparison.(ü¯”½
+:squid:S1166"%Either log or rethrow this exception.(”ı¾
+[squid:S3027"FPut single-quotes around ',' to use the faster "indexOf(char)" method.(ĞíÏ€
+lsquid:S1132"RMove the "æ•°æ®èµ„æº" string literal on the left side of this string comparison.(¤Úàİúÿÿÿÿ

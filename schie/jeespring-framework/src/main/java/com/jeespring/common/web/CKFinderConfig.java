@@ -61,7 +61,8 @@ public class CKFinderConfig extends Configuration {
 
         AccessControlUtil.getInstance(this).loadACLConfig();
         try {
-            this.baseURL = FileUtils.path(Servlets.getRequest().getContextPath() + Global.USERFILES_BASE_URL + principal + "/");
+            this.baseURL = FileUtils
+                    .path(Servlets.getRequest().getContextPath() + Global.USERFILES_BASE_URL + principal + "/");
             this.baseDir = FileUtils.path(Global.getUserfilesBaseDir() + Global.USERFILES_BASE_URL + principal + "/");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -74,9 +75,8 @@ public class CKFinderConfig extends Configuration {
         return UserUtils.getPrincipal() != null;
     }
 
-
     @Override
-	public void init() throws Exception {
+    public void init() throws Exception {
         DefaultResourceLoader loader = new DefaultResourceLoader();
         Resource resource = loader.getResource(this.xmlFilePath);
         Class<?> clazz = getClass().getSuperclass();
@@ -130,7 +130,7 @@ public class CKFinderConfig extends Configuration {
                 if ("imgQuality".equals(childNode.getNodeName())) {
                     value = childNode.getTextContent().trim();
                     value = value.replaceAll("//D", "");
-                    method = clazz.getDeclaredMethod("adjustQuality", new Class[]{String.class});
+                    method = clazz.getDeclaredMethod("adjustQuality", new Class[] { String.class });
                     method.setAccessible(true);
                     this.imgQuality = Float.parseFloat(method.invoke(this, value).toString());
                 }
@@ -144,22 +144,22 @@ public class CKFinderConfig extends Configuration {
                     }
                 }
                 if ("thumbs".equals(childNode.getNodeName())) {
-                    method = clazz.getDeclaredMethod("setThumbs", new Class[]{NodeList.class});
+                    method = clazz.getDeclaredMethod("setThumbs", new Class[] { NodeList.class });
                     method.setAccessible(true);
                     method.invoke(this, childNode.getChildNodes());
                 }
                 if ("accessControls".equals(childNode.getNodeName())) {
-                    method = clazz.getDeclaredMethod("setACLs", new Class[]{NodeList.class});
+                    method = clazz.getDeclaredMethod("setACLs", new Class[] { NodeList.class });
                     method.setAccessible(true);
                     method.invoke(this, childNode.getChildNodes());
                 }
                 if ("hideFolders".equals(childNode.getNodeName())) {
-                    method = clazz.getDeclaredMethod("setHiddenFolders", new Class[]{NodeList.class});
+                    method = clazz.getDeclaredMethod("setHiddenFolders", new Class[] { NodeList.class });
                     method.setAccessible(true);
                     method.invoke(this, childNode.getChildNodes());
                 }
                 if ("hideFiles".equals(childNode.getNodeName())) {
-                    method = clazz.getDeclaredMethod("setHiddenFiles", new Class[]{NodeList.class});
+                    method = clazz.getDeclaredMethod("setHiddenFiles", new Class[] { NodeList.class });
                     method.setAccessible(true);
                     method.invoke(this, childNode.getChildNodes());
                 }
@@ -203,19 +203,19 @@ public class CKFinderConfig extends Configuration {
                     }
                 }
                 if ("plugins".equals(childNode.getNodeName())) {
-                    method = clazz.getDeclaredMethod("setPlugins", new Class[]{Node.class});
+                    method = clazz.getDeclaredMethod("setPlugins", new Class[] { Node.class });
                     method.setAccessible(true);
                     method.invoke(this, childNode);
 
                 }
                 if ("basePathBuilderImpl".equals(childNode.getNodeName())) {
-                    method = clazz.getDeclaredMethod("setBasePathImpl", new Class[]{String.class});
+                    method = clazz.getDeclaredMethod("setBasePathImpl", new Class[] { String.class });
                     method.setAccessible(true);
                     method.invoke(this, childNode.getTextContent().trim());
                 }
             }
         }
-        method = clazz.getDeclaredMethod("setTypes", new Class[]{Document.class});
+        method = clazz.getDeclaredMethod("setTypes", new Class[] { Document.class });
         method.setAccessible(true);
         method.invoke(this, doc);
         field = clazz.getDeclaredField("events");

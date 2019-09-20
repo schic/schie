@@ -54,7 +54,7 @@ public interface ICommonService<T> {
      * @param entity
      * @return
      */
-    Page<T> findPage(Page<T> page, T entity) ;
+    Page<T> findPage(Page<T> page, T entity);
 
     /**
      * 保存数据（插入或更新）
@@ -62,7 +62,7 @@ public interface ICommonService<T> {
      * @param entity
      */
     @Transactional(readOnly = false)
-    void save(T entity) ;
+    void save(T entity);
 
     /**
      * 删除数据

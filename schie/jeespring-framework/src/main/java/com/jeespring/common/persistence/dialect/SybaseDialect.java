@@ -6,8 +6,7 @@ package com.jeespring.common.persistence.dialect;
 import com.jeespring.common.persistence.dialect.Dialect;
 
 /**
- * Sybase数据库分页方言实现。
- * 还未实现
+ * Sybase数据库分页方言实现。 还未实现
  *
  * @author poplar.yfyang
  * @version 1.0 2010-10-10 下午12:31
@@ -20,7 +19,6 @@ public class SybaseDialect implements Dialect {
         return false;
     }
 
-
     @Override
     public String getLimitString(String sql, int offset, int limit) {
         return null;
@@ -28,6 +26,7 @@ public class SybaseDialect implements Dialect {
 
     /**
      * 将sql变成分页sql语句,提供将offset及limit使用占位符号(placeholder)替换.
+     * 
      * <pre>
      * 如mysql
      * dialect.getLimitString("select * from user", 12, ":offset",0,":limit") 将返回

@@ -1,17 +1,25 @@
+/**
+ * 
+ */
 package com.jeespring.common.servlet;
 
-import com.jeespring.common.config.Global;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.util.UriUtils;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.util.UriUtils;
+
+import com.jeespring.common.config.Global;
 
 /**
  * 查看CK上传的图片
@@ -34,15 +42,15 @@ public class UserfilesDownloadServlet extends HttpServlet {
         }
         try {
             filepath = UriUtils.decode(filepath, "UTF-8");
-        //} catch (UnsupportedEncodingException e1) {
+            // } catch (UnsupportedEncodingException e1) {
         } catch (Exception e1) {
             logger.error(String.format("解释文件路径失败，URL地址为%s", filepath), e1);
         }
         File file = new File(Global.getUserfilesBaseDir() + Global.USERFILES_BASE_URL + filepath);
-        try {
-            FileCopyUtils.copy(new FileInputStream(file), resp.getOutputStream());
+        try (FileInputStream fis = new FileInputStream(file)) {
+            FileCopyUtils.copy(fis, resp.getOutputStream());
             resp.setHeader("Content-Type", "application/octet-stream");
-            //resp.setHeader("Cache-Control", "max-age=604800");//设置缓存
+            // resp.setHeader("Cache-Control", "max-age=604800");//设置缓存
             return;
         } catch (FileNotFoundException e) {
             req.setAttribute("exception", new FileNotFoundException("请求的文件不存在"));
@@ -51,14 +59,12 @@ public class UserfilesDownloadServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         fileOutputStream(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         fileOutputStream(req, resp);
     }
 }

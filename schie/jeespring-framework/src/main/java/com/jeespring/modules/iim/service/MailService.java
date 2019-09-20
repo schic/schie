@@ -21,6 +21,7 @@ import com.jeespring.modules.iim.entity.MailCompose;
 
 /**
  * 发件箱Service
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2015-11-15
  */
@@ -28,113 +29,114 @@ import com.jeespring.modules.iim.entity.MailCompose;
 @Transactional(readOnly = true)
 public class MailService extends AbstractBaseService<MailDao, Mail> {
 
-	@Autowired
-	private MailBoxDao mailBoxDao;
-	@Autowired
-	private MailComposeDao mailComposeDao;
-	
-	@Override
+    @Autowired
+    private MailBoxDao mailBoxDao;
+    @Autowired
+    private MailComposeDao mailComposeDao;
+
+    @Override
     public Mail get(String id) {
-		Mail mail = super.get(id);
-		mail.setMailBoxList(mailBoxDao.findList(new MailBox(mail)));
-		mail.setMailComposeList(mailComposeDao.findList(new MailCompose(mail)));
-		return mail;
-	}
-	
-	@Override
+        Mail mail = super.get(id);
+        mail.setMailBoxList(mailBoxDao.findList(new MailBox(mail)));
+        mail.setMailComposeList(mailComposeDao.findList(new MailCompose(mail)));
+        return mail;
+    }
+
+    @Override
     public List<Mail> findList(Mail mail) {
-		return super.findList(mail);
-	}
-	
-	@Override
+        return super.findList(mail);
+    }
+
+    @Override
     public Page<Mail> findPage(Page<Mail> page, Mail mail) {
-		return super.findPage(page, mail);
-	}
-	
-	@Override
+        return super.findPage(page, mail);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void save(Mail mail) {
-		super.save(mail);
-		for (MailBox mailBox : mail.getMailBoxList()){
-			if (mailBox.getId() == null){
-				continue;
-			}
-			if (MailBox.DEL_FLAG_NORMAL.equals(mailBox.getDelFlag())){
-				if (StringUtils.isBlank(mailBox.getId())){
-					mailBox.setMail(mail);
-					mailBox.preInsert();
-					mailBoxDao.insert(mailBox);
-				}else{
-					mailBox.preUpdate();
-					mailBoxDao.update(mailBox);
-				}
-			}else{
-				mailBoxDao.delete(mailBox);
-			}
-		}
-		for (MailCompose mailCompose : mail.getMailComposeList()){
-			if (mailCompose.getId() == null){
-				continue;
-			}
-			if (MailCompose.DEL_FLAG_NORMAL.equals(mailCompose.getDelFlag())){
-				if (StringUtils.isBlank(mailCompose.getId())){
-					mailCompose.setMail(mail);
-					mailCompose.preInsert();
-					mailComposeDao.insert(mailCompose);
-				}else{
-					mailCompose.preUpdate();
-					mailComposeDao.update(mailCompose);
-				}
-			}else{
-				mailComposeDao.delete(mailCompose);
-			}
-		}
-	}
-	@Transactional(readOnly = false)
-	public void saveOnlyMain(Mail mail) {
-		super.save(mail);
-		for (MailBox mailBox : mail.getMailBoxList()){
-			if (mailBox.getId() == null){
-				continue;
-			}
-			if (MailBox.DEL_FLAG_NORMAL.equals(mailBox.getDelFlag())){
-				if (StringUtils.isBlank(mailBox.getId())){
-					mailBox.setMail(mail);
-					mailBox.preInsert();
-					mailBoxDao.insert(mailBox);
-				}else{
-					mailBox.preUpdate();
-					mailBoxDao.update(mailBox);
-				}
-			}else{
-				mailBoxDao.delete(mailBox);
-			}
-		}
-		for (MailCompose mailCompose : mail.getMailComposeList()){
-			if (mailCompose.getId() == null){
-				continue;
-			}
-			if (MailCompose.DEL_FLAG_NORMAL.equals(mailCompose.getDelFlag())){
-				if (StringUtils.isBlank(mailCompose.getId())){
-					mailCompose.setMail(mail);
-					mailCompose.preInsert();
-					mailComposeDao.insert(mailCompose);
-				}else{
-					mailCompose.preUpdate();
-					mailComposeDao.update(mailCompose);
-				}
-			}else{
-				mailComposeDao.delete(mailCompose);
-			}
-		}
-	}
-	
-	@Override
+    public void save(Mail mail) {
+        super.save(mail);
+        for (MailBox mailBox : mail.getMailBoxList()) {
+            if (mailBox.getId() == null) {
+                continue;
+            }
+            if (MailBox.DEL_FLAG_NORMAL.equals(mailBox.getDelFlag())) {
+                if (StringUtils.isBlank(mailBox.getId())) {
+                    mailBox.setMail(mail);
+                    mailBox.preInsert();
+                    mailBoxDao.insert(mailBox);
+                } else {
+                    mailBox.preUpdate();
+                    mailBoxDao.update(mailBox);
+                }
+            } else {
+                mailBoxDao.delete(mailBox);
+            }
+        }
+        for (MailCompose mailCompose : mail.getMailComposeList()) {
+            if (mailCompose.getId() == null) {
+                continue;
+            }
+            if (MailCompose.DEL_FLAG_NORMAL.equals(mailCompose.getDelFlag())) {
+                if (StringUtils.isBlank(mailCompose.getId())) {
+                    mailCompose.setMail(mail);
+                    mailCompose.preInsert();
+                    mailComposeDao.insert(mailCompose);
+                } else {
+                    mailCompose.preUpdate();
+                    mailComposeDao.update(mailCompose);
+                }
+            } else {
+                mailComposeDao.delete(mailCompose);
+            }
+        }
+    }
+
     @Transactional(readOnly = false)
-	public void delete(Mail mail) {
-		super.delete(mail);
-		mailBoxDao.delete(new MailBox(mail));
-		mailComposeDao.delete(new MailCompose(mail));
-	}
-	
+    public void saveOnlyMain(Mail mail) {
+        super.save(mail);
+        for (MailBox mailBox : mail.getMailBoxList()) {
+            if (mailBox.getId() == null) {
+                continue;
+            }
+            if (MailBox.DEL_FLAG_NORMAL.equals(mailBox.getDelFlag())) {
+                if (StringUtils.isBlank(mailBox.getId())) {
+                    mailBox.setMail(mail);
+                    mailBox.preInsert();
+                    mailBoxDao.insert(mailBox);
+                } else {
+                    mailBox.preUpdate();
+                    mailBoxDao.update(mailBox);
+                }
+            } else {
+                mailBoxDao.delete(mailBox);
+            }
+        }
+        for (MailCompose mailCompose : mail.getMailComposeList()) {
+            if (mailCompose.getId() == null) {
+                continue;
+            }
+            if (MailCompose.DEL_FLAG_NORMAL.equals(mailCompose.getDelFlag())) {
+                if (StringUtils.isBlank(mailCompose.getId())) {
+                    mailCompose.setMail(mail);
+                    mailCompose.preInsert();
+                    mailComposeDao.insert(mailCompose);
+                } else {
+                    mailCompose.preUpdate();
+                    mailComposeDao.update(mailCompose);
+                }
+            } else {
+                mailComposeDao.delete(mailCompose);
+            }
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void delete(Mail mail) {
+        super.delete(mail);
+        mailBoxDao.delete(new MailBox(mail));
+        mailComposeDao.delete(new MailCompose(mail));
+    }
+
 }

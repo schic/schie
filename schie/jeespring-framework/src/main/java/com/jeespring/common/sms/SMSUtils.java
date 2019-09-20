@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.common.sms;
 
 import java.io.BufferedReader;
@@ -31,85 +34,83 @@ import com.jeespring.common.security.Digests;
 */
 public class SMSUtils {
 
+    // 发送短信，uid，pwd，参数值请向企信通申请， tel：发送的手机号， content:发送的内容
+    public static String send(String uid, String pwd, String tel, String content) throws IOException {
+        try {
+            // 创建StringBuffer对象用来操作字符串
+            StringBuffer sb = new StringBuffer("http://api.cnsms.cn/?");
 
-	//发送短信，uid，pwd，参数值请向企信通申请， tel：发送的手机号， content:发送的内容
-	public static String send(String uid, String pwd, String tel, String content) throws IOException {
-		try{
-			// 创建StringBuffer对象用来操作字符串
-			StringBuffer sb = new StringBuffer("http://api.cnsms.cn/?");
+            // 向StringBuffer追加用户名
+            sb.append("ac=send&uid=" + uid);// 在此申请企信通uid，并进行配置用户名
 
-			// 向StringBuffer追加用户名
-			sb.append("ac=send&uid="+uid);//在此申请企信通uid，并进行配置用户名
+            // 向StringBuffer追加密码（密码采用MD5 32位 小写）
+            sb.append("&encode=utf8");
 
-			// 向StringBuffer追加密码（密码采用MD5 32位 小写）
-			sb.append("&encode=utf8");
+            // 向StringBuffer追加密码（密码采用MD5 32位 小写）
+            sb.append("&pwd=" + Digests.string2MD5(pwd));// 在此申请企信通uid，并进行配置密码
 
-			// 向StringBuffer追加密码（密码采用MD5 32位 小写）
-			sb.append("&pwd="+Digests.string2MD5(pwd));//在此申请企信通uid，并进行配置密码
+            // 向StringBuffer追加手机号码
+            sb.append("&mobile=" + tel);
+            // 向StringBuffer追加消息内容转URL标准码
+            sb.append("&content=" + URLEncoder.encode(content, "utf8"));
 
-			// 向StringBuffer追加手机号码
-			sb.append("&mobile="+tel);
-			// 向StringBuffer追加消息内容转URL标准码
-			sb.append("&content="+URLEncoder.encode(content,"utf8"));
+            // 创建url对象
+            URL url = new URL(sb.toString());
 
-			// 创建url对象
-			URL url = new URL(sb.toString());
+            // 打开url连接
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-			// 打开url连接
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            // 设置url请求方式 ‘get’ 或者 ‘post’
+            connection.setRequestMethod("POST");
 
-			// 设置url请求方式 ‘get’ 或者 ‘post’
-			connection.setRequestMethod("POST");
+            // 发送
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
 
-			// 发送
-			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+            // 返回发送结果
+            return in.readLine();
 
-			// 返回发送结果
-			String inputline = in.readLine();
-			return inputline;
+        } catch (Exception e) {
+            return "";
+        }
+    }
 
-		}catch (Exception e){
-			return "";
-		}
-	}
-	public static String sendPass(String tel, String password) throws IOException {
-		//发送内容
-		String content = "您的新密码是："+password+"，请登录系统，重新设置密码。";
+    public static String sendPass(String tel, String password) throws IOException {
+        // 发送内容
+        String content = "您的新密码是：" + password + "，请登录系统，重新设置密码。";
 
-		// 创建StringBuffer对象用来操作字符串
-		StringBuffer sb = new StringBuffer("http://api.cnsms.cn/?");
+        // 创建StringBuffer对象用来操作字符串
+        StringBuffer sb = new StringBuffer("http://api.cnsms.cn/?");
 
-		// 向StringBuffer追加用户名
-		sb.append("ac=send&uid=");//设置用户名
+        // 向StringBuffer追加用户名
+        sb.append("ac=send&uid=");// 设置用户名
 
-		// 向StringBuffer追加密码（密码采用MD5 32位 小写）
-		sb.append("&encode=utf8");
+        // 向StringBuffer追加密码（密码采用MD5 32位 小写）
+        sb.append("&encode=utf8");
 
-		// 向StringBuffer追加密码（密码采用MD5 32位 小写）
-		sb.append("&pwd=");//设置密码
+        // 向StringBuffer追加密码（密码采用MD5 32位 小写）
+        sb.append("&pwd=");// 设置密码
 
-		// 向StringBuffer追加手机号码
-		sb.append("&mobile="+tel);
-		// 向StringBuffer追加消息内容转URL标准码
-		sb.append("&content="+URLEncoder.encode(content,"utf8"));
+        // 向StringBuffer追加手机号码
+        sb.append("&mobile=" + tel);
+        // 向StringBuffer追加消息内容转URL标准码
+        sb.append("&content=" + URLEncoder.encode(content, "utf8"));
 
-		// 创建url对象
-		URL url = new URL(sb.toString());
+        // 创建url对象
+        URL url = new URL(sb.toString());
 
-		// 打开url连接
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        // 打开url连接
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-		// 设置url请求方式 ‘get’ 或者 ‘post’
-		connection.setRequestMethod("POST");
+        // 设置url请求方式 ‘get’ 或者 ‘post’
+        connection.setRequestMethod("POST");
 
-		// 发送
-		BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        // 发送
+        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
 
-		// 返回发送结果
-		String inputline = in.readLine();
-		return inputline;
+        // 返回发送结果
+        String inputline = in.readLine();
+        return inputline;
 
-	}
-
+    }
 
 }

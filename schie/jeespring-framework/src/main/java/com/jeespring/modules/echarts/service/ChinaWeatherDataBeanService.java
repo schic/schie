@@ -15,6 +15,7 @@ import com.jeespring.modules.echarts.dao.ChinaWeatherDataBeanDao;
 
 /**
  * 城市气温Service
+ * 
  * @author lgf
  * @version 2016-06-02
  */
@@ -22,34 +23,32 @@ import com.jeespring.modules.echarts.dao.ChinaWeatherDataBeanDao;
 @Transactional(readOnly = true)
 public class ChinaWeatherDataBeanService extends AbstractBaseService<ChinaWeatherDataBeanDao, ChinaWeatherDataBean> {
 
-	@Override
+    @Override
     public ChinaWeatherDataBean get(String id) {
-		return super.get(id);
-	}
-	
-	@Override
+        return super.get(id);
+    }
+
+    @Override
     public List<ChinaWeatherDataBean> findList(ChinaWeatherDataBean chinaWeatherDataBean) {
-		return super.findList(chinaWeatherDataBean);
-	}
-	
-	@Override
-    public Page<ChinaWeatherDataBean> findPage(Page<ChinaWeatherDataBean> page, ChinaWeatherDataBean chinaWeatherDataBean) {
-		return super.findPage(page, chinaWeatherDataBean);
-	}
-	
-	@Override
+        return super.findList(chinaWeatherDataBean);
+    }
+
+    @Override
+    public Page<ChinaWeatherDataBean> findPage(Page<ChinaWeatherDataBean> page,
+            ChinaWeatherDataBean chinaWeatherDataBean) {
+        return super.findPage(page, chinaWeatherDataBean);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void save(ChinaWeatherDataBean chinaWeatherDataBean) {
-		super.save(chinaWeatherDataBean);
-	}
-	
-	@Override
+    public void save(ChinaWeatherDataBean chinaWeatherDataBean) {
+        super.save(chinaWeatherDataBean);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void delete(ChinaWeatherDataBean chinaWeatherDataBean) {
-		super.delete(chinaWeatherDataBean);
-	}
-	
-	
-	
-	
+    public void delete(ChinaWeatherDataBean chinaWeatherDataBean) {
+        super.delete(chinaWeatherDataBean);
+    }
+
 }

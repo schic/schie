@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
-import com.jeespring.common.sms.SMSUtils;
-import com.jeespring.modules.sys.service.SysConfigService;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,21 +28,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.jeespring.common.validator.BeanValidators;
 import com.jeespring.common.config.Global;
 import com.jeespring.common.json.AjaxJson;
+import com.jeespring.common.persistence.Page;
+import com.jeespring.common.sms.SMSUtils;
 import com.jeespring.common.utils.DateUtils;
 import com.jeespring.common.utils.FileUtils;
 import com.jeespring.common.utils.IdGen;
 import com.jeespring.common.utils.StringUtils;
 import com.jeespring.common.utils.excel.ExportExcel;
 import com.jeespring.common.utils.excel.ImportExcel;
-import com.jeespring.common.persistence.Page;
+import com.jeespring.common.utils.http.HttpUtils;
+import com.jeespring.common.validator.BeanValidators;
 import com.jeespring.common.web.AbstractBaseController;
 import com.jeespring.modules.sys.dao.UserDao;
 import com.jeespring.modules.sys.entity.Office;
 import com.jeespring.modules.sys.entity.Role;
 import com.jeespring.modules.sys.entity.User;
+import com.jeespring.modules.sys.service.SysConfigService;
 import com.jeespring.modules.sys.service.SystemService;
 import com.jeespring.modules.sys.utils.UserUtils;
 
@@ -84,6 +85,7 @@ public class UserController extends AbstractBaseController {
     @RequestMapping(value = { "list", "" })
     public String list(User user, HttpServletRequest request, HttpServletResponse response, Model model) {
         Page<User> page = systemService.findUser(new Page<User>(request, response), user);
+        model.addAttribute("isShowSearchForm", request.getParameter("isShowSearchForm"));
         model.addAttribute("page", page);
         return "modules/sys/userList";
     }
@@ -97,13 +99,15 @@ public class UserController extends AbstractBaseController {
 
     @RequiresPermissions(value = { "sys:user:view", "sys:user:add", "sys:user:edit" }, logical = Logical.OR)
     @RequestMapping(value = "form")
-    public String form(User user, Model model) {
+    public String form(User user, Model model, HttpServletRequest request) {
         if (user.getCompany() == null || user.getCompany().getId() == null) {
             user.setCompany(UserUtils.getUser().getCompany());
         }
         if (user.getOffice() == null || user.getOffice().getId() == null) {
             user.setOffice(UserUtils.getUser().getOffice());
         }
+        model.addAttribute("action", request.getParameter("action"));
+        model.addAttribute(HttpUtils.OLDSEARCH, request.getParameter(HttpUtils.OLDSEARCH));
         model.addAttribute("user", user);
         model.addAttribute("allRoles", systemService.findAllRole());
         return "modules/sys/userForm";
@@ -125,11 +129,11 @@ public class UserController extends AbstractBaseController {
             user.setPassword(SystemService.entryptPassword(user.getNewPassword()));
         }
         if (!beanValidator(model, user)) {
-            return form(user, model);
+            return form(user, model, request);
         }
         if (!"true".equals(checkLoginName(user.getOldLoginName(), user.getLoginName()))) {
             addMessage(model, "保存用户'" + user.getLoginName() + "'失败，登录名已存在");
-            return form(user, model);
+            return form(user, model, request);
         }
         // 角色数据有效性验证，过滤不在授权内的角色
         List<Role> roleList = Lists.newArrayList();
@@ -156,12 +160,15 @@ public class UserController extends AbstractBaseController {
             // UserUtils.getCacheMap().clear();
         }
         addMessage(redirectAttributes, "保存用户'" + user.getLoginName() + "'成功");
-        return "redirect:" + adminPath + "/sys/user/list?repage";
+
+        addOldSearchMessage(redirectAttributes, request);
+
+        return "redirect:" + adminPath + "/sys/user/list";
     }
 
     @RequiresPermissions("sys:user:del")
     @RequestMapping(value = "delete")
-    public String delete(User user, RedirectAttributes redirectAttributes) {
+    public String delete(User user, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
         if (sysConfigService.isDemoMode()) {
             addMessage(redirectAttributes, sysConfigService.isDemoModeDescription());
             return "redirect:" + adminPath + "/sys/user/list?repage";
@@ -174,7 +181,10 @@ public class UserController extends AbstractBaseController {
             systemService.deleteUser(user);
             addMessage(redirectAttributes, "删除用户成功");
         }
-        return "redirect:" + adminPath + "/sys/user/list?repage";
+
+        addOldSearchMessage(redirectAttributes, request);
+
+        return "redirect:" + adminPath + "/sys/user/list";
     }
 
     /**
@@ -366,8 +376,8 @@ public class UserController extends AbstractBaseController {
             if (user.getRemarks() != null) {
                 currentUser.setRemarks(user.getRemarks());
             }
-//			if(user.getPhoto() !=null )
-//				currentUser.setPhoto(user.getPhoto());
+            //			if(user.getPhoto() !=null )
+            //				currentUser.setPhoto(user.getPhoto());
             systemService.updateUserInfo(currentUser);
             if (__ajax) {// 手机访问
                 AjaxJson j = new AjaxJson();
@@ -598,25 +608,25 @@ public class UserController extends AbstractBaseController {
         return j;
     }
 
-//	@InitBinder
-//	public void initBinder(WebDataBinder b) {
-//		b.registerCustomEditor(List.class, "roleList", new PropertyEditorSupport(){
-//			@Autowired
-//			private SystemService systemService;
-//			@Override
-//			public void setAsText(String text) throws IllegalArgumentException {
-//				String[] ids = StringUtils.split(text, ",");
-//				List<Role> roles = new ArrayList<Role>();
-//				for (String id : ids) {
-//					Role role = systemService.getRole(Long.valueOf(id));
-//					roles.add(role);
-//				}
-//				setValue(roles);
-//			}
-//			@Override
-//			public String getAsText() {
-//				return Collections3.extractToString((List) getValue(), "id", ",");
-//			}
-//		});
-//	}
+    //	@InitBinder
+    //	public void initBinder(WebDataBinder b) {
+    //		b.registerCustomEditor(List.class, "roleList", new PropertyEditorSupport(){
+    //			@Autowired
+    //			private SystemService systemService;
+    //			@Override
+    //			public void setAsText(String text) throws IllegalArgumentException {
+    //				String[] ids = StringUtils.split(text, ",");
+    //				List<Role> roles = new ArrayList<Role>();
+    //				for (String id : ids) {
+    //					Role role = systemService.getRole(Long.valueOf(id));
+    //					roles.add(role);
+    //				}
+    //				setValue(roles);
+    //			}
+    //			@Override
+    //			public String getAsText() {
+    //				return Collections3.extractToString((List) getValue(), "id", ",");
+    //			}
+    //		});
+    //	}
 }

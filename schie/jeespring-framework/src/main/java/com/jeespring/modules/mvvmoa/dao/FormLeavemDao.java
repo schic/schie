@@ -9,10 +9,11 @@ import com.jeespring.modules.mvvmoa.entity.FormLeavem;
 
 /**
  * 员工请假DAO接口
+ * 
  * @author liugf
  * @version 2017-07-17
  */
 @Mapper
 public interface FormLeavemDao extends InterfaceBaseDao<FormLeavem> {
-	
+
 }

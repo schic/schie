@@ -17,42 +17,44 @@ import com.jeespring.modules.iim.entity.MailPage;
 
 /**
  * 发件箱Service
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2015-11-13
  */
 @Service
 @Transactional(readOnly = true)
 public class MailComposeService extends AbstractBaseService<MailComposeDao, MailCompose> {
-	@Autowired
-	private MailComposeDao mailComposeDao;
-	@Override
-    public MailCompose get(String id) {
-		return super.get(id);
-	}
-	
-	@Override
-    public List<MailCompose> findList(MailCompose mailCompose) {
-		return super.findList(mailCompose);
-	}
-	
-	public Page<MailCompose> findPage(MailPage<MailCompose> page, MailCompose mailCompose) {
-		return super.findPage(page, mailCompose);
-	}
-	
-	@Override
-    @Transactional(readOnly = false)
-	public void save(MailCompose mailCompose) {
-		super.save(mailCompose);
-	}
-	
-	@Override
-    @Transactional(readOnly = false)
-	public void delete(MailCompose mailCompose) {
-		super.delete(mailCompose);
-	}
+    @Autowired
+    private MailComposeDao mailComposeDao;
 
-	public int getCount(MailCompose mailCompose) {
-		return mailComposeDao.getCount(mailCompose);
-	}
-	
+    @Override
+    public MailCompose get(String id) {
+        return super.get(id);
+    }
+
+    @Override
+    public List<MailCompose> findList(MailCompose mailCompose) {
+        return super.findList(mailCompose);
+    }
+
+    public Page<MailCompose> findPage(MailPage<MailCompose> page, MailCompose mailCompose) {
+        return super.findPage(page, mailCompose);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void save(MailCompose mailCompose) {
+        super.save(mailCompose);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void delete(MailCompose mailCompose) {
+        super.delete(mailCompose);
+    }
+
+    public int getCount(MailCompose mailCompose) {
+        return mailComposeDao.getCount(mailCompose);
+    }
+
 }

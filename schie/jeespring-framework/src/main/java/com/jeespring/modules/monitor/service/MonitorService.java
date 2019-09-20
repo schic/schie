@@ -15,6 +15,7 @@ import com.jeespring.modules.monitor.dao.MonitorDao;
 
 /**
  * 系统监控Service
+ * 
  * @author liugf
  * @version 2016-02-07
  */
@@ -22,31 +23,31 @@ import com.jeespring.modules.monitor.dao.MonitorDao;
 @Transactional(readOnly = true)
 public class MonitorService extends AbstractBaseService<MonitorDao, Monitor> {
 
-	@Override
+    @Override
     public Monitor get(String id) {
-		return super.get(id);
-	}
-	
-	@Override
+        return super.get(id);
+    }
+
+    @Override
     public List<Monitor> findList(Monitor monitor) {
-		return super.findList(monitor);
-	}
-	
-	@Override
+        return super.findList(monitor);
+    }
+
+    @Override
     public Page<Monitor> findPage(Page<Monitor> page, Monitor monitor) {
-		return super.findPage(page, monitor);
-	}
-	
-	@Override
+        return super.findPage(page, monitor);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void save(Monitor monitor) {
-		super.save(monitor);
-	}
-	
-	@Override
+    public void save(Monitor monitor) {
+        super.save(monitor);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void delete(Monitor monitor) {
-		super.delete(monitor);
-	}
-	
+    public void delete(Monitor monitor) {
+        super.delete(monitor);
+    }
+
 }

@@ -15,6 +15,7 @@ import com.jeespring.modules.iim.entity.ChatHistory;
 
 /**
  * 聊天记录Service
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2015-12-29
  */
@@ -22,39 +23,37 @@ import com.jeespring.modules.iim.entity.ChatHistory;
 @Transactional(readOnly = true)
 public class ChatHistoryService extends AbstractBaseService<ChatHistoryDao, ChatHistory> {
 
-	@Override
+    @Override
     public ChatHistory get(String id) {
-		return super.get(id);
-	}
-	
-	@Override
+        return super.get(id);
+    }
+
+    @Override
     public List<ChatHistory> findList(ChatHistory chatHistory) {
-		return super.findList(chatHistory);
-	}
-	
-	
-	@Override
+        return super.findList(chatHistory);
+    }
+
+    @Override
     public Page<ChatHistory> findPage(Page<ChatHistory> page, ChatHistory entity) {
-		entity.setPage(page);
-		page.setList(dao.findLogList(entity));
-		return page;
-	}
-	
-	
-	@Override
+        entity.setPage(page);
+        page.setList(dao.findLogList(entity));
+        return page;
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void save(ChatHistory chatHistory) {
-		super.save(chatHistory);
-	}
-	
-	@Override
+    public void save(ChatHistory chatHistory) {
+        super.save(chatHistory);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void delete(ChatHistory chatHistory) {
-		super.delete(chatHistory);
-	}
-	
-	public int findUnReadCount(ChatHistory chatHistory){
-		return dao.findUnReadCount(chatHistory);
-	}
-	
+    public void delete(ChatHistory chatHistory) {
+        super.delete(chatHistory);
+    }
+
+    public int findUnReadCount(ChatHistory chatHistory) {
+        return dao.findUnReadCount(chatHistory);
+    }
+
 }

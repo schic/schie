@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jeespring.modules.exchange.dao.ExDbStandardDao">
-
+<mapper namespace="com.schic.schie.modules.exchange.dao.ExDbStandardDao">
 	<sql id="exDbStandardColumns">
 					a.id AS "id",
 					a.parent_id AS "parent.id",
@@ -39,7 +38,9 @@
 					a.create_date AS "createDate",
 					a.create_by AS "createBy.id",
 					a.update_date AS "updateDate",
-					a.update_by AS "updateBy.id"
+					a.update_by AS "updateBy.id",
+					a.orgid AS "orgid",
+					a.extabid AS "exTabId"
 	</sql>
 
 	<sql id="exDbStandardJoins">
@@ -73,7 +74,7 @@
 				<if test="dbName == 'mysql'">concat('%',#{parentIds},'%')</if>
 			</if>
 			<if test="fType != null and fType != ''">
-				AND a.f_type = #{fType}
+				AND a.f_type LIKE '%'||#{fType}||'%'
 			</if>
 			<if test="name != null and name != ''">
 				AND a.name LIKE
@@ -82,7 +83,7 @@
 				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
 			</if>
 			<if test="inId != null and inId != ''">
-				AND a.in_id = #{inId}
+				AND a.in_id LIKE '%'||#{inId}||'%'
 			</if>
 			<if test="nameCn != null and nameCn != ''">
 				AND a.name_cn LIKE
@@ -103,7 +104,7 @@
 				AND a.datalength = #{datalength}
 			</if>
 			<if test="fRequire != null and fRequire != ''">
-				AND a.f_require = #{fRequire}
+				AND a.f_require LIKE '%'||#{fRequire}||'%'
 			</if>
 			<if test="sort != null and sort != ''">
 				AND a.sort = #{sort}
@@ -132,7 +133,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
+				ORDER BY sort ASC
 			</otherwise>
 		</choose>
 	</select>
@@ -323,12 +324,13 @@
 			<when test=" totalType != null and totalType != ''">
 				GROUP BY to_char(a.create_date,'${totalType}')
 			</when>
-			<otherwise>
-			</otherwise>
 		</choose>
 		<choose>
 			<when test=" orderBy != null and orderBy != ''">
 				ORDER BY ${orderBy}
+			</when>
+			<when test=" orderBy == null and orderBy == ''">
+				ORDER BY sort DESC
 			</when>
 			<otherwise>
 				ORDER BY a.update_date DESC

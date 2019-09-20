@@ -15,335 +15,336 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.jeespring.common.config.Global;
+import com.jeespring.common.persistence.AbstractBaseEntity;
 import com.jeespring.common.utils.Collections3;
 import com.jeespring.common.utils.excel.annotation.ExcelField;
 import com.jeespring.common.utils.excel.fieldtype.RoleListType;
-import com.jeespring.common.persistence.AbstractBaseEntity;
 
 /**
  * 用户Entity
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2013-12-05
  */
 public class User extends AbstractBaseEntity<User> {
 
-	private static final long serialVersionUID = 1L;
-	private Office company;	// 归属公司
-	private Office office;	// 归属部门
-	private String loginName;// 登录名
-	private String password;// 密码
-	private String no;		// 工号
-	private String name;	// 姓名
-	private String email;	// 邮箱
-	private String phone;	// 电话
-	private String mobile;	// 手机
-	private String userType;// 用户类型
-	private String loginIp;	// 最后登陆IP
-	private Date loginDate;	// 最后登陆日期
-	private String loginFlag;	// 是否允许登陆
-	private String photo;	// 头像
-	private String qrCode;	//二维码
-	private String oldLoginName;// 原登录名
-	private String newPassword;	// 新密码
-	private String oldLoginIp;	// 上次登陆IP
-	private Date oldLoginDate;	// 上次登陆日期
-	private Role role;	// 根据角色查询用户条件
-	private List<Role> roleList = Lists.newArrayList(); // 拥有角色列表
-	private String oauthId;   //小程序唯一标识
-	private String oauthSecret;  //小程序秘钥
+    private static final long serialVersionUID = 1L;
+    private Office company; // 归属公司
+    private Office office; // 归属部门
+    private String loginName;// 登录名
+    private String password;// 密码
+    private String no; // 工号
+    private String name; // 姓名
+    private String email; // 邮箱
+    private String phone; // 电话
+    private String mobile; // 手机
+    private String userType;// 用户类型
+    private String loginIp; // 最后登陆IP
+    private Date loginDate; // 最后登陆日期
+    private String loginFlag; // 是否允许登陆
+    private String photo; // 头像
+    private String qrCode; // 二维码
+    private String oldLoginName;// 原登录名
+    private String newPassword; // 新密码
+    private String oldLoginIp; // 上次登陆IP
+    private Date oldLoginDate; // 上次登陆日期
+    private Role role; // 根据角色查询用户条件
+    private List<Role> roleList = Lists.newArrayList(); // 拥有角色列表
+    private String oauthId; // 小程序唯一标识
+    private String oauthSecret; // 小程序秘钥
 
-	public User() {
-		super();
-		this.loginFlag = Global.YES;
-	}
-	
-	public User(String id){
-		super(id);
-	}
+    public User() {
+        super();
+        this.loginFlag = Global.YES;
+    }
 
-	public User(String id, String loginName){
-		super(id);
-		this.loginName = loginName;
-	}
+    public User(String id) {
+        super(id);
+    }
 
-	public User(Role role){
-		super();
-		this.role = role;
-	}
-	
-	public String getPhoto() {
-		return photo;
-	}
+    public User(String id, String loginName) {
+        super(id);
+        this.loginName = loginName;
+    }
 
-	public void setPhoto(String photo) {
-		this.photo = photo;
-	}
+    public User(Role role) {
+        super();
+        this.role = role;
+    }
 
-	public String getLoginFlag() {
-		return loginFlag;
-	}
+    public String getPhoto() {
+        return photo;
+    }
 
-	public void setLoginFlag(String loginFlag) {
-		this.loginFlag = loginFlag;
-	}
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
-	//SupCol(isUnique="true", isHide="true")
-	@Override
-    @ExcelField(title="ID", type=1, align=2, sort=1)
-	public String getId() {
-		return id;
-	}
+    public String getLoginFlag() {
+        return loginFlag;
+    }
 
-	@JsonIgnore
-	@NotNull(message="归属公司不能为空")
-	@ExcelField(title="归属公司", align=2, sort=20)
-	public Office getCompany() {
-		return company;
-	}
+    public void setLoginFlag(String loginFlag) {
+        this.loginFlag = loginFlag;
+    }
 
-	public void setCompany(Office company) {
-		this.company = company;
-	}
-	
-	@JsonIgnore
-	@NotNull(message="归属部门不能为空")
-	@ExcelField(title="归属部门", align=2, sort=25)
-	public Office getOffice() {
-		return office;
-	}
+    // SupCol(isUnique="true", isHide="true")
+    @Override
+    @ExcelField(title = "ID", type = 1, align = 2, sort = 1)
+    public String getId() {
+        return id;
+    }
 
-	public void setOffice(Office office) {
-		this.office = office;
-	}
+    @JsonIgnore
+    @NotNull(message = "归属公司不能为空")
+    @ExcelField(title = "归属公司", align = 2, sort = 20)
+    public Office getCompany() {
+        return company;
+    }
 
-	@Length(min=1, max=100, message="登录名长度必须介于 1 和 100 之间")
-	@ExcelField(title="登录名", align=2, sort=30)
-	public String getLoginName() {
-		return loginName;
-	}
+    public void setCompany(Office company) {
+        this.company = company;
+    }
 
-	public void setLoginName(String loginName) {
-		this.loginName = loginName;
-	}
+    @JsonIgnore
+    @NotNull(message = "归属部门不能为空")
+    @ExcelField(title = "归属部门", align = 2, sort = 25)
+    public Office getOffice() {
+        return office;
+    }
 
-	@JsonIgnore
-	@Length(min=1, max=100, message="密码长度必须介于 1 和 100 之间")
-	public String getPassword() {
-		return password;
-	}
+    public void setOffice(Office office) {
+        this.office = office;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    @Length(min = 1, max = 100, message = "登录名长度必须介于 1 和 100 之间")
+    @ExcelField(title = "登录名", align = 2, sort = 30)
+    public String getLoginName() {
+        return loginName;
+    }
 
-	@Length(min=1, max=100, message="姓名长度必须介于 1 和 100 之间")
-	@ExcelField(title="姓名", align=2, sort=40)
-	public String getName() {
-		return name;
-	}
-	
-	@Length(min=1, max=100, message="工号长度必须介于 1 和 100 之间")
-	@ExcelField(title="工号", align=2, sort=45)
-	public String getNo() {
-		return no;
-	}
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
 
-	public void setNo(String no) {
-		this.no = no;
-	}
+    @JsonIgnore
+    @Length(min = 1, max = 100, message = "密码长度必须介于 1 和 100 之间")
+    public String getPassword() {
+        return password;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	@Email(message="邮箱格式不正确")
-	@Length(min=0, max=200, message="邮箱长度必须介于 1 和 200 之间")
-	@ExcelField(title="邮箱", align=1, sort=50)
-	public String getEmail() {
-		return email;
-	}
+    @Length(min = 1, max = 100, message = "姓名长度必须介于 1 和 100 之间")
+    @ExcelField(title = "姓名", align = 2, sort = 40)
+    public String getName() {
+        return name;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	@Length(min=0, max=200, message="电话长度必须介于 1 和 200 之间")
-	@ExcelField(title="电话", align=2, sort=60)
-	public String getPhone() {
-		return phone;
-	}
+    @Length(min = 1, max = 100, message = "工号长度必须介于 1 和 100 之间")
+    @ExcelField(title = "工号", align = 2, sort = 45)
+    public String getNo() {
+        return no;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public void setNo(String no) {
+        this.no = no;
+    }
 
-	@Length(min=0, max=200, message="手机长度必须介于 1 和 200 之间")
-	@ExcelField(title="手机", align=2, sort=70)
-	public String getMobile() {
-		return mobile;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+    @Email(message = "邮箱格式不正确")
+    @Length(min = 0, max = 200, message = "邮箱长度必须介于 1 和 200 之间")
+    @ExcelField(title = "邮箱", align = 1, sort = 50)
+    public String getEmail() {
+        return email;
+    }
 
-	@Override
-    @ExcelField(title="备注", align=1, sort=900)
-	public String getRemarks() {
-		return remarks;
-	}
-	
-	@Length(min=0, max=100, message="用户类型长度必须介于 1 和 100 之间")
-	@ExcelField(title="用户类型", align=2, sort=80, dictType="sys_user_type")
-	public String getUserType() {
-		return userType;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setUserType(String userType) {
-		this.userType = userType;
-	}
+    @Length(min = 0, max = 200, message = "电话长度必须介于 1 和 200 之间")
+    @ExcelField(title = "电话", align = 2, sort = 60)
+    public String getPhone() {
+        return phone;
+    }
 
-	@Override
-    @ExcelField(title="创建时间", type=0, align=1, sort=90)
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	@ExcelField(title="最后登录IP", type=1, align=1, sort=100)
-	public String getLoginIp() {
-		return loginIp;
-	}
+    @Length(min = 0, max = 200, message = "手机长度必须介于 1 和 200 之间")
+    @ExcelField(title = "手机", align = 2, sort = 70)
+    public String getMobile() {
+        return mobile;
+    }
 
-	public void setLoginIp(String loginIp) {
-		this.loginIp = loginIp;
-	}
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@ExcelField(title="最后登录日期", type=1, align=1, sort=110)
-	public Date getLoginDate() {
-		return loginDate;
-	}
+    @Override
+    @ExcelField(title = "备注", align = 1, sort = 900)
+    public String getRemarks() {
+        return remarks;
+    }
 
-	public void setLoginDate(Date loginDate) {
-		this.loginDate = loginDate;
-	}
+    @Length(min = 0, max = 100, message = "用户类型长度必须介于 1 和 100 之间")
+    @ExcelField(title = "用户类型", align = 2, sort = 80, dictType = "sys_user_type")
+    public String getUserType() {
+        return userType;
+    }
 
-	public String getOldLoginName() {
-		return oldLoginName;
-	}
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 
-	public void setOldLoginName(String oldLoginName) {
-		this.oldLoginName = oldLoginName;
-	}
+    @Override
+    @ExcelField(title = "创建时间", type = 0, align = 1, sort = 90)
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-	public String getNewPassword() {
-		return newPassword;
-	}
+    @ExcelField(title = "最后登录IP", type = 1, align = 1, sort = 100)
+    public String getLoginIp() {
+        return loginIp;
+    }
 
-	public void setNewPassword(String newPassword) {
-		this.newPassword = newPassword;
-	}
+    public void setLoginIp(String loginIp) {
+        this.loginIp = loginIp;
+    }
 
-	public String getOldLoginIp() {
-		if (oldLoginIp == null){
-			return loginIp;
-		}
-		return oldLoginIp;
-	}
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ExcelField(title = "最后登录日期", type = 1, align = 1, sort = 110)
+    public Date getLoginDate() {
+        return loginDate;
+    }
 
-	public void setOldLoginIp(String oldLoginIp) {
-		this.oldLoginIp = oldLoginIp;
-	}
+    public void setLoginDate(Date loginDate) {
+        this.loginDate = loginDate;
+    }
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	public Date getOldLoginDate() {
-		if (oldLoginDate == null){
-			return loginDate;
-		}
-		return oldLoginDate;
-	}
+    public String getOldLoginName() {
+        return oldLoginName;
+    }
 
-	public void setOldLoginDate(Date oldLoginDate) {
-		this.oldLoginDate = oldLoginDate;
-	}
+    public void setOldLoginName(String oldLoginName) {
+        this.oldLoginName = oldLoginName;
+    }
 
-	public Role getRole() {
-		return role;
-	}
+    public String getNewPassword() {
+        return newPassword;
+    }
 
-	public void setRole(Role role) {
-		this.role = role;
-	}
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
 
-	@JsonIgnore
-	@ExcelField(title="拥有角色", align=1, sort=800, fieldType=RoleListType.class)
-	public List<Role> getRoleList() {
-		return roleList;
-	}
-	
-	public void setRoleList(List<Role> roleList) {
-		this.roleList = roleList;
-	}
+    public String getOldLoginIp() {
+        if (oldLoginIp == null) {
+            return loginIp;
+        }
+        return oldLoginIp;
+    }
 
-	@JsonIgnore
-	public List<String> getRoleIdList() {
-		List<String> roleIdList = Lists.newArrayList();
-		for (Role role : roleList) {
-			roleIdList.add(role.getId());
-		}
-		return roleIdList;
-	}
+    public void setOldLoginIp(String oldLoginIp) {
+        this.oldLoginIp = oldLoginIp;
+    }
 
-	public void setRoleIdList(List<String> roleIdList) {
-		roleList = Lists.newArrayList();
-		for (String roleId : roleIdList) {
-			Role role = new Role();
-			role.setId(roleId);
-			roleList.add(role);
-		}
-	}
-	
-	/**
-	 * 用户拥有的角色名称字符串, 多个角色名称用','分隔.
-	 */
-	public String getRoleNames() {
-		return Collections3.extractToString(roleList, "name", ",");
-	}
-	
-	public boolean isAdmin(){
-		return isAdmin(this.id);
-	}
-	
-	public static boolean isAdmin(String id){
-		return id != null && "1".equals(id);
-	}
-	
-	@Override
-	public String toString() {
-		return id;
-	}
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    public Date getOldLoginDate() {
+        if (oldLoginDate == null) {
+            return loginDate;
+        }
+        return oldLoginDate;
+    }
 
-	public void setQrCode(String qrCode) {
-		this.qrCode = qrCode;
-	}
+    public void setOldLoginDate(Date oldLoginDate) {
+        this.oldLoginDate = oldLoginDate;
+    }
 
-	public String getQrCode() {
-		return qrCode;
-	}
+    public Role getRole() {
+        return role;
+    }
 
-	public String getOauthId() {
-		return oauthId;
-	}
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
-	public void setOauthId(String oauthId) {
-		this.oauthId = oauthId;
-	}
+    @JsonIgnore
+    @ExcelField(title = "拥有角色", align = 1, sort = 800, fieldType = RoleListType.class)
+    public List<Role> getRoleList() {
+        return roleList;
+    }
 
-	public String getOauthSecret() {
-		return oauthSecret;
-	}
+    public void setRoleList(List<Role> roleList) {
+        this.roleList = roleList;
+    }
 
-	public void setOauthSecret(String oauthSecret) {
-		this.oauthSecret = oauthSecret;
-	}
+    @JsonIgnore
+    public List<String> getRoleIdList() {
+        List<String> roleIdList = Lists.newArrayList();
+        for (Role role : roleList) {
+            roleIdList.add(role.getId());
+        }
+        return roleIdList;
+    }
+
+    public void setRoleIdList(List<String> roleIdList) {
+        roleList = Lists.newArrayList();
+        for (String roleId : roleIdList) {
+            Role role = new Role();
+            role.setId(roleId);
+            roleList.add(role);
+        }
+    }
+
+    /**
+     * 用户拥有的角色名称字符串, 多个角色名称用','分隔.
+     */
+    public String getRoleNames() {
+        return Collections3.extractToString(roleList, "name", ",");
+    }
+
+    public boolean isAdmin() {
+        return isAdmin(this.id);
+    }
+
+    public static boolean isAdmin(String id) {
+        return id != null && "1".equals(id);
+    }
+
+    @Override
+    public String toString() {
+        return id;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
+    }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public String getOauthId() {
+        return oauthId;
+    }
+
+    public void setOauthId(String oauthId) {
+        this.oauthId = oauthId;
+    }
+
+    public String getOauthSecret() {
+        return oauthSecret;
+    }
+
+    public void setOauthSecret(String oauthSecret) {
+        this.oauthSecret = oauthSecret;
+    }
 }

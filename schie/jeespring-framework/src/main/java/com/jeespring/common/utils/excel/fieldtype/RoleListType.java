@@ -14,39 +14,40 @@ import com.jeespring.modules.sys.service.SystemService;
 
 /**
  * 字段类型转换
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2013-5-29
  */
 public class RoleListType {
 
-	private static SystemService systemService = SpringContextHolder.getBean(SystemService.class);
-	
-	/**
-	 * 获取对象值（导入）
-	 */
-	public static Object getValue(String val) {
-		List<Role> roleList = Lists.newArrayList();
-		List<Role> allRoleList = systemService.findAllRole();
-		for (String s : StringUtils.split(val, ",")){
-			for (Role e : allRoleList){
-				if (StringUtils.trimToEmpty(s).equals(e.getName())){
-					roleList.add(e);
-				}
-			}
-		}
-		return roleList.size()>0?roleList:null;
-	}
+    private static SystemService systemService = SpringContextHolder.getBean(SystemService.class);
 
-	/**
-	 * 设置对象值（导出）
-	 */
-	public static String setValue(Object val) {
-		if (val != null){
-			@SuppressWarnings("unchecked")
-			List<Role> roleList = (List<Role>)val;
-			return Collections3.extractToString(roleList, "name", ", ");
-		}
-		return "";
-	}
-	
+    /**
+     * 获取对象值（导入）
+     */
+    public static Object getValue(String val) {
+        List<Role> roleList = Lists.newArrayList();
+        List<Role> allRoleList = systemService.findAllRole();
+        for (String s : StringUtils.split(val, ",")) {
+            for (Role e : allRoleList) {
+                if (StringUtils.trimToEmpty(s).equals(e.getName())) {
+                    roleList.add(e);
+                }
+            }
+        }
+        return !roleList.isEmpty() ? roleList : null;
+    }
+
+    /**
+     * 设置对象值（导出）
+     */
+    public static String setValue(Object val) {
+        if (val != null) {
+            @SuppressWarnings("unchecked")
+            List<Role> roleList = (List<Role>) val;
+            return Collections3.extractToString(roleList, "name", ", ");
+        }
+        return "";
+    }
+
 }

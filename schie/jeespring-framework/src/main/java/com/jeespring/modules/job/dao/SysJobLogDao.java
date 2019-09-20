@@ -9,10 +9,11 @@ import com.jeespring.modules.job.entity.SysJobLog;
 
 /**
  * 定时任务调度日志表DAO接口
+ * 
  * @author JeeSpring
  * @version 2018-08-16
  */
 @Mapper
 public interface SysJobLogDao extends InterfaceBaseDao<SysJobLog> {
-	
+
 }

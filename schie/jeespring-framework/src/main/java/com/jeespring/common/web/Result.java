@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.common.web;
 
 import com.alibaba.fastjson.JSON;
@@ -7,25 +10,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Result extends HashMap<String, Object> implements Map<String, Object>{
+public class Result extends HashMap<String, Object> implements Map<String, Object> {
     /**
      *
      */
     private static final long serialVersionUID = 1L;
-    private HashMap<String,Object> resultHashMap = new HashMap<String, Object>();
+    private HashMap<String, Object> resultHashMap = new HashMap<String, Object>();
 
     public void setResultObject(Object obejct) {
         put("RESULT", obejct);
     }
 
-    public void setResultExtend(String key,Object object){
-        JSONObject jsonObject= JSON.parseObject(JSON.toJSONString(get("RESULT")));
-        jsonObject.put(key,object);
+    public void setResultExtend(String key, Object object) {
+        JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(get("RESULT")));
+        jsonObject.put(key, object);
         put("RESULT", jsonObject);
     }
 
-	public void setResultHashMap(String item,Object obejct) {
-        resultHashMap.put(item,obejct);
+    public void setResultHashMap(String item, Object obejct) {
+        resultHashMap.put(item, obejct);
         put("RESULT", resultHashMap);
     }
 
@@ -33,11 +36,11 @@ public class Result extends HashMap<String, Object> implements Map<String, Objec
         put("CODE", resultCode);
     }
 
-    public Object getResultCoe(){
+    public Object getResultCoe() {
         return get("CODE");
     }
 
-    public Object getResultCode(){
+    public Object getResultCode() {
         return get("CODE");
     }
 
@@ -46,7 +49,7 @@ public class Result extends HashMap<String, Object> implements Map<String, Objec
         return (List<T>) get("RESULT");
     }
 
-    public <V, K> Map<K,V> getResutObjectMap() {
+    public <V, K> Map<K, V> getResutObjectMap() {
         return (Map<K, V>) get("RESULT");
     }
 

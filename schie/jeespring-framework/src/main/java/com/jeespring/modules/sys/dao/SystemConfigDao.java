@@ -9,10 +9,11 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 系统配置DAO接口
+ * 
  * @author liugf
  * @version 2016-02-07
  */
 @Mapper
 public interface SystemConfigDao extends InterfaceBaseDao<SystemConfig> {
-	
+
 }

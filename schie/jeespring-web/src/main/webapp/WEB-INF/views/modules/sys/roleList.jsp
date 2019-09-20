@@ -21,10 +21,10 @@
                        class="btn btn-default btn-sm" title="新增"><i
                             class="fa fa-plus"></i>新增</a>
                 </shiro:hasPermission>
-                <shiro:hasPermission name="sys:role:del">
+                <%-- <shiro:hasPermission name="sys:role:del">
                     <a id="btnDeleteAll" href="${ctx}/sys/role/deleteAll" class="btn btn-default btn-sm"
                        title="删除"><i class="fa fa-trash-o"></i>删除</a>
-                </shiro:hasPermission>
+                </shiro:hasPermission> --%>
                 <!-- 工具功能 -->
                 <%@ include file="/WEB-INF/views/include/btnGroup.jsp" %>
             </div>
@@ -59,7 +59,7 @@
             <table id="contentTable" class="table table-hover table-condensed dataTables-example dataTable">
                 <thead>
                 <tr>
-                    <th><input type="checkbox" class="i-checks"></th>
+                    <!-- <th><input type="checkbox" class="i-checks"></th> -->
                     <th>角色名称</th>
                     <th>英文名称</th>
                     <th>归属机构</th>
@@ -72,9 +72,9 @@
                 <tbody>
                 <c:forEach items="${list}" var="role">
                     <tr>
-                        <td><input type="checkbox" id="${role.id}" class="i-checks"></td>
-                        <td><a href="#"
-                               onclick="openDialogView('查看角色', '${ctx}/sys/role/form?id=${role.id}','800px', '500px')">${role.name}</a>
+                        <%-- <td><input type="checkbox" id="${role.id}" class="i-checks"></td> --%>
+                        <td><a href="${ctx}/sys/role/form?id=${role.id}&action=view"
+                               >${role.name}</a>
                         </td>
                         <td><a href="#"
                                onclick="openDialogView('查看角色', '${ctx}/sys/role/form?id=${role.id}','800px', '500px')">${role.enname}</a>
@@ -83,7 +83,7 @@
                         <td>${fns:getDictLabel(role.dataScope, 'sys_data_scope', '无')}</td>
                         <td>
                             <shiro:hasPermission name="sys:role:view">
-                                <a  id="btnView" class="btnView" href="${ctx}/sys/role/form?id=${role.id}" title="查看"><i
+                                <a  id="btnView" class="btnView" href="${ctx}/sys/role/form?id=${role.id}&action=view" title="查看"><i
                                         class="fa fa-search-plus"></i></a>
                             </shiro:hasPermission>
                             <shiro:hasPermission name="sys:role:edit">

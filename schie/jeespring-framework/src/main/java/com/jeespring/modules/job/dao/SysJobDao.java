@@ -9,10 +9,11 @@ import com.jeespring.modules.job.entity.SysJob;
 
 /**
  * 定时任务调度DAO接口
+ * 
  * @author JeeSpring
  * @version 2018-08-16
  */
 @Mapper
 public interface SysJobDao extends InterfaceBaseDao<SysJob> {
-	
+
 }

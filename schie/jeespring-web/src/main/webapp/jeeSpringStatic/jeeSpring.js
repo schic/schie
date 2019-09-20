@@ -141,3 +141,23 @@ function getDictLabel(data, value, defaultValue){
 }
 
 var ctx = "${ctx}";
+
+
+//打开对话框(查看)
+function openDialogView(title,url,width,height,type){
+	if(type=="tap" || type==null) {
+      top.openTabView(title, url, width, height);
+      return;
+  }
+	top.layer.open({
+	    type: 2,  
+	    area: [width, height],
+	    title: title,
+      maxmin: true, //开启最大化最小化按钮
+	    content: url ,
+	    btn: ['关闭'],
+	    cancel: function(index){ 
+	       }
+	}); 	
+	
+}

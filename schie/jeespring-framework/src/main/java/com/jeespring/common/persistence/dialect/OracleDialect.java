@@ -5,6 +5,7 @@ package com.jeespring.common.persistence.dialect;
 
 /**
  * Oracle的方言实现
+ * 
  * @author poplar.yfyang
  * @version 1.0 2010-10-10 下午12:31
  * @since JDK 1.5
@@ -22,6 +23,7 @@ public class OracleDialect implements Dialect {
 
     /**
      * 将sql变成分页sql语句,提供将offset及limit使用占位符号(placeholder)替换.
+     * 
      * <pre>
      * 如mysql
      * dialect.getLimitString("select * from user", 12, ":offset",0,":limit") 将返回
@@ -44,17 +46,18 @@ public class OracleDialect implements Dialect {
         StringBuilder pagingSelect = new StringBuilder(sql.length() + 100);
 
         if (offset > 0) {
-			pagingSelect.append("select * from ( select row_.*, rownum rownum_ from ( ");
-		} else {
-			pagingSelect.append("select * from ( ");
-		}
-		pagingSelect.append(sql);
-		if (offset > 0) {
-			String endString = offsetPlaceholder + "+" + limitPlaceholder;
-			pagingSelect.append(" ) row_ where rownum <= "+endString+") where rownum_ > ").append(offsetPlaceholder);
-		} else {
-			pagingSelect.append(" ) where rownum <= "+limitPlaceholder);
-		}
+            pagingSelect.append("select * from ( select row_.*, rownum rownum_ from ( ");
+        } else {
+            pagingSelect.append("select * from ( ");
+        }
+        pagingSelect.append(sql);
+        if (offset > 0) {
+            String endString = offsetPlaceholder + "+" + limitPlaceholder;
+            pagingSelect.append(" ) row_ where rownum <= " + endString + ") where rownum_ > ")
+                    .append(offsetPlaceholder);
+        } else {
+            pagingSelect.append(" ) where rownum <= " + limitPlaceholder);
+        }
 
         if (isForUpdate) {
             pagingSelect.append(" for update");

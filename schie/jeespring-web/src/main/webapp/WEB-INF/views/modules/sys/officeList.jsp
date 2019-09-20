@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp" %>
 <html>
 <head>
-    <title>部门管理</title>
+    <title>机构管理</title>
     <meta name="decorator" content="default"/>
     <%@ include file="/WEB-INF/views/include/headMeta.jsp" %>
     <%@ include file="/WEB-INF/views/include/headCss.jsp" %>
@@ -16,7 +16,7 @@
     <div class="box box-main">
         <!-- 内容盒子头部 -->
         <div class="box-header">
-            <div class="box-title"><i class="fa fa-edit"></i>部门管理</div>
+            <div class="box-title"><i class="fa fa-edit"></i>机构管理</div>
             <div class="box-tools pull-right">
                 <shiro:hasPermission name="sys:user:add">
                     <a id="btnAdd" href="${ctx}/sys/office/form?parent.id=${office.id}" data-addTab="true" title="新增"  class="btn btn-default btn-sm"><i class="fa fa-plus"></i>新增</a>
@@ -30,10 +30,10 @@
             <table id="treeTable" class="table table-hover table-condensed dataTables-example dataTable">
                 <thead>
                 <tr>
-                    <th>部门名称</th>
-                    <th>归属区域</th>
-                    <th>部门编码</th>
-                    <th>部门类型</th>
+                    <th>机构名称</th>
+                    <!-- <th>归属区域</th> -->
+                    <th>行政区划</th>
+                    <th>机构类型</th>
                     <th>备注</th>
                     <shiro:hasPermission name="sys:office:edit">
                         <th>操作</th>
@@ -49,12 +49,13 @@
 <div id="messageBox">${message}</div>
 <%@ include file="/WEB-INF/views/include/footJs.jsp" %>
 <script src="/staticViews/viewBase.js"></script>
+<!-- 删除区域 <td>{{row.area.name}}</td> -->
 <script type="text/template" id="treeTableTpl">
     <tr id="{{row.id}}" pId="{{pid}}">
-        <td><a href="#"
-               onclick="openDialogView('查看部门', '${ctx}/sys/office/form?id={{row.id}}','800px', '620px')">{{row.name}}</a>
+        <td><a href="${ctx}/sys/office/form?id={{row.id}}&action=view"
+               >{{row.name}}</a>
         </td>
-        <td>{{row.area.name}}</td>
+        
         <td>{{row.code}}</td>
         <td>{{dict.type}}</td>
         <td>{{row.remarks}}</td>
@@ -67,11 +68,11 @@
             </shiro:hasPermission>
             <shiro:hasPermission name="sys:office:del">
                 <a  id="btnDelete" class="btnDelete" href="${ctx}/sys/office/delete?id={{row.id}}"
-                   onclick="return confirmx('要删除该部门及所有子部门项吗？', this.href)" class="btn btn-white btn-sm"  title="删除"><i
+                   onclick="return confirmx('要删除该机构及所有子机构项吗？', this.href)" class="btn btn-white btn-sm"  title="删除"><i
                         class="fa fa-trash-o"></i></a>
             </shiro:hasPermission>
             <shiro:hasPermission name="sys:office:add">
-                <a href="${ctx}/sys/office/form?parent.id={{row.id}}" class="btn  btn-white btn-sm"><i class="fa fa-plus"></i> 添加下级部门</a>
+                <a href="${ctx}/sys/office/form?parent.id={{row.id}}" class="btn  btn-white btn-sm"><i class="fa fa-plus"></i> 添加下级机构</a>
             </shiro:hasPermission>
         </td>
     </tr>

@@ -16,13 +16,7 @@
 	
 	<modules>
 		<module>jeespring-framework</module>
-		<!-- <module>jeespring-gencode</module>
-		<module>jeespring-act</module>
-		<module>jeespring-company</module>
-		<module>jeespring-mq</module> -->
-		<!-- <module>jeespring-cms</module> -->
         <module>jeespring-web</module>
-		<!-- <module>jeespring-webDubboProvider</module> -->
 		<module>schie</module>
     </modules>
 	

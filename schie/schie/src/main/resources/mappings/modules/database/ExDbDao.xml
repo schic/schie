@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jeespring.modules.database.dao.ExDbDao">
-    
+<mapper namespace="com.schic.schie.modules.database.dao.ExDbDao">
+
 	<sql id="exDbColumns">
 					a.id AS "id",
 					a.company_id AS "companyId",
@@ -16,7 +16,10 @@
 					a.cuser AS "cuser",
 					a.mdate AS "mdate",
 					a.muser AS "muser",
-					a.del_flag AS "delFlag"
+					a.del_flag AS "delFlag",
+					a.extabid AS "exTabId",
+					a.readthread AS "readThread",
+					a.writethread AS "writeThread"
 	</sql>
 
 	<sql id="exDbColumnsList">
@@ -33,7 +36,10 @@
 					a.cuser AS "cuser",
 					a.mdate AS "mdate",
 					a.muser AS "muser",
-					a.del_flag AS "delFlag"
+					a.del_flag AS "delFlag",
+					a.extabid AS "exTabId",
+					a.readthread AS "readThread",
+					a.writethread AS "writeThread"
 	</sql>
 
 	<sql id="exDbJoins">
@@ -62,18 +68,17 @@
 			</if>
 			<if test="dbName != null and dbName != ''">
 				AND a.db_name LIKE 
-					<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{dbName}||'%'</if>
-					<if test="dbName == 'mssql'">'%'+#{dbName}+'%'</if>
-					<if test="dbName == 'mysql'">concat('%',#{dbName},'%')</if>
+				'%'||#{dbName}||'%'
+
 			</if>
 			<if test="dbType != null and dbType != ''">
-				AND a.db_type = #{dbType}
+				AND a.db_type LIKE '%'||#{dbType}||'%'
 			</if>
 			<if test="dbUrl != null and dbUrl != ''">
-				AND a.db_url = #{dbUrl}
+				AND a.db_url LIKE '%'||#{dbUrl}||'%'
 			</if>
 			<if test="dbUser != null and dbUser != ''">
-				AND a.db_user = #{dbUser}
+				AND a.db_user LIKE '%'||#{dbUser}||'%'
 			</if>
 			<if test="dbPwd != null and dbPwd != ''">
 				AND a.db_pwd = #{dbPwd}
@@ -91,16 +96,25 @@
 				AND a.cdate BETWEEN #{beginCdate} AND #{endCdate}
 			</if>
 			<if test="cuser != null and cuser != ''">
-				AND a.cuser = #{cuser}
+				AND a.cuser LIKE '%'||#{cuser}||'%'
 			</if>
 			<if test="beginMdate != null and endMdate != null ">
 				AND a.mdate BETWEEN #{beginMdate} AND #{endMdate}
 			</if>
 			<if test="muser != null and muser != ''">
-				AND a.muser = #{muser}
+				AND a.muser LIKE '%'||#{muser}||'%'
+			</if>
+			<if test="exTabId != null and exTabId != ''">
+				AND a.extabid = #{exTabId}
 			</if>
 			<if test="delFlag != null and delFlag != ''">
 				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="readThread != null and readThread != ''">
+				AND a.readthread = #{readThread}
+			</if>
+			<if test="writeThread != null and writeThread != ''">
+				AND a.writethread = #{writeThread}
 			</if>
 		</where>
 		<choose>
@@ -111,6 +125,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY sort ASC
 			</otherwise>
 		</choose>
 	</select>
@@ -147,7 +162,11 @@
 			cuser,
 			mdate,
 			muser,
-			del_flag
+			del_flag,
+			extabid,
+			readthread,
+			writethread
+
 		) VALUES (
 			#{id},
 			#{companyId},
@@ -162,7 +181,10 @@
 			#{cuser},
 			current_timestamp,
 			#{muser},
-			#{delFlag}
+			#{delFlag},
+			#{exTabId},
+			#{readThread},
+			#{writeThread}
 		)
 	</insert>
 	
@@ -173,7 +195,15 @@
 			db_type = #{dbType},
 			db_url = #{dbUrl},
 			db_user = #{dbUser},
+		<if test="dbPwd != null and dbPwd != ''">
 			db_pwd = #{dbPwd},
+		</if>
+		<if test="readThread != null and readThread != ''">
+			readthread = #{readThread},
+		</if>
+		<if test="writeThread != null and writeThread != ''">
+			writethread = #{writeThread},
+		</if>
 			sort = #{sort},
 			remarks = #{remarks},
 			mdate = current_timestamp,

@@ -21,6 +21,7 @@ public class H2Dialect implements Dialect {
 
     /**
      * 将sql变成分页sql语句,提供将offset及limit使用占位符号(placeholder)替换.
+     * 
      * <pre>
      * 如mysql
      * dialect.getLimitString("select * from user", 12, ":offset",0,":limit") 将返回
@@ -34,9 +35,10 @@ public class H2Dialect implements Dialect {
      * @param limitPlaceholder  分页纪录条数占位符号
      * @return 包含占位符的分页sql
      */
-    private String getLimitString(String sql, int offset, String offsetPlaceholder, int limit, String limitPlaceholder) {
-        return sql + ((offset > 0) ? " limit " + limitPlaceholder + " offset "
-                + offsetPlaceholder : " limit " + limitPlaceholder);
+    private String getLimitString(String sql, int offset, String offsetPlaceholder, int limit,
+            String limitPlaceholder) {
+        return sql + ((offset > 0) ? " limit " + limitPlaceholder + " offset " + offsetPlaceholder
+                : " limit " + limitPlaceholder);
     }
 
     @Override

@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.modules.baiduface.rest;
 
 import com.alibaba.fastjson.JSONArray;
@@ -25,25 +28,26 @@ import java.util.Map;
 
 /**
  * 人脸识别Controller
+ * 
  * @author 唐继涛
  * @version 2018-7-13
  */
-@RestController
-@RequestMapping(value = "/rest/face")
-@Api(value = "face百度人脸识别API接口", description = "face百度人脸识别API接口")
+//@RestController
+//@RequestMapping(value = "/rest/face")
+//@Api(value = "face百度人脸识别API接口", description = "face百度人脸识别API接口")
 public class FaceRecognitionRestController extends AbstractBaseController {
-    //设置APPID/AK/SK
+    // 设置APPID/AK/SK
     public static final String APP_ID = "11483847";
     public static final String API_KEY = "Hn5zrGgRe5WWiXV1GcWYirFT";
     public static final String SECRET_KEY = "vlzV3XEvuc1zGa9cfi5PpdRuFlfz08gu";
-    public String id = null;
+    private String id = null;
 
-    @RequestMapping(value = {"match"}, method = {RequestMethod.POST})
+    @RequestMapping(value = { "match" }, method = { RequestMethod.POST })
     @ApiOperation(value = "人脸对比(Content-Type为application/json)", notes = "人脸对比(Content-Type为application/json)")
     @ApiImplicitParam(name = "String", value = "人脸对比", dataType = "String")
     public String match(@RequestBody String imgStr) {
         // 请求url
-        String url = "https://aip.baidubce.com/rest/2.0/face/v3/match"; //百度人脸对比的API
+        String url = "https://aip.baidubce.com/rest/2.0/face/v3/match"; // 百度人脸对比的API
         try {
 //            String str = this.getUser(userId);
 
@@ -65,7 +69,7 @@ public class FaceRecognitionRestController extends AbstractBaseController {
             images.add(map1);
             images.add(map2);
             String param = GsonUtils.toJson(images);
-            String token =  FaceRecognitionRestController.getAuth();
+            String token = FaceRecognitionRestController.getAuth();
             String result = HttpUtil.post(url, token, "application/json", param);
             System.out.println(result);
             return result;
@@ -75,17 +79,18 @@ public class FaceRecognitionRestController extends AbstractBaseController {
         return null;
     }
 
-    @RequestMapping(value = {"search"}, method = {RequestMethod.POST})
+    @RequestMapping(value = { "search" }, method = { RequestMethod.POST })
     @ApiOperation(value = "人脸搜索(Content-Type为application/json)", notes = "人脸搜索(Content-Type为application/json)")
     @ApiImplicitParam(name = "String", value = "人脸搜索", dataType = "String")
     public Result search(@RequestBody String imgStr) {
         // 请求url
-        String url = "https://aip.baidubce.com/rest/2.0/face/v3/search"; //百度人脸搜索的API
+        String url = "https://aip.baidubce.com/rest/2.0/face/v3/search"; // 百度人脸搜索的API
         Result result = ResultFactory.getSuccessResult();
         try {
-            String Str = this.GroupGetlist(); //调用百度查询用户组的API接口，将查询返回的数据接收。
-            JSONObject baiJsonObject = JSONObject.parseObject(Str); //将数据转换为json对象类型的数据。
-            String str = baiJsonObject.getJSONObject("result").getString("group_id_list").replace("\"", "").replace("[", "").replace("]", "");
+            String Str = this.GroupGetlist(); // 调用百度查询用户组的API接口，将查询返回的数据接收。
+            JSONObject baiJsonObject = JSONObject.parseObject(Str); // 将数据转换为json对象类型的数据。
+            String str = baiJsonObject.getJSONObject("result").getString("group_id_list").replace("\"", "")
+                    .replace("[", "").replace("]", "");
             Map<String, Object> map = new HashMap<>();
             map.put("image", imgStr);
             map.put("liveness_control", "NORMAL");
@@ -93,24 +98,24 @@ public class FaceRecognitionRestController extends AbstractBaseController {
             map.put("image_type", "BASE64");
             map.put("quality_control", "LOW");
             String param = GsonUtils.toJson(map);
-            //调用百度的人脸检测API获取百度API返回的数据。
-            String token =  FaceRecognitionRestController.getAuth();
+            // 调用百度的人脸检测API获取百度API返回的数据。
+            String token = FaceRecognitionRestController.getAuth();
             String baiDuResult = HttpUtil.post(url, token, "application/json", param);
 
-            JSONObject returnResult = JSONObject.parseObject(baiDuResult);  //将百度返回的数据转为json对象类型的数据。
+            JSONObject returnResult = JSONObject.parseObject(baiDuResult); // 将百度返回的数据转为json对象类型的数据。
             String user = returnResult.getJSONObject("result").getString("user_list").replace("\"", "").replace("[", "")
-                    .replace("]", "").replace("{","").replace("}","");
-            String[] userList = user.split(",");  //根据逗号分隔用户信息。
-            JSONArray jsonArray = (JSONArray) JSONArray.toJSON(userList);  //将字符串数组转为json 数组类型的。
+                    .replace("]", "").replace("{", "").replace("}", "");
+            String[] userList = user.split(","); // 根据逗号分隔用户信息。
+            JSONArray jsonArray = (JSONArray) JSONArray.toJSON(userList); // 将字符串数组转为json 数组类型的。
 
-            String[] scoreList = ((String) jsonArray.get(0)).split(":"); //获取json数组第一条数据然后根据:分隔。
-            JSONArray json = (JSONArray) JSONArray.toJSON(scoreList);  //获取百度返回user_list数据的score评分。
-            String scoreString = String.valueOf(json.get(1));  //将分数值转成string类型的。
-            Double score = Double.parseDouble(scoreString);    //将string类型的转换成double。
-            //判断分数值
-            if(score >= 80){
+            String[] scoreList = ((String) jsonArray.get(0)).split(":"); // 获取json数组第一条数据然后根据:分隔。
+            JSONArray json = (JSONArray) JSONArray.toJSON(scoreList); // 获取百度返回user_list数据的score评分。
+            String scoreString = String.valueOf(json.get(1)); // 将分数值转成string类型的。
+            Double score = Double.parseDouble(scoreString); // 将string类型的转换成double。
+            // 判断分数值
+            if (score >= 80) {
                 result = ResultFactory.getSuccessResult("检测成功！");
-            }else {
+            } else {
                 result = ResultFactory.getErrorResult("检测失败，请重新扫描!！");
             }
 
@@ -121,12 +126,12 @@ public class FaceRecognitionRestController extends AbstractBaseController {
         return null;
     }
 
-    @RequestMapping(value = {"add"}, method = {RequestMethod.POST})
+    @RequestMapping(value = { "add" }, method = { RequestMethod.POST })
     @ApiOperation(value = "人脸注册(Content-Type为application/json)", notes = "人脸注册(Content-Type为application/json)")
     @ApiImplicitParam(name = "String", value = "人脸注册", dataType = "String")
     public Result add(@RequestBody String imgStr, String userId) {
         // 请求url
-        String url = "https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/add"; //百度添加到人脸库的API
+        String url = "https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/add"; // 百度添加到人脸库的API
         Result result = ResultFactory.getSuccessResult();
         try {
 
@@ -134,12 +139,12 @@ public class FaceRecognitionRestController extends AbstractBaseController {
             map.put("image", imgStr);
             map.put("group_id", "测试人脸库");
             map.put("user_id", 11);
-            map.put("user_info","测试");
+            map.put("user_info", "测试");
             map.put("liveness_control", "NORMAL");
             map.put("image_type", "BASE64");
             map.put("quality_control", "NORMAL");
             String param = GsonUtils.toJson(map);
-            String token =  FaceRecognitionRestController.getAuth();
+            String token = FaceRecognitionRestController.getAuth();
             String baiDuResult = HttpUtil.post(url, token, "application/json", param);
             if (baiDuResult.contains("SUCCESS")) {
                 result = ResultFactory.getSuccessResult("注册成功！");
@@ -164,7 +169,7 @@ public class FaceRecognitionRestController extends AbstractBaseController {
             map.put("start", 0);
             map.put("length", 100);
             String param = GsonUtils.toJson(map);
-            String token =  FaceRecognitionRestController.getAuth();
+            String token = FaceRecognitionRestController.getAuth();
             String result = HttpUtil.post(url, token, "application/json", param);
             return result;
         } catch (Exception e) {
@@ -174,12 +179,12 @@ public class FaceRecognitionRestController extends AbstractBaseController {
     }
 
     /**
-     * 获取API访问token
-     * 该token有一定的有效期，需要自行管理，当失效时需重新获取.
+     * 获取API访问token 该token有一定的有效期，需要自行管理，当失效时需重新获取.
+     * 
      * @return assess_token 示例：
-     * "24.460da4889caad24cccdb1fea17221975.2592000.1491995545.282335-1234567"
+     *         "24.460da4889caad24cccdb1fea17221975.2592000.1491995545.282335-1234567"
      */
-    public static  String getAuth() {
+    public static String getAuth() {
         // 获取token地址
         String authHost = "https://aip.baidubce.com/oauth/2.0/token?";
         String getAccessTokenUrl = authHost
@@ -219,9 +224,9 @@ public class FaceRecognitionRestController extends AbstractBaseController {
         return null;
     }
 
-    /*public static void main(String[] args) {
-
-//        new FaceSpot().getAuth();
-        getAuth();
-    }*/
+    /*
+     * public static void main(String[] args) {
+     * 
+     * // new FaceSpot().getAuth(); getAuth(); }
+     */
 }

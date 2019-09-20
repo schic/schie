@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.common.redis;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -13,29 +16,28 @@ import redis.clients.jedis.JedisPoolConfig;
 @EnableAutoConfiguration
 public class RedisConfig {
 
-    //private static Logger logger = Logger.getLogger(RedisConfig.class);
+    // private static Logger logger = Logger.getLogger(RedisConfig.class);
 
     @Bean
-    @ConfigurationProperties(prefix="spring.redis")
-    public JedisPoolConfig getRedisConfig(){
+    @ConfigurationProperties(prefix = "spring.redis")
+    public JedisPoolConfig getRedisConfig() {
         JedisPoolConfig config = new JedisPoolConfig();
         return config;
     }
 
     @Bean
-    @ConfigurationProperties(prefix="spring.redis")
-    public JedisConnectionFactory getConnectionFactory(){
+    @ConfigurationProperties(prefix = "spring.redis")
+    public JedisConnectionFactory getConnectionFactory() {
         JedisConnectionFactory factory = new JedisConnectionFactory();
         JedisPoolConfig config = getRedisConfig();
         factory.setPoolConfig(config);
-        //logger.info("JedisConnectionFactory bean init success.");
+        // logger.info("JedisConnectionFactory bean init success.");
         return factory;
     }
 
-
     @Bean
-    public RedisTemplate<?, ?> getRedisTemplate(){
-        RedisTemplate<?,?> template = new StringRedisTemplate(getConnectionFactory());
+    public RedisTemplate<?, ?> getRedisTemplate() {
+        RedisTemplate<?, ?> template = new StringRedisTemplate(getConnectionFactory());
         return template;
     }
 }

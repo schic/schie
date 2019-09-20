@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.common.exception.job;
 
 /**
@@ -5,30 +8,25 @@ package com.jeespring.common.exception.job;
  * 
  * @author JeeSpring
  */
-public class TaskException extends Exception
-{
+public class TaskException extends Exception {
     private static final long serialVersionUID = 1L;
 
     private Code code;
 
-    public TaskException(String msg, Code code)
-    {
+    public TaskException(String msg, Code code) {
         this(msg, code, null);
     }
 
-    public TaskException(String msg, Code code, Exception nestedEx)
-    {
+    public TaskException(String msg, Code code, Exception nestedEx) {
         super(msg, nestedEx);
         this.code = code;
     }
 
-    public Code getCode()
-    {
+    public Code getCode() {
         return code;
     }
 
-    public enum Code
-    {
+    public enum Code {
         TASK_EXISTS, NO_TASK_EXISTS, TASK_ALREADY_STARTED, UNKNOWN, CONFIG_ERROR, TASK_NODE_NOT_AVAILABLE
     }
 

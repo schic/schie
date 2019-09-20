@@ -1,13 +1,22 @@
+/**
+ * 
+ */
 package com.schic.schie.modules.resource.entity;
+
+import java.io.Serializable;
 
 /*
 数据资源出参
  */
-public class OutJson {
-    private String oName ; //名称
+public class OutJson implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1565811912670259631L;
+
+    private String oName; //名称
     private String oRemark; //类型
     private String oLevel; //权限等级
-
 
     public OutJson() {
     }

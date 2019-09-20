@@ -14,11 +14,9 @@ import com.jeespring.common.persistence.dialect.Dialect;
  */
 public class MySQLDialect implements Dialect {
 
-
     @Override
     public String getLimitString(String sql, int offset, int limit) {
-        return getLimitString(sql, offset, Integer.toString(offset),
-                Integer.toString(limit));
+        return getLimitString(sql, offset, Integer.toString(offset), Integer.toString(limit));
     }
 
     @Override
@@ -28,6 +26,7 @@ public class MySQLDialect implements Dialect {
 
     /**
      * 将sql变成分页sql语句,提供将offset及limit使用占位符号(placeholder)替换.
+     * 
      * <pre>
      * 如mysql
      * dialect.getLimitString("select * from user", 12, ":offset",0,":limit") 将返回

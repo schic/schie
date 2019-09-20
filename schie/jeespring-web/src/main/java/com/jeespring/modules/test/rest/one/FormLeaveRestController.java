@@ -44,9 +44,9 @@ import org.springframework.web.bind.annotation.*;
  * @author JeeSpring
  * @version 2018-10-12
  */
-@RestController
-@RequestMapping(value = "/rest/test/one/formLeave")
-@Api(value="请假接口", description="请假接口")
+//@RestController
+//@RequestMapping(value = "/rest/test/one/formLeave")
+//@Api(value="请假接口", description="请假接口")
 public class FormLeaveRestController extends AbstractBaseController {
 
 	@Autowired

@@ -16,40 +16,41 @@ import freemarker.template.Template;
 
 /**
  * FreeMarkers工具类
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2013-01-15
  */
 public class FreeMarkers {
 
-	public static String renderString(String name,String templateString, Map<String, ?> model) {
-		try {
-			StringWriter result = new StringWriter();
-			Template t = new Template("name", new StringReader(templateString), new Configuration());
-			t.process(model, result);
-			return result.toString();
-		} catch (Exception e) {
-			System.out.println("代码生成执行:"+name+"文件时异常！");
-			throw Exceptions.unchecked(e);
-		}
-	}
+    public static String renderString(String name, String templateString, Map<String, ?> model) {
+        try {
+            StringWriter result = new StringWriter();
+            Template t = new Template("name", new StringReader(templateString), new Configuration());
+            t.process(model, result);
+            return result.toString();
+        } catch (Exception e) {
+            System.out.println("代码生成执行:" + name + "文件时异常！");
+            throw Exceptions.unchecked(e);
+        }
+    }
 
-	public static String renderTemplate(Template template, Object model) {
-		try {
-			StringWriter result = new StringWriter();
-			template.process(model, result);
-			return result.toString();
-		} catch (Exception e) {
-			throw Exceptions.unchecked(e);
-		}
-	}
+    public static String renderTemplate(Template template, Object model) {
+        try {
+            StringWriter result = new StringWriter();
+            template.process(model, result);
+            return result.toString();
+        } catch (Exception e) {
+            throw Exceptions.unchecked(e);
+        }
+    }
 
-	public static Configuration buildConfiguration(String directory) throws IOException {
-		Configuration cfg = new Configuration();
-		Resource path = new DefaultResourceLoader().getResource(directory);
-		cfg.setDirectoryForTemplateLoading(path.getFile());
-		return cfg;
-	}
-	
+    public static Configuration buildConfiguration(String directory) throws IOException {
+        Configuration cfg = new Configuration();
+        Resource path = new DefaultResourceLoader().getResource(directory);
+        cfg.setDirectoryForTemplateLoading(path.getFile());
+        return cfg;
+    }
+
 //	public static void main(String[] args) throws IOException {
 //		// renderString
 //		Map<String, String> model = com.google.common.collect.Maps.newHashMap();
@@ -61,11 +62,11 @@ public class FreeMarkers {
 //		Template template = cfg.getTemplate("testTemplate.ftl");
 //		String result2 = FreeMarkers.renderTemplate(template, model);
 //		System.out.println(result2);
-		
+
 //		Map<String, String> model = com.google.common.collect.Maps.newHashMap();
 //		model.put("userName", "calvin");
 //		String result = FreeMarkers.renderString("hello ${userName} ${r'${userName}'}", model);
 //		System.out.println(result);
 //	}
-	
+
 }

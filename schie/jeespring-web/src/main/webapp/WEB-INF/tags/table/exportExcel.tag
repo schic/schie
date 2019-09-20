@@ -23,7 +23,8 @@ $(document).ready(function() {
 				$("#searchForm").attr("action",url);
 			    $("#pageNo").val(pageNo);
 				$("#pageSize").val(pageSize);
-		    //top.layer.close(index);
+				
+		        top.layer.close(index);
 		});
 	});
     

@@ -31,7 +31,7 @@ public class ExDbStandard extends AbstractBaseEntity<ExDbStandard> {
 	private String datatype;		// 数据类型
 	private String datalength;		// 数据长度
 	private String fRequire;		// 填报要求
-	private Double sort;		// 排序
+	private Integer sort;		// 排序
 	private Date beginCreateDate;		// 开始 创建时间
 	private Date endCreateDate;		// 结束 创建时间
 	private String orgid;          //组织机构ID
@@ -54,7 +54,6 @@ public class ExDbStandard extends AbstractBaseEntity<ExDbStandard> {
 	}
 
 	@JsonBackReference
-				@ExcelField(title="父级id", align=2, sort=1)
 	public ExDbStandard getParent() {
 		return parent;
 	}
@@ -62,7 +61,6 @@ public class ExDbStandard extends AbstractBaseEntity<ExDbStandard> {
 	public void setParent(ExDbStandard parent) {
 		this.parent = parent;
 	}
-				@ExcelField(title="所有父级id", align=2, sort=2)
 	public String getParentIds() {
 		return parentIds;
 	}
@@ -114,7 +112,7 @@ public class ExDbStandard extends AbstractBaseEntity<ExDbStandard> {
 
 
 	@Length(min=0, max=100, message="名称长度必须介于 0 和 100 之间")
-				@ExcelField(title="表名称", align=2, sort=4)
+//				@ExcelField(title="表名称", align=2, sort=4)
 	public String getName() {
 		return name;
 	}
@@ -182,11 +180,11 @@ public class ExDbStandard extends AbstractBaseEntity<ExDbStandard> {
 
 
 				@ExcelField(title="排序", align=2, sort=11)
-	public Double getSort() {
+	public Integer getSort() {
 		return sort;
 	}
 
-	public void setSort(Double sort) {
+	public void setSort(Integer sort) {
 		this.sort = sort;
 	}
 

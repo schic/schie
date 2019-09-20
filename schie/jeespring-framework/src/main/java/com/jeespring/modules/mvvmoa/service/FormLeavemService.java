@@ -15,6 +15,7 @@ import com.jeespring.modules.mvvmoa.dao.FormLeavemDao;
 
 /**
  * 员工请假Service
+ * 
  * @author liugf
  * @version 2017-07-17
  */
@@ -22,31 +23,31 @@ import com.jeespring.modules.mvvmoa.dao.FormLeavemDao;
 @Transactional(readOnly = true)
 public class FormLeavemService extends AbstractBaseService<FormLeavemDao, FormLeavem> {
 
-	@Override
+    @Override
     public FormLeavem get(String id) {
-		return super.get(id);
-	}
-	
-	@Override
+        return super.get(id);
+    }
+
+    @Override
     public List<FormLeavem> findList(FormLeavem formLeavem) {
-		return super.findList(formLeavem);
-	}
-	
-	@Override
+        return super.findList(formLeavem);
+    }
+
+    @Override
     public Page<FormLeavem> findPage(Page<FormLeavem> page, FormLeavem formLeavem) {
-		return super.findPage(page, formLeavem);
-	}
-	
-	@Override
+        return super.findPage(page, formLeavem);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void save(FormLeavem formLeavem) {
-		super.save(formLeavem);
-	}
-	
-	@Override
+    public void save(FormLeavem formLeavem) {
+        super.save(formLeavem);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void delete(FormLeavem formLeavem) {
-		super.delete(formLeavem);
-	}
-	
+    public void delete(FormLeavem formLeavem) {
+        super.delete(formLeavem);
+    }
+
 }

@@ -30,10 +30,11 @@ public abstract class BaseInterceptor implements Interceptor, Serializable {
 
     protected static final String MAPPED_STATEMENT = "mappedStatement";
 
+    public static final String DBTYPE_POSTGRESQL = "postgresql";
+
     protected Log log = LogFactory.getLog(this.getClass());
 
     protected Dialect DIALECT;
-
 
     /**
      * 对参数进行转换和检查
@@ -57,10 +58,8 @@ public abstract class BaseInterceptor implements Interceptor, Serializable {
     }
 
     /**
-     * 设置属性，支持自定义方言类和制定数据库的方式
-     * <code>dialectClass</code>,自定义方言类。可以不配置这项
-     * <ode>dbms</ode> 数据库类型，插件支持的数据库
-     * <code>sqlPattern</code> 需要拦截的SQL ID
+     * 设置属性，支持自定义方言类和制定数据库的方式 <code>dialectClass</code>,自定义方言类。可以不配置这项
+     * <ode>dbms</ode> 数据库类型，插件支持的数据库 <code>sqlPattern</code> 需要拦截的SQL ID
      *
      * @param p 属性
      */
@@ -79,7 +78,7 @@ public abstract class BaseInterceptor implements Interceptor, Serializable {
             dialect = new MySQLDialect();
         } else if ("oracle".equals(dbType)) {
             dialect = new OracleDialect();
-        } else if ("postgre".equals(dbType)) {
+        } else if (DBTYPE_POSTGRESQL.equals(dbType)) {
             dialect = new PostgreSQLDialect();
         } else if ("mssql".equals(dbType) || "sqlserver".equals(dbType)) {
             dialect = new SQLServer2005Dialect();

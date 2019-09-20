@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jeespring.modules.resource.dao.ExResourcesDao">
+<mapper namespace="com.schic.schie.modules.resource.dao.ExResourcesDao">
 
 	<sql id="exResourcesColumns">
 					a.res_id AS "id",
@@ -26,7 +26,8 @@
 					a.cdate AS "cdate",
 					a.cuser AS "cuser",
 					a.mdate AS "mdate",
-					a.muser AS "muser"
+					a.muser AS "muser",
+					c.name AS "companyName"
 	</sql>
 
 	<sql id="exResourcesColumnsList">
@@ -53,10 +54,12 @@
 					a.cdate AS "cdate",
 					a.cuser AS "cuser",
 					a.mdate AS "mdate",
-					a.muser AS "muser"
+					a.muser AS "muser",
+					c.name AS "companyName"
 	</sql>
 
 	<sql id="exResourcesJoins">
+	LEFT JOIN sys_office c ON c.id = a.company_id
 	</sql>
 
 	<select id="get" resultType="ExResources">
@@ -73,7 +76,6 @@
 		FROM ex_resources a
 		<include refid="exResourcesJoins"/>
 		<where>
-			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="id != null and id != ''">
 				AND a.res_id = #{id}
 			</if>
@@ -149,6 +151,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY sort ASC
 			</otherwise>
 		</choose>
 	</select>
@@ -166,6 +169,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY mdate desc
 			</otherwise>
 		</choose>
 	</select>

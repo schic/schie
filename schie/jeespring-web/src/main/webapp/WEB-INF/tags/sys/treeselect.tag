@@ -25,6 +25,7 @@
 <%@ attribute name="hideBtn" type="java.lang.Boolean" required="false" description="是否显示按钮" %>
 <%@ attribute name="disabled" type="java.lang.String" required="false" description="是否限制选择，如果限制，设置为disabled" %>
 <%@ attribute name="dataMsgRequired" type="java.lang.String" required="false" description="" %>
+<%@ attribute name="onChange" type="java.lang.String" required="false" description="改变事件" %>
 <input id="${id}Id" name="${name}" class="${cssClass}" type="hidden" value="${value}"/>
 <div class="input-group">
     <input id="${id}Name" name="${labelName}" ${allowInput?'':'readonly="readonly"'} type="text" value="${labelValue}"
@@ -92,6 +93,9 @@
                 $("#${id}Name").val(names.join(","));
                 $("#${id}Name").focus();
                 jeeSpringLayer.close(index);
+                if('${onChange}'){
+                	${onChange}(ids.join(",").replace(/u_/ig, ""));
+                }
             },
             cancel: function (index) { //或者使用btn2
                 //按钮【按钮二】的回调

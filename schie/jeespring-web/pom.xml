@@ -52,13 +52,12 @@
 		</dependency-->
 
 		<!--PGSQL驱动-->
-		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql 
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.2.5</version>
-		</dependency>
-
+		</dependency>-->
 		<dependency>
 			<groupId>com.ckfinder</groupId>
 			<artifactId>apache-ant-zip</artifactId>
@@ -101,6 +100,31 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/UserAgentUtils-1.13.jar</systemPath>
 		</dependency>	
+		<!-- <dependency>
+			<groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>4.0.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/oshi-core-4.0.0.jar</systemPath>
+		</dependency>	
+		
+		<dependency>
+		    <groupId>com.sun.jna</groupId>
+		    <artifactId>jna</artifactId>
+		    <version>5.4.0</version>
+		    <scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/jna-5.4.0.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+		    <groupId>net.java.dev.jna</groupId>
+		    <artifactId>jna-platform</artifactId>
+		    <version>5.4.0</version>
+		    <scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/jna-platform-5.4.0.jar</systemPath>
+		</dependency> -->
+		
+		
 	</dependencies>
 	<build>
 		<plugins>
@@ -169,6 +193,7 @@
 					<excludeArtifactIds>
 						slf4j-log4j12
 					</excludeArtifactIds>
+					<fork>true</fork>
 				</configuration>
 			</plugin>
 		</plugins>

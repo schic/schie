@@ -5,6 +5,7 @@ package com.jeespring.common.persistence;
 
 /**
  * DAO支持类实现
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2014-05-16
  */

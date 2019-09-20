@@ -23,11 +23,12 @@ import com.jeespring.common.utils.StringUtils;
 
 /**
  * 数据库分页插件，只拦截查询语句.
+ * 
  * @author poplar.yfyang / HuangBingGui
  * @version 2013-8-28
  */
-@Intercepts({@Signature(type = Executor.class, method = "query",
-        args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
+@Intercepts({ @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class,
+        RowBounds.class, ResultHandler.class }) })
 public class PaginationInterceptor extends BaseInterceptor {
 
     private static final long serialVersionUID = 1L;
@@ -36,52 +37,52 @@ public class PaginationInterceptor extends BaseInterceptor {
     public Object intercept(Invocation invocation) throws Throwable {
 
         final MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
-        
+
 //        //拦截需要分页的SQL
 ////        if (mappedStatement.getId().matches(_SQL_PATTERN)) {
 //        if (StringUtils.indexOfIgnoreCase(mappedStatement.getId(), _SQL_PATTERN) != -1) {
-            Object parameter = invocation.getArgs()[1];
-            BoundSql boundSql = mappedStatement.getBoundSql(parameter);
-            Object parameterObject = boundSql.getParameterObject();
+        Object parameter = invocation.getArgs()[1];
+        BoundSql boundSql = mappedStatement.getBoundSql(parameter);
+        Object parameterObject = boundSql.getParameterObject();
 
-            //获取分页参数对象
-            Page<Object> page = null;
-            if (parameterObject != null) {
-                page = convertParameter(parameterObject, page);
+        // 获取分页参数对象
+        Page<Object> page = null;
+        if (parameterObject != null) {
+            page = convertParameter(parameterObject, page);
+        }
+
+        // 如果设置了分页对象，则进行分页
+        if (page != null && page.getPageSize() != -1) {
+
+            if (StringUtils.isBlank(boundSql.getSql())) {
+                return null;
             }
+            String originalSql = boundSql.getSql().trim();
 
-            //如果设置了分页对象，则进行分页
-            if (page != null && page.getPageSize() != -1) {
+            // 得到总记录数
+            page.setCount(SQLHelper.getCount(originalSql, null, mappedStatement, parameterObject, boundSql, log));
 
-            	if (StringUtils.isBlank(boundSql.getSql())){
-                    return null;
-                }
-                String originalSql = boundSql.getSql().trim();
-            	
-                //得到总记录数
-                page.setCount(SQLHelper.getCount(originalSql, null, mappedStatement, parameterObject, boundSql, log));
-
-                //分页查询 本地化对象 修改数据库注意修改实现
-                String pageSql = SQLHelper.generatePageSql(originalSql, page, DIALECT);
+            // 分页查询 本地化对象 修改数据库注意修改实现
+            String pageSql = SQLHelper.generatePageSql(originalSql, page, DIALECT);
 //                if (log.isDebugEnabled()) {
 //                    log.debug("PAGE SQL:" + StringUtils.replace(pageSql, "\n", ""));
 //                }
-                invocation.getArgs()[2] = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-                BoundSql newBoundSql = new BoundSql(mappedStatement.getConfiguration(), pageSql, boundSql.getParameterMappings(), boundSql.getParameterObject());
-                //解决MyBatis 分页foreach 参数失效 start
-                if (Reflections.getFieldValue(boundSql, "metaParameters") != null) {
-                    MetaObject mo = (MetaObject) Reflections.getFieldValue(boundSql, "metaParameters");
-                    Reflections.setFieldValue(newBoundSql, "metaParameters", mo);
-                }
-                //解决MyBatis 分页foreach 参数失效 end
-                MappedStatement newMs = copyFromMappedStatement(mappedStatement, new BoundSqlSqlSource(newBoundSql));
-
-                invocation.getArgs()[0] = newMs;
+            invocation.getArgs()[2] = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+            BoundSql newBoundSql = new BoundSql(mappedStatement.getConfiguration(), pageSql,
+                    boundSql.getParameterMappings(), boundSql.getParameterObject());
+            // 解决MyBatis 分页foreach 参数失效 start
+            if (Reflections.getFieldValue(boundSql, "metaParameters") != null) {
+                MetaObject mo = (MetaObject) Reflections.getFieldValue(boundSql, "metaParameters");
+                Reflections.setFieldValue(newBoundSql, "metaParameters", mo);
             }
+            // 解决MyBatis 分页foreach 参数失效 end
+            MappedStatement newMs = copyFromMappedStatement(mappedStatement, new BoundSqlSqlSource(newBoundSql));
+
+            invocation.getArgs()[0] = newMs;
+        }
 //        }
         return invocation.proceed();
     }
-
 
     @Override
     public Object plugin(Object target) {
@@ -93,10 +94,9 @@ public class PaginationInterceptor extends BaseInterceptor {
         super.initProperties(properties);
     }
 
-    private MappedStatement copyFromMappedStatement(MappedStatement ms,
-                                                    SqlSource newSqlSource) {
-        MappedStatement.Builder builder = new MappedStatement.Builder(ms.getConfiguration(),
-                ms.getId(), newSqlSource, ms.getSqlCommandType());
+    private MappedStatement copyFromMappedStatement(MappedStatement ms, SqlSource newSqlSource) {
+        MappedStatement.Builder builder = new MappedStatement.Builder(ms.getConfiguration(), ms.getId(), newSqlSource,
+                ms.getSqlCommandType());
         builder.resource(ms.getResource());
         builder.fetchSize(ms.getFetchSize());
         builder.statementType(ms.getStatementType());
@@ -122,7 +122,7 @@ public class PaginationInterceptor extends BaseInterceptor {
         }
 
         @Override
-		public BoundSql getBoundSql(Object parameterObject) {
+        public BoundSql getBoundSql(Object parameterObject) {
             return boundSql;
         }
     }

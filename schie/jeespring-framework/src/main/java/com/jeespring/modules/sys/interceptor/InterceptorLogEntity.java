@@ -1,11 +1,12 @@
+/**
+ * 
+ */
 package com.jeespring.modules.sys.interceptor;
 
 import com.jeespring.modules.sys.entity.Log;
 
 /**
- * Created by
- * Created on 2017/1/15 20:51
- * JeeSpring
+ * Created by Created on 2017/1/15 20:51 JeeSpring
  */
 public class InterceptorLogEntity {
     private Log log;

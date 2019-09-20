@@ -17,8 +17,8 @@
         <div class="box-header">
             <div class="box-title"><i class="fa fa-edit"></i>
                 <c:if test="${action ne 'view'}">
-                    <c:if test="${empty oaNotify.id}">新增</c:if>
-                    <c:if test="${not empty oaNotify.id}">编辑</c:if>
+                    <c:if test="${empty user.id}">新增</c:if>
+                    <c:if test="${not empty user.id}">编辑</c:if>
                 </c:if>
                 <c:if test="${action eq 'view'}">查看</c:if>
                 用户管理
@@ -30,6 +30,7 @@
                        class="form-horizontal  content-background">
             <div class="content">
                 <form:hidden path="id"/>
+                <input id="oldSearch" name="oldSearch" type="hidden" htmlEscape="true" value="${oldSearch}"/>
                 <div class="form-unit">基本信息</div>
                 <div class="row">
                     <div class="col-xs-6 form-group">
@@ -44,7 +45,7 @@
                     <div class="col-xs-6 form-group">
                         <label class="control-label col-sm-4 pull-left"><font color="red">*</font>归属公司</label>
                         <div class="col-sm-8">
-                            <sys:treeselect id="company" name="company.id" value="${user.company.id}"
+                            <sys:treeselect id="company" name="company.id" onChange="companyChange" value="${user.company.id}"
                                             labelName="company.name" labelValue="${user.company.name}"
                                             title="公司" url="/sys/office/treeData?type=1"
                                             cssClass="form-control required"/>
@@ -201,7 +202,7 @@
                     <c:if test="${action ne 'view'}">
                         <a id="btnSubmit" class="btn btn-primary">保存</a>
                     </c:if>
-                    <a id="btnBack" class="btn btn-default">返回</a>
+                    <a id="btnBack" class="btn btn-default" href="${ctx}/sys/user/list">返回</a>
                 </div>
                 </form:form>
             </div>
@@ -210,6 +211,13 @@
 </div>
 <div id="messageBox">${message}</div>
 <%@ include file="/WEB-INF/views/include/footJs.jsp" %>
+
+<script type="text/javascript">
+function companyChange(value){
+	//alert(value);
+}
+</script>
+
 <script src="/staticViews/viewBase.js"></script>
 <script src="/staticViews/modules/sys/userForm.js"></script>
 </body>

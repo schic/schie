@@ -19,7 +19,8 @@ import org.springframework.core.io.ResourceLoader;
 import org.yaml.snakeyaml.Yaml;
 
 /**
- * Properties文件载入工具类. 可载入多个properties文件, 相同的属性在最后载入的文件中的值将会覆盖之前的值，但以System的Property优先.
+ * Properties文件载入工具类. 可载入多个properties文件,
+ * 相同的属性在最后载入的文件中的值将会覆盖之前的值，但以System的Property优先.
  *
  * @author calvin
  * @version 2013-05-15
@@ -157,7 +158,7 @@ public class PropertiesLoader {
                         props.put(key, map.get(key));
                     }
                 } catch (Exception e) {
-                    //e.printStackTrace(System.out);
+                    // e.printStackTrace(System.out);
                 }
             }
         }
@@ -176,7 +177,7 @@ public class PropertiesLoader {
             String currentkey = obj.toString();
             Object currentObj = map.get(obj);
             if (currentObj instanceof Map) {
-				Map currentMap = resolv((Map) currentObj);
+                Map currentMap = resolv((Map) currentObj);
                 for (Object key : currentMap.keySet()) {
                     String mapKey = currentkey + "." + key.toString();
                     values.put(mapKey, currentMap.get(key).toString());

@@ -10,22 +10,21 @@ import org.apache.ibatis.annotations.Mapper;
 import com.jeespring.modules.iim.entity.ChatHistory;
 
 /**
- * 聊天记录DAO接口
- * * * * @author 黄炳桂 516821420@qq.com
+ * 聊天记录DAO接口 * * * @author 黄炳桂 516821420@qq.com
+ * 
  * @version 2015-12-29
  */
 @Mapper
 public interface ChatHistoryDao extends InterfaceBaseDao<ChatHistory> {
-	
-	
-	/**
-	 * 查询列表数据
-	 * @param entity
-	 * @return
-	 */
+
+    /**
+     * 查询列表数据
+     * 
+     * @param entity
+     * @return
+     */
     List<ChatHistory> findLogList(ChatHistory entity);
-	
-	
-	int findUnReadCount(ChatHistory chatHistory);
-	
+
+    int findUnReadCount(ChatHistory chatHistory);
+
 }

@@ -39,6 +39,10 @@ public class IdGen implements IdGenerator, SessionIdGenerator {
         return random.nextLong();
     }
 
+    public static double nextDouble() {
+        return random.nextDouble();
+    }
+
     /**
      * 基于Base62编码的SecureRandom随机生成bytes.
      */

@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.modules.sys.interceptor;
 
 import java.lang.reflect.Method;
@@ -17,7 +20,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jeespring.common.config.Global;
 import com.jeespring.common.utils.CacheUtils;
-import com.jeespring.common.utils.Exceptions;
 import com.jeespring.common.utils.StringUtils;
 import com.jeespring.modules.sys.dao.LogDao;
 import com.jeespring.modules.sys.dao.MenuDao;
@@ -25,14 +27,12 @@ import com.jeespring.modules.sys.entity.Log;
 import com.jeespring.modules.sys.entity.Menu;
 
 /**
- * Created by
- * Created on 2017/1/15 20:55
- * JeeSpring
+ * Created by Created on 2017/1/15 20:55 JeeSpring
  */
 @Component
 public class LogThread extends Thread {
 
-    public static LinkedBlockingQueue<InterceptorLogEntity> interceptorLogQueue = new LinkedBlockingQueue<>();
+    protected static LinkedBlockingQueue<InterceptorLogEntity> interceptorLogQueue = new LinkedBlockingQueue<>();
     private static final String CACHE_MENU_NAME_PATH_MAP = "menuNamePathMap";
     private static Logger logger = LoggerFactory.getLogger(LogThread.class);
     @Autowired
@@ -41,7 +41,7 @@ public class LogThread extends Thread {
     private MenuDao menuDao;
 
     @Override
-	public void run() {
+    public void run() {
         logger.info("start the InterceptorLog  thread");
         while (true) {
             try {
@@ -58,13 +58,13 @@ public class LogThread extends Thread {
                         permission = (rp != null ? StringUtils.join(rp.value(), ",") : "");
                     }
                     log.setTitle(getMenuNamePath(log.getRequestUri(), permission));
-                    if(StringUtils.isBlank(log.getTitle())){
+                    if (StringUtils.isBlank(log.getTitle())) {
                         log.setTitle(log.getRequestUri());
                     }
                 }
                 // 如果有异常，设置异常信息
-                //log.setException(Exceptions.getStackTraceAsString(ex));
-                if(ex!=null) {
+                // log.setException(Exceptions.getStackTraceAsString(ex));
+                if (ex != null) {
                     log.setException(ex.getMessage());
                 }
                 // 如果无标题并无异常日志，则不保存信息
@@ -72,7 +72,7 @@ public class LogThread extends Thread {
                     continue;
                 }
                 log.setId(UUID.randomUUID().toString());
-                if(log.getParams()!=null && log.getParams().length()>=500) {
+                if (log.getParams() != null && log.getParams().length() >= 500) {
                     log.setParams(log.getParams().substring(0, 200));
                 }
                 logDao.insert(log);
@@ -136,5 +136,9 @@ public class LogThread extends Thread {
             }
         }
         return menuNamePath;
+    }
+
+    public static LinkedBlockingQueue<InterceptorLogEntity> getInterceptorLogQueue() {
+        return interceptorLogQueue;
     }
 }

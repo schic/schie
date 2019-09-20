@@ -77,7 +77,7 @@ public abstract class AbstractEntity<T> implements Serializable {
 
     @JsonIgnore
     @XmlTransient
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public User getCurrentUser() {
         if (currentUser == null) {
             currentUser = UserUtils.getUser();
@@ -91,7 +91,7 @@ public abstract class AbstractEntity<T> implements Serializable {
 
     @JsonIgnore
     @XmlTransient
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public Page<T> getPage() {
         if (page == null) {
             page = new Page<T>();
@@ -106,7 +106,7 @@ public abstract class AbstractEntity<T> implements Serializable {
 
     @JsonIgnore
     @XmlTransient
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public String getWhere() {
         return where;
     }
@@ -139,7 +139,6 @@ public abstract class AbstractEntity<T> implements Serializable {
         this.pageNo = pageNo;
     }
 
-
     public int getPageSize() {
         return pageSize;
     }
@@ -150,7 +149,7 @@ public abstract class AbstractEntity<T> implements Serializable {
 
     @JsonIgnore
     @XmlTransient
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public Map<String, String> getSqlMap() {
         if (sqlMap == null) {
             sqlMap = Maps.newHashMap();
@@ -194,15 +193,16 @@ public abstract class AbstractEntity<T> implements Serializable {
      * 全局变量对象
      */
     @JsonIgnore
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public Global getGlobal() {
         return new Global();
     }
+
     /**
      * 获取数据库名称,该方法至关重要,在所有的mapper里面都是用
      */
     @JsonIgnore
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public String getDbName() {
         return Global.getJdbcType();
     }

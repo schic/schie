@@ -19,8 +19,7 @@ public class DB2Dialect implements Dialect {
     }
 
     private static String getRowNumber(String sql) {
-        StringBuilder rownumber = new StringBuilder(50)
-                .append("rownumber() over(");
+        StringBuilder rownumber = new StringBuilder(50).append("rownumber() over(");
 
         int orderByIndex = sql.toLowerCase().indexOf("order by");
 
@@ -44,6 +43,7 @@ public class DB2Dialect implements Dialect {
 
     /**
      * 将sql变成分页sql语句,提供将offset及limit使用占位符号(placeholder)替换.
+     * 
      * <pre>
      * 如mysql
      * dialect.getLimitString("select * from user", 12, ":offset",0,":limit") 将返回
@@ -59,27 +59,27 @@ public class DB2Dialect implements Dialect {
     public String getLimitString(String sql, int offset, String offsetPlaceholder, String limitPlaceholder) {
         int startOfSelect = sql.toLowerCase().indexOf("select");
 
-        StringBuilder pagingSelect = new StringBuilder(sql.length() + 100)
-                .append(sql.substring(0, startOfSelect)) //add the comment
-                .append("select * from ( select ") //nest the main query in an outer select
-                .append(getRowNumber(sql)); //add the rownnumber bit into the outer query select list
+        StringBuilder pagingSelect = new StringBuilder(sql.length() + 100).append(sql.substring(0, startOfSelect)) // add
+                                                                                                                   // the
+                                                                                                                   // comment
+                .append("select * from ( select ") // nest the main query in an outer select
+                .append(getRowNumber(sql)); // add the rownnumber bit into the outer query select list
 
         if (hasDistinct(sql)) {
-            pagingSelect.append(" row_.* from ( ") //add another (inner) nested select
-                    .append(sql.substring(startOfSelect)) //add the main query
-                    .append(" ) as row_"); //close off the inner nested select
+            pagingSelect.append(" row_.* from ( ") // add another (inner) nested select
+                    .append(sql.substring(startOfSelect)) // add the main query
+                    .append(" ) as row_"); // close off the inner nested select
         } else {
-            pagingSelect.append(sql.substring(startOfSelect + 6)); //add the main query
+            pagingSelect.append(sql.substring(startOfSelect + 6)); // add the main query
         }
 
         pagingSelect.append(" ) as temp_ where rownumber_ ");
 
-        //add the restriction to the outer select
+        // add the restriction to the outer select
         if (offset > 0) {
 //			int end = offset + limit;
             String endString = offsetPlaceholder + "+" + limitPlaceholder;
-            pagingSelect.append("between ").append(offsetPlaceholder)
-                    .append("+1 and ").append(endString);
+            pagingSelect.append("between ").append(offsetPlaceholder).append("+1 and ").append(endString);
         } else {
             pagingSelect.append("<= ").append(limitPlaceholder);
         }

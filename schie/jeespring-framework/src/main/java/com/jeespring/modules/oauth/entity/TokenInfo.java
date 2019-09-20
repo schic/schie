@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.modules.oauth.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
@@ -31,7 +34,7 @@ public class TokenInfo implements Serializable {
     }
 
     @JsonIgnore
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public String getOauthId() {
         return oauthId;
     }
@@ -41,7 +44,7 @@ public class TokenInfo implements Serializable {
     }
 
     @JsonIgnore
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public String getOauthSecret() {
         return oauthSecret;
     }
@@ -51,7 +54,7 @@ public class TokenInfo implements Serializable {
     }
 
     @JsonIgnore
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public String getIp() {
         return ip;
     }

@@ -17,6 +17,7 @@ import com.jeespring.modules.iim.entity.MailPage;
 
 /**
  * 收件箱Service
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2015-11-13
  */
@@ -24,36 +25,37 @@ import com.jeespring.modules.iim.entity.MailPage;
 @Transactional(readOnly = true)
 public class MailBoxService extends AbstractBaseService<MailBoxDao, MailBox> {
 
-	@Autowired
-	private MailBoxDao mailBoxDao;
-	@Override
+    @Autowired
+    private MailBoxDao mailBoxDao;
+
+    @Override
     public MailBox get(String id) {
-		return super.get(id);
-	}
-	
-	@Override
+        return super.get(id);
+    }
+
+    @Override
     public List<MailBox> findList(MailBox mailBox) {
-		return super.findList(mailBox);
-	}
-	
-	public Page<MailBox> findPage(MailPage<MailBox> page, MailBox mailBox) {
-		return super.findPage(page, mailBox);
-	}
-	
-	@Override
+        return super.findList(mailBox);
+    }
+
+    public Page<MailBox> findPage(MailPage<MailBox> page, MailBox mailBox) {
+        return super.findPage(page, mailBox);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void save(MailBox mailBox) {
-		super.save(mailBox);
-	}
-	
-	@Override
+    public void save(MailBox mailBox) {
+        super.save(mailBox);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void delete(MailBox mailBox) {
-		super.delete(mailBox);
-	}
-	
-	public int getCount(MailBox mailBox) {
-		return mailBoxDao.getCount(mailBox);
-	}
-	
+    public void delete(MailBox mailBox) {
+        super.delete(mailBox);
+    }
+
+    public int getCount(MailBox mailBox) {
+        return mailBoxDao.getCount(mailBox);
+    }
+
 }

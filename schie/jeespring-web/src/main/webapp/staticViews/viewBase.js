@@ -1,5 +1,6 @@
 //页面操作基础方法代码
 $(document).ready(function() {
+	viewBaseSearchForm();
     orderBy();
     checks();
     message();
@@ -23,7 +24,9 @@ $("#btnExport").click(function(){
         $("#searchForm").attr("action",url);
         $("#pageNo").val(pageNo);
         $("#pageSize").val(pageSize);
-        //top.layer.close(index);
+        
+        //
+        top.layer.close(index);
     });
 });
 //导入excel
@@ -52,7 +55,16 @@ $("#btnImport").click(function(){
 });
 //筛选
 $("#btnSearchView").click(function(){
+	if($("#isShowSearchForm")){
+		if("true" == $("#isShowSearchForm").val()){
+			$("#isShowSearchForm").val('false');
+		} else {
+			$("#isShowSearchForm").val('true');
+		}
+	}
+	
     $("#searchForm").toggle();
+    
     /*if($("#searchForm").is(':visible')){
         $("#btnSearchView").html("<i class=\"fa fa-filter\"></i>隐藏");
     }else{
@@ -66,6 +78,9 @@ $("#btnTotalView").click(function(){
 });
 //查询
 $("#btnSearch").click(function(){
+	if($("#isShowSearchForm")){
+		$("#isShowSearchForm").val('true');
+	}
     sortOrRefresh();
 });
 //重置
@@ -82,11 +97,19 @@ $(".btnView").click(function(){
 });
 //编辑
 $(".btnEdit").click(function(){
-    return btnAEV(this);
+	var searchForm = $('#searchForm').serialize();
+	searchForm = escape(searchForm);
+	var href = $(this).attr('href');
+	$(this).attr('href', href + '&oldSearch='+searchForm);
+    return;// btnAEV(this);
 });
 //删除
 $(".btnDelete").click(function(){
-    return confirmx('确认要删除该通知吗？', this.href);
+	var searchForm = $('#searchForm').serialize();
+	searchForm = escape(searchForm);
+	var href = $(this).attr('href');
+	$(this).attr('href', href + '&oldSearch='+searchForm);
+    return confirmx('确认要删除该数据吗？', this.href);
 });
 //删除全部
 $("#btnDeleteAll").click(function(){
@@ -123,12 +146,27 @@ $("#btnRefresh").click(function(){
 $("#btnSubmit").click(function(){
     return formSubmit();
 });
+//保存
+$(".btntj").click(function(){
+    return formSubmit();
+});
 //返回
 $("#btnBack").click(function(){
-    if(jeeSpring.addTab=="true")
+    if(jeeSpring.addTab=="true") {
         top.closeCurrentTab();
-    else
+    } else {
+    	if($(this).attr("href")){
+    		var searchForm = $('#oldSearch').val();
+    		var href = $(this).attr('href');
+    		if(href.indexOf('?')>=0){
+    			$(this).attr('href', href + '&'+searchForm);
+    		} else {
+    			$(this).attr('href', href + '?'+searchForm);
+    		}
+    		return;
+    	}
         history.back(-1);
+    }
 });
 
 var jeeSpring = {
@@ -219,6 +257,14 @@ function checks(){
     $('#contentTable thead tr th input.i-checks').on('ifUnchecked', function(event){ //ifCreated 事件应该在插件初始化之前绑定
         $('#contentTable tbody tr td input.i-checks').iCheck('uncheck');
     });
+}
+
+function viewBaseSearchForm(){
+	if($("#isShowSearchForm")){
+		if("true" == $("#isShowSearchForm").val()){
+			$("#searchForm").toggle();
+		}
+	}
 }
 
 function orderBy(){

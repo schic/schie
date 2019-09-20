@@ -11,24 +11,27 @@ import com.jeespring.modules.oa.entity.OaNotifyRecord;
 
 /**
  * 通知通告记录DAO接口
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2014-05-16
  */
 @Mapper
 public interface OaNotifyRecordDao extends InterfaceBaseDao<OaNotifyRecord> {
 
-	/**
-	 * 插入通知记录
-	 * @param oaNotifyRecordList
-	 * @return
-	 */
+    /**
+     * 插入通知记录
+     * 
+     * @param oaNotifyRecordList
+     * @return
+     */
     int insertAll(List<OaNotifyRecord> oaNotifyRecordList);
-	
-	/**
-	 * 根据通知ID删除通知记录
-	 * @param oaNotifyId 通知ID
-	 * @return
-	 */
+
+    /**
+     * 根据通知ID删除通知记录
+     * 
+     * @param oaNotifyId 通知ID
+     * @return
+     */
     int deleteByOaNotifyId(String oaNotifyId);
-	
+
 }

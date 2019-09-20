@@ -26,29 +26,33 @@ import javax.servlet.http.HttpServletResponse;
 public class LogInterceptor extends AbstractService implements HandlerInterceptor {
 
     private Logger logger = LoggerFactory.getLogger("controller-log");
-    private static final ThreadLocal<Long> startTimeThreadLocal =new NamedThreadLocal<Long>("ThreadLocal StartTime");
+    private static final ThreadLocal<Long> startTimeThreadLocal = new NamedThreadLocal<Long>("ThreadLocal StartTime");
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-                             Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
         startTimeThreadLocal.set(System.currentTimeMillis());
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-                           ModelAndView modelAndView) throws Exception {
+            ModelAndView modelAndView) throws Exception {
+        //
     }
+
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
-                                Object handler, Exception ex) throws Exception {
-        if(!"/error".equals(request.getRequestURI())) {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+            throws Exception {
+        if (!"/error".equals(request.getRequestURI())) {
             try {
-                logger.info("URI: {},耗时：{}   ", request.getRequestURI() + "-" + request.getMethod()
-                        , DateUtils.formatDateTime(System.currentTimeMillis() - startTimeThreadLocal.get()));
-            }catch (Exception e){ e.toString(); }
+                logger.info("URI: {},耗时：{}   ", request.getRequestURI() + "-" + request.getMethod(),
+                        DateUtils.formatDateTime(System.currentTimeMillis() - startTimeThreadLocal.get()));
+            } catch (Exception e) {
+                e.toString();
+            }
         }
-        //删除线程变量中的数据，防止内存泄漏
+        // 删除线程变量中的数据，防止内存泄漏
         startTimeThreadLocal.remove();
         // 保存日志
         LogUtils.saveLog(request, handler, ex, null);

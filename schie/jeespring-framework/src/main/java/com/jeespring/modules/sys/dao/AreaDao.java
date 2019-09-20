@@ -9,10 +9,11 @@ import com.jeespring.modules.sys.entity.Area;
 
 /**
  * 区域DAO接口
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2014-05-16
  */
 @Mapper
 public interface AreaDao extends TreeDao<Area> {
-	
+
 }

@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.common.druid;
 
 import java.sql.SQLException;
@@ -14,8 +17,8 @@ import com.alibaba.druid.pool.DruidDataSource;
 /**
  * 
  * 描述：如果不使用代码手动初始化DataSource的话，监控界面的SQL监控会没有数据("是spring boot的bug???")
- * @author chhliu
- * 创建时间：2017年2月9日 下午10:33:08
+ * 
+ * @author chhliu 创建时间：2017年2月9日 下午10:33:08
  * @version 1.2.0
  */
 @Configuration
@@ -59,16 +62,16 @@ public class DruidConfiguration {
     @Value("${spring.datasource.useGlobalDataSourceStat}")
     private boolean useGlobalDataSourceStat;
 
-    @Bean     //声明其为Bean实例
-    @Primary  //在同样的DataSource中，首先使用被标注的DataSource
-    public DataSource dataSource(){
+    @Bean // 声明其为Bean实例
+    @Primary // 在同样的DataSource中，首先使用被标注的DataSource
+    public DataSource dataSource() {
         DruidDataSource datasource = new DruidDataSource();
         datasource.setUrl(this.dbUrl);
         datasource.setUsername(username);
         datasource.setPassword(password);
         datasource.setDriverClassName(driverClassName);
 
-        //configuration
+        // configuration
         datasource.setInitialSize(initialSize);
         datasource.setMinIdle(minIdle);
         datasource.setMaxActive(maxActive);
@@ -85,7 +88,7 @@ public class DruidConfiguration {
         try {
             datasource.setFilters(filters);
         } catch (SQLException e) {
-            System.err.println("druid configuration initialization filter: "+ e);
+            System.err.println("druid configuration initialization filter: " + e);
         }
         datasource.setConnectionProperties(connectionProperties);
         return datasource;

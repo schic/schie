@@ -105,7 +105,6 @@ public class CacheUtils {
         getCache(cacheName).remove(key);
     }
 
-
     /**
      * 获得一个Cache，没有则显示日志。
      *

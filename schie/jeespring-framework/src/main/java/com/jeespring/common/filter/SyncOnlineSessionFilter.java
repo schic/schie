@@ -1,37 +1,27 @@
+/**
+ * 
+ */
 package com.jeespring.common.filter;
 
-import com.jeespring.common.constant.ShiroConstants;
-import com.jeespring.common.redis.RedisUtils;
-import com.jeespring.common.security.ShiroUtils;
-import com.jeespring.common.utils.IpUtils;
-import com.jeespring.common.utils.ServletUtils;
-import  com.jeespring.modules.monitor.entity.OnlineSession;
-import com.jeespring.modules.sys.dao.OnlineSessionDAO;
-import com.jeespring.modules.sys.entity.User;
-import com.jeespring.modules.sys.service.SysUserOnlineService;
-import eu.bitwalker.useragentutils.UserAgent;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
 import org.apache.shiro.web.filter.PathMatchingFilter;
-import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import com.jeespring.common.constant.ShiroConstants;
+import com.jeespring.modules.monitor.entity.OnlineSession;
+import com.jeespring.modules.sys.service.SysUserOnlineService;
 
 /**
  * 同步Session数据到Db
  * 
  * @author JeeSpring
  */
-public class SyncOnlineSessionFilter extends PathMatchingFilter
-{
+public class SyncOnlineSessionFilter extends PathMatchingFilter {
     /**
      * 日志对象
      */
@@ -54,27 +44,23 @@ public class SyncOnlineSessionFilter extends PathMatchingFilter
      * @throws Exception
      */
     @Override
-    protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception
-    {
+    protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
         try {
-            OnlineSessionFilter onlineSessionFilter=new OnlineSessionFilter();
-            onlineSessionFilter.isAccessAllowed(request,response,null);
-            //isAccessAllowed(request, response);
+            OnlineSessionFilter onlineSessionFilter = new OnlineSessionFilter();
+            onlineSessionFilter.isAccessAllowed(request, response, null);
+            // isAccessAllowed(request, response);
             OnlineSession session = (OnlineSession) request.getAttribute(ShiroConstants.ONLINE_SESSION);
             // 如果session stop了 也不同步
             // session停止时间，如果stopTimestamp不为null，则代表已停止
-            if (session != null && session.getUserId() != null && session.getStopTimestamp() == null)
-            {
+            if (session != null && session.getUserId() != null && session.getStopTimestamp() == null) {
                 sysUserOnlineService.syncToDb(session);
             }
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("SyncOnlineSessionFilter preHandle error:", e.getMessage());
             return true;
         }
 
     }
-
-
 
 }

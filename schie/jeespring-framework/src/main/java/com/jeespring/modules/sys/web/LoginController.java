@@ -45,7 +45,7 @@ import com.jeespring.modules.sys.utils.UserUtils;
 
 /**
  * 登录Controller
- * 
+ *
  * @author 黄炳桂 516821420@qq.com
  * @version 2013-5-31
  */
@@ -71,7 +71,7 @@ public class LoginController extends AbstractBaseController {
 
     /**
      * 管理登录
-     * 
+     *
      * @throws IOException
      */
     @RequestMapping(value = "${adminPath}/login", method = RequestMethod.GET)
@@ -118,23 +118,33 @@ public class LoginController extends AbstractBaseController {
             loginImgUrl = loginImgUrlSysConfig.get(IdGen.nextInt(loginImgUrlSysConfig.size())).getPicture();
         }
 
-        SysConfig validateCodeSysConfig = new SysConfig();
-        validateCodeSysConfig.setType("validateCode");
-        validateCodeSysConfig = sysConfigService.findListFirstCache(validateCodeSysConfig);
-        SysConfig versionSysConfig = new SysConfig();
-        versionSysConfig.setType(VERSION);
-        versionSysConfig = sysConfigService.findListFirstCache(versionSysConfig);
         model.addAttribute("loginImgUrl", loginImgUrl);
         model.addAttribute(SYSTEMMODE, sysConfigService.systemMode());
+
+        SysConfig validateCodeSysConfig = new SysConfig();
+        validateCodeSysConfig.setType("validateCode");
+        validateCodeSysConfig = sysConfigService.findListFirst(validateCodeSysConfig);
         model.addAttribute("validateCode", validateCodeSysConfig.getValue());
+
+        SysConfig versionSysConfig = new SysConfig();
+        versionSysConfig.setType(VERSION);
+        versionSysConfig = sysConfigService.findListFirst(versionSysConfig);
         model.addAttribute(VERSION, versionSysConfig.getValue());
+
+        //cookie有用户名，则填充
+        String username = CookieUtils.getCookie(request, FormAuthenticationFilter.DEFAULT_USERNAME_PARAM);
+        if (StringUtils.isNotEmpty(username)) {
+            model.addAttribute(FormAuthenticationFilter.DEFAULT_USERNAME_PARAM, username);
+            model.addAttribute(FormAuthenticationFilter.DEFAULT_REMEMBER_ME_PARAM, true);
+        }
+
         // return "modules/sys/sysLogin";
         return "base/login";
     }
 
     @RequestMapping(value = "${adminPath}/register", method = RequestMethod.GET)
     public String register(HttpServletRequest request, HttpServletResponse response, Model model,
-            RedirectAttributes redirectAttributes) throws IOException {
+                           RedirectAttributes redirectAttributes) throws IOException {
         Principal principal = UserUtils.getPrincipal();
 
         // 默认页签模式
@@ -207,6 +217,13 @@ public class LoginController extends AbstractBaseController {
         model.addAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME, exception);
         model.addAttribute(FormAuthenticationFilter.DEFAULT_MESSAGE_PARAM, message);
 
+        //记住用户名
+        if (rememberMe) {
+            CookieUtils.setCookie(response, FormAuthenticationFilter.DEFAULT_USERNAME_PARAM, username);
+        } else {
+            CookieUtils.setCookie(response, FormAuthenticationFilter.DEFAULT_USERNAME_PARAM, "", 0);
+        }
+
         if (logger.isDebugEnabled()) {
             logger.debug("login fail, active session size: {}, message: {}, exception: {}",
                     sessionDAO.getActiveSessions(false).size(), message, exception);
@@ -222,12 +239,21 @@ public class LoginController extends AbstractBaseController {
         request.getSession().setAttribute(ValidateCodeServlet.VALIDATE_CODE, IdGen.uuid());
         model.addAttribute(SYSTEMMODE, sysConfigService.systemMode());
 
+        SysConfig validateCodeSysConfig = new SysConfig();
+        validateCodeSysConfig.setType("validateCode");
+        validateCodeSysConfig = sysConfigService.findListFirst(validateCodeSysConfig);
+        model.addAttribute("validateCode", validateCodeSysConfig.getValue());
+
+        SysConfig versionSysConfig = new SysConfig();
+        versionSysConfig.setType(VERSION);
+        versionSysConfig = sysConfigService.findListFirst(versionSysConfig);
+        model.addAttribute(VERSION, versionSysConfig.getValue());
         return "base/login";
     }
 
     /**
      * 管理登录
-     * 
+     *
      * @throws IOException
      */
     @RequestMapping(value = "${adminPath}/logout", method = RequestMethod.GET)
@@ -254,7 +280,7 @@ public class LoginController extends AbstractBaseController {
     @RequiresPermissions("user")
     @RequestMapping(value = "${adminPath}")
     public String index(HttpServletRequest request, HttpServletResponse response, Model model,
-            RedirectAttributes redirectAttributes) {
+                        RedirectAttributes redirectAttributes) {
         Principal principal = UserUtils.getPrincipal();
         // 登录成功后，验证码计算器清零
         isValidateCodeLogin(principal.getLoginName(), false, true);
@@ -299,23 +325,23 @@ public class LoginController extends AbstractBaseController {
             return REDIRECT + adminPath + "/login";
         }
 
-//		// 登录成功后，获取上次登录的当前站点ID
-//		UserUtils.putCache("siteId", StringUtils.toLong(CookieUtils.getCookie(request, "siteId")));
+        //		// 登录成功后，获取上次登录的当前站点ID
+        //		UserUtils.putCache("siteId", StringUtils.toLong(CookieUtils.getCookie(request, "siteId")));
 
-//		System.out.println("==========================a");
-//		try {
-//			byte[] bytes = com.jeespring.common.utils.FileUtils.readFileToByteArray(
-//					com.jeespring.common.utils.FileUtils.getFile("c:\\sxt.dmp"));
-//			UserUtils.getSession().setAttribute("kkk", bytes);
-//			UserUtils.getSession().setAttribute("kkk2", bytes);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-////		for (int i=0; i<1000000; i++){
-////			//UserUtils.getSession().setAttribute("a", "a");
-////			request.getSession().setAttribute("aaa", "aa");
-////		}
-//		System.out.println("==========================b");
+        //		System.out.println("==========================a");
+        //		try {
+        //			byte[] bytes = com.jeespring.common.utils.FileUtils.readFileToByteArray(
+        //					com.jeespring.common.utils.FileUtils.getFile("c:\\sxt.dmp"));
+        //			UserUtils.getSession().setAttribute("kkk", bytes);
+        //			UserUtils.getSession().setAttribute("kkk2", bytes);
+        //		} catch (Exception e) {
+        //			e.printStackTrace();
+        //		}
+        ////		for (int i=0; i<1000000; i++){
+        ////			//UserUtils.getSession().setAttribute("a", "a");
+        ////			request.getSession().setAttribute("aaa", "aa");
+        ////		}
+        //		System.out.println("==========================b");
         //
         //
 
@@ -328,7 +354,7 @@ public class LoginController extends AbstractBaseController {
      */
     @RequestMapping(value = "/theme/{theme}")
     public String getThemeInCookie(@PathVariable String theme, HttpServletRequest request,
-            HttpServletResponse response) {
+                                   HttpServletResponse response) {
         if (StringUtils.isNotBlank(theme)) {
             CookieUtils.setCookie(response, "theme", theme);
         }
@@ -337,7 +363,7 @@ public class LoginController extends AbstractBaseController {
 
     /**
      * 是否是验证码登录
-     * 
+     *
      * @param useruame 用户名
      * @param isFail   计数加1
      * @param clean    计数清零
@@ -366,12 +392,12 @@ public class LoginController extends AbstractBaseController {
 
     /**
      * 首页
-     * 
+     *
      * @throws IOException
      */
     @RequestMapping(value = "${adminPath}/home")
     public String home(HttpServletRequest request, HttpServletResponse response, Model model,
-            RedirectAttributes redirectAttributes) throws IOException {
+                       RedirectAttributes redirectAttributes) throws IOException {
         SysConfig sysConfig = new SysConfig(); // new一个新的xxx对象
         // sysConfig.setType("homePageAboveInfomation");//传值
         // List<SysConfig> indexSysConfig=

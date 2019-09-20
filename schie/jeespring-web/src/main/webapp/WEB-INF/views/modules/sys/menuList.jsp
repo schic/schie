@@ -66,8 +66,9 @@
                     <tbody><c:forEach items="${list}" var="menu">
                         <tr id="${menu.id}" pId="${menu.parent.id ne '1'?menu.parent.id:'0'}">
                             <td><input type="checkbox" id="${menu.id}" class="i-checks"></td>
-                            <td nowrap><i class="icon-${not empty menu.icon?menu.icon:' hide'}"></i><a href="#"
-                                                                                                       onclick="openDialogView('查看菜单', '${ctx}/sys/menu/form?id=${menu.id}','800px', '500px')">${menu.name}</a>
+                            <td nowrap><i class="icon-${not empty menu.icon?menu.icon:' hide'}"></i>
+                                <a href="${ctx}/sys/menu/form?id=${menu.id}&action=view"
+                               >${menu.name}</a>
                             </td>
                             <td title="${menu.href}">${fns:abbr(menu.href,30)}</td>
                             <td style="text-align:center;">
@@ -83,7 +84,7 @@
                             <td class="hidden-xs" title="${menu.permission}">${fns:abbr(menu.permission,30)}</td>
                             <td nowrap>
                                 <shiro:hasPermission name="sys:menu:view">
-                                    <a href="${ctx}/sys/menu/form?id=${menu.id}" title="查看"
+                                    <a href="${ctx}/sys/menu/form?id=${menu.id}&action=view" title="查看"
                                       ><i class="fa fa-search-plus"></i></a>
                                 </shiro:hasPermission>
                                 <shiro:hasPermission name="sys:menu:edit">

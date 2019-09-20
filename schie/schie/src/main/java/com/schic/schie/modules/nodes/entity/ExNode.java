@@ -3,11 +3,12 @@
  */
 package com.schic.schie.modules.nodes.entity;
 
-import com.jeespring.common.persistence.AbstractBaseEntity;
-import com.jeespring.common.utils.excel.annotation.ExcelField;
+import java.util.Date;
+
 import org.hibernate.validator.constraints.Length;
 
-import java.util.Date;
+import com.jeespring.common.persistence.AbstractBaseEntity;
+import com.jeespring.common.utils.excel.annotation.ExcelField;
 
 /**
  * 节点管理Entity
@@ -18,7 +19,7 @@ public class ExNode extends AbstractBaseEntity<ExNode> {
 	
 	private static final long serialVersionUID = 1L;
 	private String name;		// 名称
-	private Double sort;		// 排序
+	private Integer sort;		// 排序
 	private Date cdate;		// 创建时间
 	private String cuser;		// 创建人
 	private Date mdate;		// 修改时间
@@ -26,11 +27,23 @@ public class ExNode extends AbstractBaseEntity<ExNode> {
 	private String srvUrl;		// 服务地址
 	private String monUrl;		// 监控地址
 	private String companyId;		// 机构id
+	private String username;      //MC用户名
+	private String password;     // MC密码
+	private String encryption;   // MC用户名和密码加密后字段
 	private Date beginCdate;		// 开始 创建时间
 	private Date endCdate;		// 结束 创建时间
 	private Date beginMdate;		// 开始 修改时间
 	private Date endMdate;		// 结束 修改时间
-	
+	private String exTabId;  //关联表ID
+
+	public String getExTabId() {
+		return exTabId;
+	}
+
+	public void setExTabId(String exTabId) {
+		this.exTabId = exTabId;
+	}
+
 	public ExNode() {
 		super();
 	}
@@ -38,6 +51,83 @@ public class ExNode extends AbstractBaseEntity<ExNode> {
 	public ExNode(String id){
 		super(id);
 	}
+	
+
+    @Override
+    public boolean equals(Object obj) {
+        if (null == obj) {
+            return false;
+        }
+        if (this == obj) {
+            return true;
+        }
+        if (!getClass().equals(obj.getClass())) {
+            return false;
+        }
+        ExNode that = (ExNode) obj;
+
+        if (name == null) {
+            if (that.getName() != null) {
+                return false;
+            }
+        } else {
+            if (!name.equals(that.getName())) {
+                return false;
+            }
+        }
+
+        if (srvUrl == null) {
+            if (that.getSrvUrl() != null) {
+                return false;
+            }
+        } else {
+            if (!srvUrl.equals(that.getSrvUrl())) {
+                return false;
+            }
+        }
+
+        if (monUrl == null) {
+            if (that.getMonUrl() != null) {
+                return false;
+            }
+        } else {
+            if (!monUrl.equals(that.getMonUrl())) {
+                return false;
+            }
+        }
+
+        if (companyId == null) {
+            if (that.getCompanyId() != null) {
+                return false;
+            }
+        } else {
+            if (!companyId.equals(that.getCompanyId())) {
+                return false;
+            }
+        }
+
+        if (username == null) {
+            if (that.getUsername() != null) {
+                return false;
+            }
+        } else {
+            if (!username.equals(that.getUsername())) {
+                return false;
+            }
+        }
+
+        if (password == null) {
+            if (that.getPassword() != null) {
+                return false;
+            }
+        } else {
+            if (!password.equals(that.getPassword())) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
 
 	@Length(min=0, max=100, message="名称长度必须介于 0 和 100 之间")
 				@ExcelField(title="名称", align=2, sort=1)
@@ -50,12 +140,36 @@ public class ExNode extends AbstractBaseEntity<ExNode> {
 	}
 
 
-				@ExcelField(title="排序", align=2, sort=2)
-	public Double getSort() {
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getEncryption() {
+		return encryption;
+	}
+
+	public void setEncryption(String encryption) {
+		this.encryption = encryption;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@ExcelField(title="排序", align=2, sort=2)
+	public Integer getSort() {
 		return sort;
 	}
 
-	public void setSort(Double sort) {
+	public void setSort(Integer sort) {
 		this.sort = sort;
 	}
 

@@ -3,28 +3,23 @@
  */
 package com.jeespring.common.config;
 
-import com.ckfinder.connector.ServletContextFactory;
-import com.google.common.collect.Maps;
-import com.jeespring.common.utils.PropertiesLoader;
-import com.jeespring.common.utils.StringUtils;
-
-import com.jeespring.modules.sys.entity.SysConfig;
-import com.jeespring.modules.sys.service.SysConfigService;
-import org.apache.ibatis.io.Resources;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.bind.RelaxedPropertyResolver;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.DefaultResourceLoader;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.ibatis.io.Resources;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.DefaultResourceLoader;
+
+import com.ckfinder.connector.ServletContextFactory;
+import com.google.common.collect.Maps;
+import com.jeespring.common.persistence.interceptor.BaseInterceptor;
+import com.jeespring.common.utils.PropertiesLoader;
+import com.jeespring.common.utils.StringUtils;
 
 /**
  * 全局配置类
@@ -109,7 +104,7 @@ public class Global {
 
     public static String getConfig(String key, String value) {
         String result = getConfig(key);
-        if (result == StringUtils.EMPTY) {
+        if (StringUtils.EMPTY.equals(result)) {
             return value;
         }
         return result;
@@ -348,7 +343,7 @@ public class Global {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         : "informix")))
                                                                                                                                                                                                                                                                                                                                                                                                                         : "h2")))))
                                                                                                                                                                                                                                                                                         : "hsql"))
-                                                                                                                                                                                                                                : "postgresql")
+                                                                                                                                                                                                                                : BaseInterceptor.DBTYPE_POSTGRESQL)
                                                                                                                                                                                                 : "mock")
                                                                                                                                                                 : "jtds")
                                                                                                                                 : "sybase")

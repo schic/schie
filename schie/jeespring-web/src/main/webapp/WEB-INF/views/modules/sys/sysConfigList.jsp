@@ -4,7 +4,9 @@
 <head>
 	<title>系统配置管理</title>
 	<meta name="decorator" content="default"/>
-			    <%@ include file="/WEB-INF/views/include/head.jsp"%>
+	<%@ include file="/WEB-INF/views/include/headMeta.jsp" %>
+	<%@ include file="/WEB-INF/views/include/headCss.jsp" %>
+	<%@ include file="/WEB-INF/views/include/headJs.jsp" %>
 	<script type="text/javascript">
 		$(document).ready(function() {
 		});
@@ -21,6 +23,7 @@
 	<div class="row">
 	<div class="col-sm-12">
 	<form:form id="searchForm" modelAttribute="sysConfig" action="${ctx}/sys/sysConfig/" method="post" class="form-inline">
+		<input id="isShowSearchForm" name="isShowSearchForm" type="hidden" value="${isShowSearchForm}"/>
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}" callback="sortOrRefresh();"/><!-- 支持排序 -->
@@ -93,7 +96,7 @@
 					label="${sysConfig.label}"
 					sort="${sysConfig.sort}"
 				class="i-checks"></td>
-				<td><a  href="#" onclick="openDialogView('查看系统配置', '${ctx}/sys/sysConfig/form?id=${sysConfig.id}','800px', '500px')">
+				<td><a  id="btnView" href="${ctx}/sys/sysConfig/form?id=${sysConfig.id}&action=view" >
 					${sysConfig.type}
 				</a></td>
 				<td>
@@ -114,7 +117,7 @@
 				</td>
 				<td>
 					<!--shiro:hasPermission name="sys:sysConfig:view"-->
-						<a href="#" onclick="openDialogView('查看系统配置', '${ctx}/sys/sysConfig/form?id=${sysConfig.id}','800px', '500px')" class="btn btn-info btn-sm" ><i class="fa fa-search-plus"></i> 查看</a>
+						<a id="btnView" href="${ctx}/sys/sysConfig/form?id=${sysConfig.id}&action=view"  class="btn btn-info btn-sm" ><i class="fa fa-search-plus"></i> 查看</a>
 					<!--/shiro:hasPermission-->
 					<!--shiro:hasPermission name="sys:sysConfig:edit"-->
     					<a href="#" onclick="openDialog('修改系统配置', '${ctx}/sys/sysConfig/form?id=${sysConfig.id}','800px', '500px')" class="btn btn-success btn-sm" ><i class="fa fa-edit"></i> 修改</a>

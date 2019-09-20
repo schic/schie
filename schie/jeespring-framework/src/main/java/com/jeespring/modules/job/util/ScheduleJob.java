@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.modules.job.util;
 
 import com.jeespring.common.constant.Constants;
@@ -24,15 +27,13 @@ import java.util.concurrent.Future;
  * @author JeeSpring
  *
  */
-public class ScheduleJob extends QuartzJobBean
-{
+public class ScheduleJob extends QuartzJobBean {
     private static final Logger log = LoggerFactory.getLogger(ScheduleJob.class);
 
     private ExecutorService service = Executors.newSingleThreadExecutor();
 
     @Override
-    protected void executeInternal(JobExecutionContext context) throws JobExecutionException
-    {
+    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         SysJob job = new SysJob();
         BeanUtils.copyBeanProp(job, context.getMergedJobDataMap().get(ScheduleConstants.TASK_PROPERTIES));
 
@@ -47,8 +48,7 @@ public class ScheduleJob extends QuartzJobBean
 
         long startTime = System.currentTimeMillis();
 
-        try
-        {
+        try {
             // 执行任务
             log.info("任务开始执行 - 名称：{} 方法：{}", job.getJobName(), job.getMethodName());
             ScheduleRunnable task = new ScheduleRunnable(job.getJobName(), job.getMethodName(), job.getMethodParams());
@@ -60,9 +60,7 @@ public class ScheduleJob extends QuartzJobBean
             jobLog.setJobMessage(job.getJobName() + " 总共耗时：" + times + "毫秒");
 
             log.info("任务执行结束 - 名称：{} 耗时：{} 毫秒", job.getJobName(), times);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             log.info("任务执行失败 - 名称：{} 方法：{}", job.getJobName(), job.getMethodName());
             log.error("任务执行异常  - ：", e);
             long times = System.currentTimeMillis() - startTime;
@@ -70,9 +68,7 @@ public class ScheduleJob extends QuartzJobBean
             // 任务状态 0：成功 1：失败
             jobLog.setStatus(Constants.FAIL);
             jobLog.setExceptionInfo(e.toString());
-        }
-        finally
-        {
+        } finally {
             jobLogService.save(jobLog);
         }
     }

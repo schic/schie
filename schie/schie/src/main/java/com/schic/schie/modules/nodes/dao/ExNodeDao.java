@@ -4,8 +4,11 @@
 package com.schic.schie.modules.nodes.dao;
 
 import com.jeespring.common.persistence.InterfaceBaseDao;
+import com.jeespring.modules.sys.entity.Office;
 import com.schic.schie.modules.nodes.entity.ExNode;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 节点管理DAO接口
@@ -14,5 +17,4 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ExNodeDao extends InterfaceBaseDao<ExNode> {
-	
 }

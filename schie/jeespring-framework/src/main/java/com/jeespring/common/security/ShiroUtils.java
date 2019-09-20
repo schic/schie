@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.common.security;
 
 import com.jeespring.modules.sys.entity.User;
@@ -16,38 +19,31 @@ import com.jeespring.common.utils.bean.BeanUtils;
  * 
  * @author JeeSpring
  */
-public class ShiroUtils
-{
+public class ShiroUtils {
 
-    public static Subject getSubjct()
-    {
+    public static Subject getSubjct() {
         return SecurityUtils.getSubject();
     }
 
-    public static Session getSession()
-    {
+    public static Session getSession() {
         return SecurityUtils.getSubject().getSession();
     }
 
-    public static void logout()
-    {
+    public static void logout() {
         getSubjct().logout();
     }
 
-    public static User getUser()
-    {
+    public static User getUser() {
         User user = null;
         Object obj = getSubjct().getPrincipal();
-        if (StringUtils.isNotNull(obj))
-        {
+        if (StringUtils.isNotNull(obj)) {
             user = new User();
             BeanUtils.copyBeanProp(user, obj);
         }
         return user;
     }
 
-    public static void setUser(User user)
-    {
+    public static void setUser(User user) {
         Subject subject = getSubjct();
         PrincipalCollection principalCollection = subject.getPrincipals();
         String realmName = principalCollection.getRealmNames().iterator().next();
@@ -56,30 +52,33 @@ public class ShiroUtils
         subject.runAs(newPrincipalCollection);
     }
 
-    public static void clearCachedAuthorizationInfo()
-    {
+    public static void clearCachedAuthorizationInfo() {
         RealmSecurityManager rsm = (RealmSecurityManager) SecurityUtils.getSecurityManager();
         UserRealm realm = (UserRealm) rsm.getRealms().iterator().next();
         realm.clearCachedAuthorizationInfo();
     }
 
-    public static Long getUserId()
-    {
-        return Long.valueOf(getUser().getId());
+    public static Long getUserId() {
+        User user = getUser();
+        if (user == null) {
+            return 0L;
+        }
+        return Long.valueOf(user.getId());
     }
 
-    public static String getLoginName()
-    {
-        return getUser().getLoginName();
+    public static String getLoginName() {
+        User user = getUser();
+        if (user == null) {
+            return "";
+        }
+        return user.getLoginName();
     }
 
-    public static String getIp()
-    {
+    public static String getIp() {
         return getSubjct().getSession().getHost();
     }
 
-    public static String getSessionId()
-    {
+    public static String getSessionId() {
         return String.valueOf(getSubjct().getSession().getId());
     }
 }

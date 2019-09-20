@@ -3,7 +3,7 @@
   <nextMetaDataId>8</nextMetaDataId>
   <name>通用数据交换监听通道</name>
   <description></description>
-  <revision>120</revision>
+  <revision>124</revision>
   <sourceConnector version="3.7.1">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -135,7 +135,7 @@
           <queueBufferSize>1000</queueBufferSize>
           <reattachAttachments>true</reattachAttachments>
         </destinationConnectorProperties>
-        <script>infoBegin(&quot;dest.readdb&quot;);
+        <script>PrintUtil.begin(&quot;dest.readdb&quot;);
 
 var dbConn;
 var conn;
@@ -161,13 +161,13 @@ try {
 
 	errorMsg = &apos;源数据库执行查询失败&apos;;
 	statement = conn.createStatement();
-	logger.debug(&quot;源库执行查询:\n&quot; + source.sql);
+	PrintUtil.msg(&quot;源库执行查询:\n&quot; + source.sql);
 	resultData = statement.executeQuery(source.sql);
 
 	errorMsg = &apos;处理源数据失败&apos;;
 	//获取数据集的结构
 	var resultSetMetaData = listResultSetMetaData(resultData);
-	logger.info(resultSetMetaData);
+	PrintUtil.msg(resultSetMetaData);
 
 	//循环数据量
 	var batchRows = source.batchRows || 1000;
@@ -191,7 +191,7 @@ try {
 	 	} else {
 			bEnd = true;
 		}
-		if((bEnd &amp;&amp; listData.size()&gt;0)||(listData.size() % batchRows == 0)){
+		if((bEnd &amp;&amp; listData.size()&gt;0)||(listData.size()&gt;0 &amp;&amp; listData.size() % batchRows == 0)){
 			mqObj.setSourceRows(listData.size());
 			if(bEnd){
 				mqObj.setEnd();
@@ -254,7 +254,7 @@ try {
 		//里面有try
 		dbConn.close();
 	}
-	infoEnd(&quot;dest.readdb&quot;);
+	PrintUtil.end(&quot;dest.readdb&quot;);
 }
 
 </script>
@@ -425,15 +425,15 @@ try {
           <queueBufferSize>1000</queueBufferSize>
           <reattachAttachments>true</reattachAttachments>
         </destinationConnectorProperties>
-        <script>infoBegin(&quot;dest.errorcmd&quot;);
+        <script>PrintUtil.begin(&quot;dest.errorcmd&quot;);
 try{
 	if (responseMap.containsKey(&apos;response&apos;)) {
 		return responseMap.get(&apos;response&apos;);
 	} else {
-		logger.debug(&apos;错误命令&apos;);
+		PrintUtil.msg(&apos;错误命令&apos;);
 	}
 } finally {
-	infoEnd(&quot;dest.errorcmd&quot;);
+	PrintUtil.end(&quot;dest.errorcmd&quot;);
 }</script>
       </properties>
       <transformer version="3.7.1">
@@ -537,7 +537,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1564126422909</time>
+        <time>1566876664237</time>
         <timezone>Asia/Shanghai</timezone>
       </lastModified>
       <pruningSettings>
@@ -567,24 +567,24 @@ return;</undeployScript>
           <codeTemplate version="3.7.1">
             <id>ea90e127-561e-4d12-928b-42df095e1704</id>
             <name>Print Debug Info</name>
-            <revision>2</revision>
+            <revision>4</revision>
             <lastModified>
-              <time>1563344271109</time>
+              <time>1566802492404</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>CHANNEL_POSTPROCESSOR</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>CHANNEL_BATCH</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>CHANNEL_ATTACHMENT</contextType>
                 <contextType>CHANNEL_PREPROCESSOR</contextType>
                 <contextType>CHANNEL_UNDEPLOY</contextType>
-                <contextType>CHANNEL_BATCH</contextType>
-                <contextType>CHANNEL_DEPLOY</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
-                <contextType>CHANNEL_ATTACHMENT</contextType>
+                <contextType>CHANNEL_DEPLOY</contextType>
+                <contextType>CHANNEL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -596,7 +596,9 @@ return;</undeployScript>
 	@param {String} arg1 - arg1 description
 	@return {String} return description
 */
-function infoBegin(arg1) {
+var PrintUtil = {};
+
+PrintUtil.begin = function(arg1) {
 	logger.info(&quot;----------------&quot;+arg1+&quot;.begin---------------&quot;);
 }
 
@@ -607,8 +609,12 @@ function infoBegin(arg1) {
 	@param {String} arg1 - arg1 description
 	@return {String} return description
 */
-function infoEnd(arg1) {
+PrintUtil.end = function(arg1) {
 	logger.info(&quot;----------------&quot;+arg1+&quot;.end---------------&quot;);
+}
+
+PrintUtil.msg = function(arg1) {
+	logger.info(arg1);
 }</code>
             </properties>
           </codeTemplate>
@@ -648,11 +654,11 @@ function infoEnd(arg1) {
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -710,19 +716,19 @@ function callHttpPost(url, bodyStr) {
           <codeTemplate version="3.7.1">
             <id>cfe54723-88b1-48d6-9257-cdf3f4640bd4</id>
             <name>创建异常时http返回资源函数</name>
-            <revision>16</revision>
+            <revision>19</revision>
             <lastModified>
-              <time>1564039272501</time>
+              <time>1566802724673</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>CHANNEL_POSTPROCESSOR</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>CHANNEL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -739,7 +745,7 @@ function callHttpPost(url, bodyStr) {
 	@return {Response} The created Response object.
 */
 function createExOutcome(details, httpStatusCode, e) {
-	infoBegin(&apos;创建返回资源&apos;);
+	PrintUtil.begin(&apos;创建返回资源&apos;);
 	if (!httpStatusCode) {
 		httpStatusCode = 400;
 	}
@@ -758,6 +764,7 @@ function createExOutcome(details, httpStatusCode, e) {
 			if (e.rhinoException) {
 				customMessage += &apos; 错误行- &apos; + e.rhinoException.lineNumber() + &apos;: &apos;;
 			}
+			logger.info(e.toString());
 			customMessage += e.toString();
 	
 			var errorContent = com.mirth.connect.util.ErrorMessageBuilder.buildErrorMessage(&apos;批量数据交换&apos;, customMessage, e.javaException || null);
@@ -784,7 +791,7 @@ function createExOutcome(details, httpStatusCode, e) {
 	mqObj.produce();
 	
 	responseMap.put(&apos;response&apos;, response);
-	infoEnd(&apos;创建返回资源&apos;);
+	PrintUtil.end(&apos;创建返回资源&apos;);
 	return response;
 }</code>
             </properties>
@@ -799,11 +806,11 @@ function createExOutcome(details, httpStatusCode, e) {
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -862,11 +869,11 @@ function exDecode(string, decodeType) {
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -909,11 +916,11 @@ function exCheckParam(paramObj) {
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -959,11 +966,11 @@ function _callHttpPost(listData, paramobj){
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1058,13 +1065,13 @@ function base64Str2Object(string) {
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>CHANNEL_POSTPROCESSOR</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
-                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>CHANNEL_ATTACHMENT</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>CHANNEL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1110,18 +1117,18 @@ if (typeof String.prototype.endsWith != &apos;function&apos;) {
           <codeTemplate version="3.7.1">
             <id>fc7190c8-1277-4c82-8de6-9059d28d9559</id>
             <name>数据写入函数</name>
-            <revision>83</revision>
+            <revision>90</revision>
             <lastModified>
-              <time>1564468575182</time>
+              <time>1566876455471</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1146,10 +1153,14 @@ WriteDbUtil.exWriteDb = function(listData, paramobj) {
 		dbConn = DatabaseConnectionFactory.createDatabaseConnection(target.driverClassName
 			,target.jdbcurl, target.dbuser, target.dbpwd);
 
-		errorMsg = &apos;写入数据失败&apos;;
 		//根据参数处理
 		return _processData(paramobj, dbConn, listData);
 	}catch (e) {
+		if (e.javaException) {
+			logger.error(errorMsg, e.javaException);	
+		} else {
+			logger.error(errorMsg, e);
+		}
 		return getServletResponseJson(errorMsg + e.toString(), -1);
 	} finally {
 		if (dbConn) { 
@@ -1161,6 +1172,9 @@ WriteDbUtil.exWriteDb = function(listData, paramobj) {
 	
 	//listdata 是java的ArrayList&lt;HashMap&lt;源表字段,data&gt;&gt;
 	function _processData(paramobj, dbConn, listData){
+		var errorMsg = &apos;处理数据失败&apos;;
+	
+		try{
 		//1判断是否有删除语句
 		//1.1有则先执行，然后通过fieldsmap生成insert语句
 		//1.2没有，则根据主键生成判断目标表是否存在sql执行，根据结果生成insert语句、update语句、insert数据、update数据
@@ -1174,11 +1188,14 @@ WriteDbUtil.exWriteDb = function(listData, paramobj) {
 		if(paramobj.target.deletesql){
 			//只有第一次才删除
 			if(paramobj.callNum &amp;&amp; paramobj.callNum==1){
-				logger.info(&quot;执行删除=&quot; + paramobj.target.deletesql);
+				errorMsg = &apos;目标库执行删除语句失败&apos;;
+				PrintUtil.msg(&quot;执行删除：&quot; + paramobj.target.deletesql);
 				dbConn.executeUpdate(paramobj.target.deletesql);
 			}
+			errorMsg = &apos;获取插入sql失败&apos;;
 			var sql = _getInsertSql(paramobj);
 			var listParams = _listInsertParam(paramobj, listData, srcPks);
+			errorMsg = &apos;执行写入目标库失败&apos;;
 			_exWriteBatch(dbConn.getConnection(), sql, listParams);
 	
 			var servletResponse = getServletResponseJson(&apos;执行成功&apos;);
@@ -1191,21 +1208,30 @@ WriteDbUtil.exWriteDb = function(listData, paramobj) {
 	
 			//转为目标主键的map，对相同主键的值，在一个批次中会去重，后面的数据覆盖前面的
 			var mapDestKeyData = _data2MapKey(listData, srcPks);
-
+			errorMsg = &apos;获取目标库查询sql失败&apos;;
 			//获取查询主键存在语句
 			var existsSql = _getExistsSql(mapDestKeyData, paramobj.target.pk, paramobj.target.table);
+
+			errorMsg = &apos;生成更新记录失败&apos;;
 			//生成更新记录
 			var mapUpdate = _getUpdateDataMap(mapDestKeyData, existsSql);
 
 			if(mapDestKeyData.size() &gt; 0){
+				errorMsg = &apos;获取插入sql失败&apos;;
 				var sql = _getInsertSql(paramobj);
 				var listParams = _listInsertParam(paramobj, Arrays.asList(mapDestKeyData.values().toArray()), srcPks);
+				errorMsg = &apos;目标库执行插入失败&apos;;
+				PrintUtil.msg(&quot;插入目标sql：&quot;+sql);
 				_exWriteBatch(dbConn.getConnection(), sql, listParams);
 			}
 
 			if(mapUpdate.size() &gt; 0){
+				errorMsg = &apos;获取更新sql失败&apos;;
 				var sql = _getUpdateSql(paramobj);
 				var listParams = _listUpdateParam(paramobj, mapUpdate);
+
+				errorMsg = &apos;执行目标库更新sql失败&apos;;
+				PrintUtil.msg(&quot;更新目标sql：&quot;+sql);
 				_exWriteBatch(dbConn.getConnection(), sql, listParams);
 			}
 
@@ -1218,6 +1244,14 @@ WriteDbUtil.exWriteDb = function(listData, paramobj) {
 			}
 			return servletResponse;
 		}
+		}catch (e) {
+			if (e.javaException) {
+				logger.error(errorMsg, e.javaException);	
+			} else {
+				logger.error(errorMsg, e);
+			}
+			return getServletResponseJson(errorMsg + e.toString(), -1);
+		} 
 	}
 
 	function _getUpdateDataMap(mapDestKeyData, existsSql){
@@ -1416,11 +1450,11 @@ WriteDbUtil.exWriteDb = function(listData, paramobj) {
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1457,11 +1491,11 @@ DbUtilFactory.get = function(dbConn){
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1493,11 +1527,11 @@ OracleDbUtil.getNow = function(dbConn){
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1528,11 +1562,11 @@ PgDbUtil.getNow = function(dbConn){
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1563,11 +1597,11 @@ SqlServerDbUtil.getNow = function(dbConn){
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1629,11 +1663,11 @@ function getResultCol(resultSet, fieldName, fieldType){
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1668,19 +1702,19 @@ function testStrJava(result) {
           <codeTemplate version="3.7.1">
             <id>0260b377-2eaf-4d20-bdd0-95f551d79794</id>
             <name>消息相关函数</name>
-            <revision>34</revision>
+            <revision>39</revision>
             <lastModified>
-              <time>1564479438087</time>
+              <time>1566378888592</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>CHANNEL_POSTPROCESSOR</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>CHANNEL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1746,7 +1780,12 @@ ExMqObject.prototype = {
 		//logger.info(&apos;发布消息mqObj：&apos;+JSON.stringify(this));
 		var util = MessageServerFactory.get(this.messageServer);
 		if(util){
-			util.produce(this.messageServer, JSON.stringify(this));
+			//消息异常，不处理
+			try{
+				util.produce(this.messageServer, JSON.stringify(this));
+			}catch(e){
+				logger.error(&quot;交换消息异常：&quot;+e.toString());
+			}
 		}
 	},
 	_getMqTime: function() {
@@ -1762,7 +1801,7 @@ ExMqObject.prototype = {
 var MessageServerFactory= {};
 
 MessageServerFactory.get = function(messageServer){
-	if(messageServer.indexOf(&quot;http&quot;) == 0){
+	if(messageServer &amp;&amp; messageServer.indexOf(&quot;http&quot;) == 0){
 		return MSHttpUtil;
 	}
 }
@@ -1770,7 +1809,7 @@ MessageServerFactory.get = function(messageServer){
 var MSHttpUtil = {};
 
 MSHttpUtil.produce = function(url, data){
-	callHttpPost(url, data);
+	var result = callHttpPost(url, data);
 }
 
 </code>
@@ -1786,11 +1825,11 @@ MSHttpUtil.produce = function(url, data){
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1818,19 +1857,19 @@ function getClassName(obj) {
           <codeTemplate version="3.7.1">
             <id>283fb344-0c24-47c6-ba66-06eb9f0b9db1</id>
             <name>获取ServletResponse返回的json对象函数</name>
-            <revision>4</revision>
+            <revision>5</revision>
             <lastModified>
-              <time>1564022673009</time>
+              <time>1566886307598</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>CHANNEL_POSTPROCESSOR</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>CHANNEL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1864,8 +1903,7 @@ ServletResponseObj.prototype = {
 		this.code = code;
 	},
 	setValueInc : function(valueInc){
-		this.source = {};
-		this.source.valueInc = valueInc;
+		this.valueInc = valueInc;
 	},
 }
 </code>
@@ -1881,11 +1919,11 @@ ServletResponseObj.prototype = {
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1921,19 +1959,19 @@ function getMaxValueInc(data, valueInc, dbNow) {
           <codeTemplate version="3.7.1">
             <id>058b5078-2e5c-4548-8955-757327c9e0b2</id>
             <name>防止重复执行</name>
-            <revision>23</revision>
+            <revision>24</revision>
             <lastModified>
-              <time>1564479063407</time>
+              <time>1566802978423</time>
               <timezone>Asia/Shanghai</timezone>
             </lastModified>
             <contextSet>
               <delegate>
-                <contextType>DESTINATION_DISPATCHER</contextType>
-                <contextType>CHANNEL_POSTPROCESSOR</contextType>
                 <contextType>SOURCE_RECEIVER</contextType>
                 <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
-                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
                 <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>CHANNEL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
               </delegate>
             </contextSet>
             <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
@@ -1954,17 +1992,17 @@ ExecCheckUtil.checkResAskId = function(paramObj){
 	if(globalMap.containsKey(&apos;mapExResAskId&apos;)){
 		map = globalMap.get(&apos;mapExResAskId&apos;);
 	} else {
-		//logger.info(&apos;---新建检查重复执行ConcurrentHashMap&apos;);
+		//PrintUtil.msg(&apos;---新建检查重复执行ConcurrentHashMap&apos;);
 		map = new ConcurrentHashMap();
 		globalMap.put(&apos;mapExResAskId&apos;, map);
 	}
 	if(map.containsKey(key)){
-		//logger.info(&apos;---检查失败&apos; + key);
-		//logger.info(&apos;---map:&apos; + map.toString());
+		//PrintUtil.msg(&apos;---检查失败&apos; + key);
+		//PrintUtil.msg(&apos;---map:&apos; + map.toString());
 		//map.clear();
 		return createExOutcome(&apos;任务正在执行&apos;, 500);
 	} else {
-		logger.info(&apos;---检查成功&apos; + key);
+		PrintUtil.msg(&apos;---检查成功&apos; + key);
 		var execId = UUIDGenerator.getUUID();
 		map.put(key, execId);
 		channelMap.put(&apos;execId&apos;, execId);
@@ -1982,11 +2020,11 @@ ExecCheckUtil.endExec = function(paramObj){
 			var execId = channelMap.get(&apos;execId&apos;);
 			if(map.get(key) == execId){
 				map.remove(key);
-				logger.info(&apos;-----释放----&apos;+key);
+				PrintUtil.msg(&apos;-----释放----&apos;+key);
 			}
 		}
 	} else {
-		//logger.info(&apos;-----map不包含key,map:&apos;+map.toString());
+		//PrintUtil.msg(&apos;-----map不包含key,map:&apos;+map.toString());
 	}
 }
 </code>

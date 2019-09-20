@@ -1,15 +1,13 @@
+/**
+ * 
+ */
 package com.jeespring.common.config;
 
-import com.jeespring.common.filter.LogoutFilter;
-import com.jeespring.common.filter.OnlineSessionFilter;
-import com.jeespring.common.redis.RedisUtils;
-import com.jeespring.common.security.shiro.session.CacheSessionDAO;
-import com.jeespring.common.security.shiro.session.SessionManager;
-import com.jeespring.modules.sys.dao.OnlineSessionDAO;
-import com.jeespring.modules.sys.dao.OnlineSessionFactory;
-import com.jeespring.modules.sys.security.FormAuthenticationFilter;
-import com.jeespring.modules.sys.security.SystemAuthorizingRealm;
-import net.sf.ehcache.CacheManager;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.Filter;
+
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -28,23 +26,27 @@ import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.DelegatingFilterProxy;
-import com.jeespring.common.filter.SyncOnlineSessionFilter;
 
-import javax.servlet.Filter;
-import java.util.HashMap;
-import java.util.Map;
+import com.jeespring.common.filter.LogoutFilter;
+import com.jeespring.common.filter.OnlineSessionFilter;
+import com.jeespring.common.filter.SyncOnlineSessionFilter;
+import com.jeespring.common.redis.RedisUtils;
+import com.jeespring.common.security.shiro.session.CacheSessionDAO;
+import com.jeespring.common.security.shiro.session.SessionManager;
+import com.jeespring.modules.sys.dao.OnlineSessionDAO;
+import com.jeespring.modules.sys.dao.OnlineSessionFactory;
+import com.jeespring.modules.sys.security.FormAuthenticationFilter;
+import com.jeespring.modules.sys.security.SystemAuthorizingRealm;
+
+import net.sf.ehcache.CacheManager;
 
 /**
- * shiro的控制类
- * 下面方法的顺序不能乱
- * Created by zhao.weiwei
- * create on 2017/1/11 10:59
- * the email is zhao.weiwei@jyall.com.
+ * shiro的控制类 下面方法的顺序不能乱 Created by zhao.weiwei create on 2017/1/11 10:59 the
+ * email is zhao.weiwei@jyall.com.
  */
 @Component
 public class ShiroConfig {
@@ -62,9 +64,9 @@ public class ShiroConfig {
     @Value("${shiro.session.expireTime}")
     private int expireTime;
 
-    //启动shiro redis缓存，单点登录
-    //@Value("${shiro.redis}")
-    //private String shiroRedis;
+    // 启动shiro redis缓存，单点登录
+    // @Value("${shiro.redis}")
+    // private String shiroRedis;
 
     // 相隔多久检查一次session的有效性，单位毫秒，默认就是10分钟
     @Value("${shiro.session.validationInterval}")
@@ -96,42 +98,40 @@ public class ShiroConfig {
 
     // 登录地址
     @Value("${shiro.user.loginUrl}")
-    private String loginUrl="/admin/login";
+    private String loginUrl = "/admin/login";
 
     // 权限认证失败地址
     @Value("${shiro.user.unauthorizedUrl}")
     private String unauthorizedUrl;
 
     /**
-     * 全局的环境变量的设置
-     * shiro的拦截
+     * 全局的环境变量的设置 shiro的拦截
      *
      * @param environment
      * @param adminPath
      * @return
      */
     @Bean(name = "shiroFilterChainDefinitions")
-    public String shiroFilterChainDefinitions(Environment environment
-            , @Value("${adminPath}") String adminPath
-            , @Value("${frontPath}") String frontPath) {
-        //Global.resolver = new RelaxedPropertyResolver(environment);
-        StringBuilder string=new StringBuilder();
+    public String shiroFilterChainDefinitions(Environment environment, @Value("${adminPath}") String adminPath,
+            @Value("${frontPath}") String frontPath) {
+        // Global.resolver = new RelaxedPropertyResolver(environment);
+        StringBuilder string = new StringBuilder();
         string.append("/static/** = anon\n");
         string.append("/staticViews/** = anon\n");
         string.append("/jeeSpringStatic/** = anon\n");
         string.append("/userfiles/** = anon\n");
         string.append("/rest/** = anon\n");
-        string.append(frontPath+"/** = anon\n");
-        string.append( adminPath + "/basic = basic\n");
-        string.append( adminPath + "/login = authc\n");
-        string.append( adminPath + "/loginBase = anon\n");
-        string.append( adminPath + "/logout = logout\n");
-        string.append(  adminPath + "/register = anon\n");
-        string.append( adminPath + "/sys/register/registerUser = anon\n");
-        string.append( adminPath + "/sys/user/validateLoginName = anon\n");
-        string.append( adminPath + "/sys/user/validateMobile = anon\n");
-        string.append(  adminPath + "/** = user\n");
-        string.append(  "/ReportServer/** = user");
+        string.append(frontPath + "/** = anon\n");
+        string.append(adminPath + "/basic = basic\n");
+        string.append(adminPath + "/login = authc\n");
+        string.append(adminPath + "/loginBase = anon\n");
+        string.append(adminPath + "/logout = logout\n");
+        string.append(adminPath + "/register = anon\n");
+        string.append(adminPath + "/sys/register/registerUser = anon\n");
+        string.append(adminPath + "/sys/user/validateLoginName = anon\n");
+        string.append(adminPath + "/sys/user/validateMobile = anon\n");
+        string.append(adminPath + "/** = user\n");
+        string.append("/ReportServer/** = user");
         return string.toString();
     }
 
@@ -143,24 +143,22 @@ public class ShiroConfig {
     }
 
     @Bean(name = "shiroFilter")
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(
-            @Value("${adminPath:/a}") String adminPath,
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(@Value("${adminPath:/a}") String adminPath,
             BasicHttpAuthenticationFilter basicHttpAuthenticationFilter,
-            FormAuthenticationFilter formAuthenticationFilter,
-            DefaultWebSecurityManager securityManager,
+            FormAuthenticationFilter formAuthenticationFilter, DefaultWebSecurityManager securityManager,
             @Qualifier("shiroFilterChainDefinitions") String shiroFilterChainDefinitions) {
         Map<String, Filter> filters = new HashMap<>();
         filters.put("basic", basicHttpAuthenticationFilter);
         filters.put("authc", formAuthenticationFilter);
         filters.put("syncOnlineSession", syncOnlineSessionFilter());
-        //filters.put("onlineSession", onlineSessionFilter());
+        // filters.put("onlineSession", onlineSessionFilter());
         filters.put("logout", logoutFilter());
         ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
         bean.setFilters(filters);
         bean.setSecurityManager(securityManager);
         bean.setLoginUrl(adminPath + "/login");
         bean.setSuccessUrl(adminPath + "?login");
-         // Shiro过滤器配置
+        // Shiro过滤器配置
         bean.setFilterChainDefinitions(shiroFilterChainDefinitions);
         return bean;
     }
@@ -172,11 +170,11 @@ public class ShiroConfig {
         return ehCacheManager;
     }
 
-
-    //@Bean(name = "redisCacheManager")
-    public RedisCacheManager redisCacheManager(String redisHostName,String reidsPassword,int reidsPort,int expireTimeShiro) {
-        RedisCacheManager redisCacheManager=  new RedisCacheManager();
-        RedisManager redisManager= new RedisManager();
+    // @Bean(name = "redisCacheManager")
+    public RedisCacheManager redisCacheManager(String redisHostName, String reidsPassword, int reidsPort,
+            int expireTimeShiro) {
+        RedisCacheManager redisCacheManager = new RedisCacheManager();
+        RedisManager redisManager = new RedisManager();
         redisManager.setHost(redisHostName);
         redisManager.setPassword(reidsPassword);
         redisManager.setPort(reidsPort);
@@ -184,8 +182,6 @@ public class ShiroConfig {
         redisCacheManager.setRedisManager(redisManager);
         return redisCacheManager;
     }
-
-
 
     @Bean(name = "sessionManager")
     public SessionManager sessionManager(CacheSessionDAO dao) {
@@ -205,42 +201,37 @@ public class ShiroConfig {
         // 是否定时检查session
         sessionManager.setSessionValidationSchedulerEnabled(true);
         // 自定义SessionDao
-        //sessionManager.setSessionDAO(sessionDAO());
+        // sessionManager.setSessionDAO(sessionDAO());
         // 自定义sessionFactory
-        //sessionManager.setSessionFactory(sessionFactory());
+        // sessionManager.setSessionFactory(sessionFactory());
         return sessionManager;
     }
 
     @Bean(name = "securityManager")
-    public DefaultWebSecurityManager defaultWebSecurityManager(
-            SystemAuthorizingRealm systemAuthorizingRealm,
-            SessionManager sessionManager,
-            EhCacheManager ehCacheManager,
-            @Value("${spring.redis.run}") String redisRun,
+    public DefaultWebSecurityManager defaultWebSecurityManager(SystemAuthorizingRealm systemAuthorizingRealm,
+            SessionManager sessionManager, EhCacheManager ehCacheManager, @Value("${spring.redis.run}") String redisRun,
             @Value("${spring.redis.hostName}") String redisHostName,
-            @Value("${spring.redis.password}") String reidsPassword,
-            @Value("${spring.redis.port}") int redisPort,
-            @Value("${spring.redis.expireTimeShiro}") int expireTimeShiro,
-            @Value("${shiro.redis}") String shiroRedis
-            ) {
+            @Value("${spring.redis.password}") String reidsPassword, @Value("${spring.redis.port}") int redisPort,
+            @Value("${spring.redis.expireTimeShiro}") int expireTimeShiro, @Value("${shiro.redis}") String shiroRedis) {
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
         defaultWebSecurityManager.setSessionManager(sessionManager);
-        if("true".equals(redisRun) && "true".equals(shiroRedis)){
-            try{
+        if ("true".equals(redisRun) && "true".equals(shiroRedis)) {
+            try {
                 // 加入缓存管理器
-                defaultWebSecurityManager.setCacheManager(redisCacheManager(redisHostName,reidsPassword,redisPort,expireTimeShiro));
+                defaultWebSecurityManager
+                        .setCacheManager(redisCacheManager(redisHostName, reidsPassword, redisPort, expireTimeShiro));
             } catch (Exception e) {
-                logger.error("RedisUtils run:"+RedisUtils.RUN_MESSAGE+e.getMessage(), RedisUtils.RUN_MESSAGE+e.getMessage());
+                logger.error("RedisUtils run:" + RedisUtils.RUN_MESSAGE + e.getMessage(),
+                        RedisUtils.RUN_MESSAGE + e.getMessage());
                 defaultWebSecurityManager.setCacheManager(ehCacheManager);
             }
-        }else{
+        } else {
             // 加入缓存管理器
             defaultWebSecurityManager.setCacheManager(ehCacheManager);
         }
         defaultWebSecurityManager.setRealm(systemAuthorizingRealm);
         return defaultWebSecurityManager;
     }
-
 
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(
@@ -277,10 +268,9 @@ public class ShiroConfig {
      * 自定义在线用户处理过滤器
      */
 
-    public OnlineSessionFilter onlineSessionFilter()
-    {
+    public OnlineSessionFilter onlineSessionFilter() {
         OnlineSessionFilter onlineSessionFilter = new OnlineSessionFilter();
-        //onlineSessionFilter.setLoginUrl(loginUrl);
+        // onlineSessionFilter.setLoginUrl(loginUrl);
         return onlineSessionFilter;
     }
 
@@ -288,15 +278,12 @@ public class ShiroConfig {
      * 自定义在线用户同步过滤器
      */
     @Bean
-    public SyncOnlineSessionFilter syncOnlineSessionFilter()
-    {
+    public SyncOnlineSessionFilter syncOnlineSessionFilter() {
         SyncOnlineSessionFilter syncOnlineSessionFilter = new SyncOnlineSessionFilter();
         return syncOnlineSessionFilter;
     }
 
-
-    public LogoutFilter logoutFilter()
-    {
+    public LogoutFilter logoutFilter() {
         LogoutFilter logoutFilter = new LogoutFilter();
         logoutFilter.setLoginUrl(loginUrl);
         return logoutFilter;

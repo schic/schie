@@ -309,6 +309,12 @@
 			<artifactId>spring-boot-starter-redis</artifactId>
 			<version>1.4.7.RELEASE</version>
 		</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-devtools</artifactId>
+				<optional>true</optional>
+				<scope>true</scope>
+			</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
@@ -396,17 +402,19 @@
 			<groupId>org.jolokia</groupId>
 			<artifactId>jolokia-core</artifactId>
 		</dependency>
+		<!-- 因sigar还需要放其他依赖dll或so到系统上，所以放弃，使用oshi
         <dependency>
             <groupId>org.fusesource</groupId>
             <artifactId>sigar</artifactId>
             <version>1.6.4</version>
-        </dependency>
+        </dependency> -->
+        
 		<dependency>
 			<groupId>com.github.abel533</groupId>
 			<artifactId>ECharts</artifactId>
 			<version>2.2.7</version>
 		</dependency>
-		<!-- 定时任务 -->
+		<!--定时任务-->
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
@@ -519,15 +527,6 @@
 					</compilerArguments>
 				</configuration>
 			</plugin>
-			<!--plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludeArtifactIds>
-						slf4j-log4j12
-					</excludeArtifactIds>
-				</configuration>
-			</plugin-->
 		</plugins>
 	</build>
 </project>

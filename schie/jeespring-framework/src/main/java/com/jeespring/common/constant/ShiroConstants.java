@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.common.constant;
 
 /**
@@ -5,8 +8,7 @@ package com.jeespring.common.constant;
  * 
  * @author JeeSpring
  */
-public interface ShiroConstants
-{
+public interface ShiroConstants {
     /**
      * 当前登录的用户
      */

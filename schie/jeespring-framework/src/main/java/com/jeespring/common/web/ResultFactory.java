@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.common.web;
 
 public class ResultFactory {

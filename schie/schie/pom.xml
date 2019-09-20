@@ -21,6 +21,18 @@
 			<artifactId>jeespring-framework</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160810</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>tools</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency> -->
 	</dependencies>
 	
     <!-- <build>
@@ -34,37 +46,54 @@
     <build>
 		<resources>
 			<resource>
-				<directory>src/main/webapp;src/main/resources</directory>
+				<directory>src/main/webapp</directory>
+				<!--<includes>
+					<include>**/**</include>
+				</includes>-->
+				<excludes>
+					<exclude>**/*.jar</exclude>
+				</excludes>
+				<targetPath>${basedir}/target/classes/META-INF/resources</targetPath>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
 				<includes>
-					<include>NONE</include>
+					<include>**/**</include>
 				</includes>
 			</resource>
 		</resources>
 		<plugins>
-			<plugin>
+		<!--<plugin>
 	            <artifactId>maven-resources-plugin</artifactId>
-	            <!-- <version>2.5</version> -->
+	            <version>3.1.0</version>&lt;!&ndash;  &ndash;&gt;
 	            <executions>
 	                <execution>
-	                    <id>web-jar</id>
-	                    <phase>process-sources</phase>
+	                    <id>copy-resources</id>
+	                    &lt;!&ndash; 在default生命周期的  xxx 阶段就执行resources插件的copy-resources目标,process-sources/validate/process-resources &ndash;&gt;
+	                    <phase>validate</phase>
 	                    <goals>
 	                        <goal>copy-resources</goal>
 	                    </goals>
 	                    <configuration>
+							<encoding>UTF-8</encoding>
+	                    	&lt;!&ndash; 指定resources插件处理资源文件到哪个目录下 &ndash;&gt;
 	                        <outputDirectory>${basedir}/target/classes/META-INF/resources</outputDirectory>
 	                        <resources>
 	                            <resource>
-	                                <directory>${basedir}/src/main/webapp</directory>
-	                                <includes>
-	                                    <include>**/*.*</include>
-	                                </includes>
+	                            	&lt;!&ndash; 指定resources插件处理哪个目录下的资源文件 &ndash;&gt;
+	                                <directory>src/main/webapp</directory>
+									<includes>
+                                        <include>**/*.*</include>
+                                    </includes>&lt;!&ndash;  &ndash;&gt;
+	                                <excludes>
+										<exclude>**/*.jar</exclude>
+									</excludes>
 	                            </resource>
 	                        </resources>
 	                    </configuration>
 	                </execution>
 	            </executions>
-	        </plugin>
+	        </plugin>-->
 	        
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

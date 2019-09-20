@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.common.utils;
 
 import java.lang.reflect.Field;
@@ -8,8 +11,7 @@ public class ObjectFieldUtils {
      * 获取对象属性赋值
      *
      * @param dObject
-     * @param fieldName
-     *            字段别名
+     * @param fieldName 字段别名
      * @return
      */
     public static Object getFieldValue(Object dObject, String fieldName) {

@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp" %>
 <html>
 <head>
-    <title>部门管理</title>
+    <title>机构管理</title>
     <%@ include file="/WEB-INF/views/include/headMeta.jsp" %>
     <%@ include file="/WEB-INF/views/include/headCss.jsp" %>
     <%@ include file="/WEB-INF/views/include/headJs.jsp" %>
@@ -15,7 +15,7 @@
         <!-- 内容盒子头部 -->
         <div class="box-header">
             <div class="box-title"><i class="fa fa-edit"></i>
-                部门管理
+                机构管理
             </div>
         </div>
         <!-- 内容盒子身体 -->
@@ -27,38 +27,51 @@
                     <div class="form-unit">基本信息</div>
                     <div class="row">
                         <div class="col-xs-6 form-group">
-                            <label class="control-label col-sm-4 pull-left">上级部门</label>
+                            <label class="control-label col-sm-4 pull-left">上级机构</label>
                             <div class="col-sm-8">
                                 <sys:treeselect id="office" name="parent.id" value="${office.parent.id}"
-                                                labelName="parent.name" labelValue="${office.parent.name}" title="部门"
+                                                labelName="parent.name" labelValue="${office.parent.name}" title="机构"
                                                 url="/sys/office/treeData" extId="${office.id}" cssClass="form-control"
                                                 allowClear="${office.currentUser.admin}"/>
                             </div>
                         </div>
-                        <div class="col-xs-6 form-group">
+                        <%-- <div class="col-xs-6 form-group">
                             <label class="control-label col-sm-4 pull-left"><font color="red">*</font>归属区域</label>
                             <div class="col-sm-8">
                                 <sys:treeselect id="area" name="area.id" value="${office.area.id}" labelName="area.name"
                                                 labelValue="${office.area.name}" title="区域" url="/sys/area/treeData"
                                                 cssClass="form-control required"/></div>
-                        </div>
+                        </div> --%>
                     </div>
                     <div class="row">
                         <div class="col-xs-6 form-group">
-                            <label class="control-label col-sm-4 pull-left"><font color="red">*</font>部门名称</label>
+                            <label class="control-label col-sm-4 pull-left"><font color="red">*</font>机构名称</label>
                             <div class="col-sm-8"><form:input path="name" htmlEscape="false" maxlength="50"
                                                               class="form-control required"/></div>
                         </div>
                         <div class="col-xs-6 form-group">
-                            <label class="control-label col-sm-4 pull-left">部门编码</label>
+                            <label class="control-label col-sm-4 pull-left">行政区划</label>
                             <div class="col-sm-8"><form:input path="code" htmlEscape="false" maxlength="50"
+                                                              class="form-control"/></div>
+                        </div>
+                    </div>
+                    
+					<div class="row">
+                        <div class="col-xs-6 form-group">
+                            <label class="control-label col-sm-4 pull-left">组织机构编码</label>
+                            <div class="col-sm-8"><form:input path="zzjgbm" htmlEscape="false" maxlength="50"
+                                                              class="form-control"/></div>
+                        </div>
+                        <div class="col-xs-6 form-group">
+                            <label class="control-label col-sm-4 pull-left">社会信用代码</label>
+                            <div class="col-sm-8"><form:input path="shxydm" htmlEscape="false" maxlength="50"
                                                               class="form-control"/></div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-xs-6 form-group">
-                            <label class="control-label col-sm-4 pull-left">部门类型</label>
+                            <label class="control-label col-sm-4 pull-left">机构类型</label>
                             <div class="col-sm-8">
                                 <form:select path="type" class="form-control">
                                     <form:options items="${fns:getDictList('sys_office_type')}" itemLabel="label"
@@ -67,7 +80,7 @@
                             </div>
                         </div>
                         <div class="col-xs-6 form-group">
-                            <label class="control-label col-sm-4 pull-left">部门级别</label>
+                            <label class="control-label col-sm-4 pull-left">机构级别</label>
                             <div class="col-sm-8">
                                 <form:select path="grade" class="form-control">
                                     <form:options items="${fns:getDictList('sys_office_grade')}" itemLabel="label"

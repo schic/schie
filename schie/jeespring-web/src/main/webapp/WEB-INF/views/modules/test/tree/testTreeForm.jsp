@@ -15,12 +15,13 @@
         <!-- 内容盒子头部 -->
         <div class="box-header">
             <div class="box-title"><i class="fa fa-edit"></i>
-                数据字典管理
+                数管理
             </div>
         </div>
         <!-- 内容盒子身体 -->
         <div class="box-body">
-			<form:form id="inputForm" modelAttribute="testTree" action="${ctx}/test/tree/testTree/save" method="post" class="form-horizontal  content-background">
+			<%--return check()--%>
+			<form:form id="inputForm" modelAttribute="testTree" action="${ctx}/test/tree/testTree/save" method="post" class="form-horizontal  content-background" >
 				<div class="content">
 					<form:hidden path="id"/>
 					<div class="form-unit">基本信息</div>
@@ -43,7 +44,8 @@
 							<label class="control-label col-sm-4 pull-left">上级父级编号:</label>
 							<div class="col-sm-8">
 								<sys:treeselect id="parent" name="parent.id" value="${testTree.parent.id}" labelName="parent.name" labelValue="${testTree.parent.name}"
-									title="父级编号" url="/test/tree/testTree/treeData" extId="${testTree.id}" cssClass="form-control " allowClear="true"/>
+									title="父级编号" url="/test/tree/testTree/treeData?type=${testTree.type}"  cssClass="form-control  required  " allowClear="true"
+								/>
 							 </div>
 						</div>
 						<div class="col-xs-6 form-group">
@@ -69,8 +71,7 @@
 <%@ include file="/WEB-INF/views/include/footJs.jsp" %>
 <script src="/staticViews/viewBase.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-	});
+
 </script>
 </body>
 </html>

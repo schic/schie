@@ -20,9 +20,11 @@
                 <button id="assignButton" type="submit" class="btn btn-default btn-sm" title="添加人员"><i
                         class="fa fa-plus"></i> 添加人员
                 </button>
+                <button id="btnBack" class="btn btn-default btn-sm" >返回</button>
                 <!-- 工具功能 -->
                 <%@ include file="/WEB-INF/views/include/btnGroup.jsp" %>
             </div>
+            
         </div>
         <!-- 内容盒子身体 -->
         <div class="box-body">
@@ -35,7 +37,7 @@
                         <span class="col-sm-4">英文名称: ${role.enname}</span>
                     </div>
                     <div class="row">
-                        <span class="col-sm-4">角色类型: ${role.roleType}</span>
+                        <%-- <span class="col-sm-4">角色类型: ${role.roleType}</span> --%>
                         <c:set var="dictvalue" value="${role.dataScope}" scope="page"/>
                         <span class="col-sm-4">数据范围: ${fns:getDictLabel(dictvalue, 'sys_data_scope', '')}</span>
                     </div>
@@ -104,7 +106,8 @@
                     pre_ids.shift();
                 }
                 if (pre_ids.sort().toString() == ids.sort().toString()) {
-                    top.$.jBox.tip("未给角色【${role.name}】分配新成员！", 'info');
+                    //top.$.jBox.tip("未给角色【${role.name}】分配新成员！", 'info');
+                    top.layer.msg("未给角色【${role.name}】分配新成员！");
                     return false;
                 }
                 ;
@@ -116,11 +119,15 @@
                 }
                 $('#idsArr').val(idsArr);
                 $('#assignRoleForm').submit();
-                //top.layer.close(index);
+                top.layer.close(index);
             },
             cancel: function (index) {
             }
         });
+    });
+    
+    $("#btnBack").click(function () {
+    	history.back(-1);
     });
 </script>
 </body>

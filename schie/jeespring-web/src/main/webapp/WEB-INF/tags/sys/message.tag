@@ -6,9 +6,10 @@
 <!--script type="text/javascript">top.$.jBox.closeTip();</script-->
 <c:if test="${not empty content}">
 	<c:if test="${not empty type}">
-	<c:set var="ctype" value="${type}"/></c:if>
+		<c:set var="ctype" value="${type}"/>
+	</c:if>
 	<c:if test="${empty type}">
-	<c:set var="ctype" value="${fn:indexOf(content,'失败') eq -1?'success':'danger'}"/>
+		<c:set var="ctype" value="${fn:indexOf(content,'失败') eq -1?'success':'danger'}"/>
 	</c:if>
 	<c:if test="${hideType != '1'}">
 		<div id="messageBox" class="alert alert-${ctype}">

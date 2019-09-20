@@ -11,12 +11,13 @@ import com.jeespring.modules.sys.entity.Dict;
 
 /**
  * 字典DAO接口
+ * 
  * @author 黄炳桂 516821420@qq.com
  * @version 2014-05-16
  */
 @Mapper
 public interface DictDao extends InterfaceBaseDao<Dict> {
 
-	List<String> findTypeList(Dict dict);
-	
+    List<String> findTypeList(Dict dict);
+
 }

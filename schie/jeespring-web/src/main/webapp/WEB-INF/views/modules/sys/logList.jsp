@@ -32,6 +32,7 @@
         <!-- 内容盒子身体 -->
         <div class="box-body">
             <form:form id="searchForm" action="${ctx}/sys/log/" method="post" class="form-inline">
+                <input id="isShowSearchForm" name="isShowSearchForm" type="hidden" value="${isShowSearchForm}"/>
                 <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
                 <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
                 <table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}"

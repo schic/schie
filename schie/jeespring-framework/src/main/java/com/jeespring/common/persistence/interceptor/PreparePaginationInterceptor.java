@@ -21,14 +21,13 @@ import com.jeespring.common.utils.Reflections;
 
 /**
  * Mybatis数据库分页插件，拦截StatementHandler的prepare方法
+ * 
  * @author poplar.yfyang / HuangBingGui
  * @version 2013-8-28
  */
-@Intercepts({
-	@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class})
-})
+@Intercepts({ @Signature(type = StatementHandler.class, method = "prepare", args = { Connection.class }) })
 public class PreparePaginationInterceptor extends BaseInterceptor {
-    
+
     private static final long serialVersionUID = 1L;
 
     public PreparePaginationInterceptor() {
@@ -39,43 +38,44 @@ public class PreparePaginationInterceptor extends BaseInterceptor {
     public Object intercept(Invocation ivk) throws Throwable {
         if (ivk.getTarget().getClass().isAssignableFrom(RoutingStatementHandler.class)) {
             final RoutingStatementHandler statementHandler = (RoutingStatementHandler) ivk.getTarget();
-            final BaseStatementHandler delegate = (BaseStatementHandler) Reflections.getFieldValue(statementHandler, DELEGATE);
-            final MappedStatement mappedStatement = (MappedStatement) Reflections.getFieldValue(delegate, MAPPED_STATEMENT);
+            final BaseStatementHandler delegate = (BaseStatementHandler) Reflections.getFieldValue(statementHandler,
+                    DELEGATE);
+            final MappedStatement mappedStatement = (MappedStatement) Reflections.getFieldValue(delegate,
+                    MAPPED_STATEMENT);
 
 //            //拦截需要分页的SQL
 ////            if (mappedStatement.getId().matches(_SQL_PATTERN)) { 
 //            if (StringUtils.indexOfIgnoreCase(mappedStatement.getId(), _SQL_PATTERN) != -1) {
-                BoundSql boundSql = delegate.getBoundSql();
-                //分页SQL<select>中parameterType属性对应的实体参数，即Mapper接口中执行分页方法的参数,该参数不得为空
-                Object parameterObject = boundSql.getParameterObject();
-                if (parameterObject == null) {
-                    log.error("参数未实例化");
-                    throw new NullPointerException("parameterObject尚未实例化！");
-                } else {
-                    final Connection connection = (Connection) ivk.getArgs()[0];
-                    final String sql = boundSql.getSql();
-                    //记录统计
-                    final int count = SQLHelper.getCount(sql, connection, mappedStatement, parameterObject, boundSql, log);
-                    Page<Object> page = null;
-                    page = convertParameter(parameterObject, page);
-                    page.setCount(count);
-                    String pagingSql = SQLHelper.generatePageSql(sql, page, DIALECT);
-                    if (log.isDebugEnabled()) {
-                        log.debug("PAGE SQL:" + pagingSql);
-                    }
-                    //将分页sql语句反射回BoundSql.
-                    Reflections.setFieldValue(boundSql, "sql", pagingSql);
+            BoundSql boundSql = delegate.getBoundSql();
+            // 分页SQL<select>中parameterType属性对应的实体参数，即Mapper接口中执行分页方法的参数,该参数不得为空
+            Object parameterObject = boundSql.getParameterObject();
+            if (parameterObject == null) {
+                log.error("参数未实例化");
+                throw new NullPointerException("parameterObject尚未实例化！");
+            } else {
+                final Connection connection = (Connection) ivk.getArgs()[0];
+                final String sql = boundSql.getSql();
+                // 记录统计
+                final int count = SQLHelper.getCount(sql, connection, mappedStatement, parameterObject, boundSql, log);
+                Page<Object> page = null;
+                page = convertParameter(parameterObject, page);
+                page.setCount(count);
+                String pagingSql = SQLHelper.generatePageSql(sql, page, DIALECT);
+                if (log.isDebugEnabled()) {
+                    log.debug("PAGE SQL:" + pagingSql);
                 }
-                
-                if (boundSql.getSql() == null || "".equals(boundSql.getSql())){
-                    return null;
-                }
-                
+                // 将分页sql语句反射回BoundSql.
+                Reflections.setFieldValue(boundSql, "sql", pagingSql);
             }
+
+            if (boundSql.getSql() == null || "".equals(boundSql.getSql())) {
+                return null;
+            }
+
+        }
 //        }
         return ivk.proceed();
     }
-
 
     @Override
     public Object plugin(Object o) {

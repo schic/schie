@@ -15,6 +15,7 @@ import com.jeespring.modules.sys.dao.SystemConfigDao;
 
 /**
  * 系统配置Service
+ * 
  * @author liugf
  * @version 2016-02-07
  */
@@ -22,31 +23,31 @@ import com.jeespring.modules.sys.dao.SystemConfigDao;
 @Transactional(readOnly = true)
 public class SystemConfigService extends AbstractBaseService<SystemConfigDao, SystemConfig> {
 
-	@Override
+    @Override
     public SystemConfig get(String id) {
-		return super.get(id);
-	}
-	
-	@Override
+        return super.get(id);
+    }
+
+    @Override
     public List<SystemConfig> findList(SystemConfig systemConfig) {
-		return super.findList(systemConfig);
-	}
-	
-	@Override
+        return super.findList(systemConfig);
+    }
+
+    @Override
     public Page<SystemConfig> findPage(Page<SystemConfig> page, SystemConfig systemConfig) {
-		return super.findPage(page, systemConfig);
-	}
-	
-	@Override
+        return super.findPage(page, systemConfig);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void save(SystemConfig systemConfig) {
-		super.save(systemConfig);
-	}
-	
-	@Override
+    public void save(SystemConfig systemConfig) {
+        super.save(systemConfig);
+    }
+
+    @Override
     @Transactional(readOnly = false)
-	public void delete(SystemConfig systemConfig) {
-		super.delete(systemConfig);
-	}
-	
+    public void delete(SystemConfig systemConfig) {
+        super.delete(systemConfig);
+    }
+
 }

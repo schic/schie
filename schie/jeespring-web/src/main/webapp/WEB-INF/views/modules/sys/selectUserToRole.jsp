@@ -59,6 +59,8 @@
 				if($.inArray(String(treeNode.id), ids)<0){
 					selectedTree.addNodes(null, treeNode);
 					ids.push(String(treeNode.id));
+				} else {
+					top.layer.msg("该用户已存在角色中！");
 				}
 			};
 			if("selectedTree"==treeId){
@@ -66,7 +68,8 @@
 					selectedTree.removeNode(treeNode);
 					ids.splice($.inArray(String(treeNode.id), ids), 1);
 				}else{
-					top.$.jBox.tip("角色原有成员不能清除！", 'info');
+					//top.$.jBox.tip("角色原有成员不能清除！", 'info');
+					top.layer.msg("角色原有成员不能清除！");
 				}
 			}
 		};
@@ -82,15 +85,20 @@
 					ids=pre_ids.slice(0);
 					selectedNodes=pre_selectedNodes;
 					$.fn.zTree.init($("#selectedTree"), setting, selectedNodes);
-			    	top.$.jBox.tip(tips, 'info');
+			    	//top.$.jBox.tip(tips, 'info');
+			    	top.layer.msg(tips);
 			    } else if (v == 'cancel'){
 			    	// 取消
-			    	top.$.jBox.tip("取消清除操作！", 'info');
+			    	//top.$.jBox.tip("取消清除操作！", 'info');
+			    	top.layer.msg("取消清除操作！");
 			    }
 			    return true;
 			};
 			tips="确定清除角色【${role.name}】下的已选人员？";
-			top.$.jBox.confirm(tips, "清除确认", submit);
+			//top.$.jBox.confirm(tips, "清除确认", submit);
+			top.layer.confirm(tips,{
+				btn: ['确定','取消'] 
+			}, submit);
 		};
 	</script>
 </head>

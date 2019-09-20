@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jeespring.modules.test.dao.tree.TestTreeDao">
+<mapper namespace="com.schic.schie.modules.test.dao.tree.TestTreeDao">
     
 	<sql id="testTreeColumns">
 		a.id AS "id",
@@ -15,7 +15,8 @@
 		a.remarks AS "remarks",
 		a.del_flag AS "delFlag",
 		a.orgid AS "orgid",
-		a.type AS "type"
+		a.type AS "type",
+		a.extabid AS "exTabId"
 
 	</sql>
 	
@@ -40,6 +41,9 @@
 			<if test="orgid != '' and orgid != null">
 				AND a.orgid = #{orgid}
 			</if>
+			<if test="type != '' and type != null">
+				AND a.type = #{type}
+			</if>
 			<if test="name != null and name != ''">
 				AND a.name LIKE
 					<if  test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{name}||'%'</if>
@@ -48,6 +52,9 @@
 			</if>
 			<if test="parent != null and parent.id != null and parent.id != ''">
 				AND a.parent_id = #{parent.id}
+			</if>
+			<if test="exTabId != null  and exTabId != ''">
+				AND a.extabid = #{exTabId}
 			</if>
 			<if test="parentIds != null and parentIds != ''">
 				AND a.parent_ids LIKE
@@ -97,7 +104,8 @@
 			update_date,
 			remarks,
 			del_flag,
-			orgid
+			orgid,
+			type
 		) VALUES (
 			#{id},
 			#{name},
@@ -110,7 +118,8 @@
 			#{updateDate},
 			#{remarks},
 			#{delFlag},
-			#{orgid}
+			#{orgid},
+			#{type}
 		)
 	</insert>
 	
@@ -123,7 +132,8 @@
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks},
-			orgid = #{orgid}
+			orgid = #{orgid},
+			type =#{type}
 		WHERE id = #{id}
 	</update>
 	

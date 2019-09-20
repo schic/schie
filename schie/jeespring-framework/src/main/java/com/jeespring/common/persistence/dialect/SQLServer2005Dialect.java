@@ -9,6 +9,7 @@ import com.jeespring.common.persistence.dialect.Dialect;
 
 /**
  * Sql 2005的方言实现
+ * 
  * @author poplar.yfyang
  * @version 1.0 2010-10-10 下午12:31
  * @since JDK 1.5
@@ -22,8 +23,7 @@ public class SQLServer2005Dialect implements Dialect {
 
     @Override
     public String getLimitString(String sql, int offset, int limit) {
-        return getLimitString(sql, offset,
-                limit, Integer.toString(limit));
+        return getLimitString(sql, offset, limit, Integer.toString(limit));
     }
 
     /**
@@ -31,15 +31,13 @@ public class SQLServer2005Dialect implements Dialect {
      * <p/>
      * The LIMIT SQL will look like:
      * <p/>
-     * WITH query AS
-     * (SELECT TOP 100 percent ROW_NUMBER() OVER (ORDER BY CURRENT_TIMESTAMP) as __row_number__, * from table_name)
-     * SELECT *
-     * FROM query
-     * WHERE __row_number__ BETWEEN :offset and :lastRows
-     * ORDER BY __row_number__
+     * WITH query AS (SELECT TOP 100 percent ROW_NUMBER() OVER (ORDER BY
+     * CURRENT_TIMESTAMP) as __row_number__, * from table_name) SELECT * FROM query
+     * WHERE __row_number__ BETWEEN :offset and :lastRows ORDER BY __row_number__
      *
      * @param querySqlString   The SQL statement to base the limit query off of.
-     * @param offset           Offset of the first row to be returned by the query (zero-based)
+     * @param offset           Offset of the first row to be returned by the query
+     *                         (zero-based)
      * @param limit            Maximum number of rows to be returned by the query
      * @param limitPlaceholder limitPlaceholder
      * @return A new SQL statement with the LIMIT clause applied.
@@ -67,16 +65,10 @@ public class SQLServer2005Dialect implements Dialect {
         }
 
         StringBuilder result = new StringBuilder();
-        result.append("WITH query AS (SELECT ")
-                .append(distinctStr)
-                .append("TOP 100 PERCENT ")
-                .append(" ROW_NUMBER() OVER (")
-                .append(orderby)
-                .append(") as __row_number__, ")
-                .append(pagingBuilder)
-                .append(") SELECT * FROM query WHERE __row_number__ BETWEEN ")
-                .append(offset + 1).append(" AND ").append(offset + limit)
-                .append(" ORDER BY __row_number__");
+        result.append("WITH query AS (SELECT ").append(distinctStr).append("TOP 100 PERCENT ")
+                .append(" ROW_NUMBER() OVER (").append(orderby).append(") as __row_number__, ").append(pagingBuilder)
+                .append(") SELECT * FROM query WHERE __row_number__ BETWEEN ").append(offset + 1).append(" AND ")
+                .append(offset + limit).append(" ORDER BY __row_number__");
 
         return result.toString();
     }

@@ -64,14 +64,14 @@ var App = function () {
     var handleIframeContent = function () {
         var ht = $(window).height();//获取浏览器窗口的整体高度；
 
-        var $footer = $(".main-footer");
+        //var $footer = $(".main-footer");
         var $header = $(".main-header");
         var $tabs = $(".content-tabs");
 
         var height = App.getViewPort().height - $header.outerHeight();
-        if($footer.is(":visible")){
-            height=height - $footer.outerHeight();
-        }
+        //if($footer.is(":visible")){
+        //    height=height - $footer.outerHeight();
+        //}
         if ($tabs.is(":visible")) {
             height = height - $tabs.outerHeight();
         }
@@ -2449,47 +2449,49 @@ $(function () {
     };
 
     setTimeout(function () {
-        $("#control-sidebar-theme-demo-options-tab").append("<div class=\"form-group\">\n" +
+        /*$("#control-sidebar-theme-demo-options-tab").append("<div class=\"form-group\">\n" +
             "<label class=\"control-sidebar-subheading\">\n" +
             "<input type=\"checkbox\" data-layout=\"footer\" class=\"pull-right\"> \n" +
             "底部隐藏/Footer Hide\n" +
             "</label>\n" +
             "</div>");
-        $("#control-sidebar-theme-demo-options-tab").append("<div class=\"form-group\">\n" +
+    	if(get("footer")=="true")
+            $("[data-layout='footer']").attr("checked","checked");*/
+        
+    	$("#control-sidebar-theme-demo-options-tab").append("<div class=\"form-group\">\n" +
             "<label class=\"control-sidebar-subheading\">\n" +
             "<input type=\"checkbox\" data-layout=\"tab\" class=\"pull-right\"> \n" +
             "页签隐藏/Tab Hide\n" +
             "</label>\n" +
             "</div>");
-        $("#control-sidebar-theme-demo-options-tab").append("<div class=\"form-group\">\n" +
+    	if(get("tab")=="true")
+            $("[data-layout='tab']").attr("checked","checked");
+    	
+        /*$("#control-sidebar-theme-demo-options-tab").append("<div class=\"form-group\">\n" +
             "<label class=\"control-sidebar-subheading\">\n" +
             "<input type=\"checkbox\" data-layout=\"addTab\" class=\"pull-right\"> \n" +
             "增改查页签模式/Add Tab\n" +
             "</label>\n" +
             "</div>");
-        if(get("footer")=="true")
-            $("[data-layout='footer']").attr("checked","checked");
-        if(get("tab")=="true")
-            $("[data-layout='tab']").attr("checked","checked");
         if(get("addTab")=="true")
-            $("[data-layout='addTab']").attr("checked","checked");
+            $("[data-layout='addTab']").attr("checked","checked");*/
     }, 1000);
 
 
     $(document).on('click','[data-layout]', function () {
-        if($(this).data('layout')=="footer"){
-            $(".main-footer").toggle();
-            store("footer",$(this).is(':checked'));
-            App.fixIframeTab();
-        }
+        //if($(this).data('layout')=="footer"){
+        //    $(".main-footer").toggle();
+        //    store("footer",$(this).is(':checked'));
+        //    App.fixIframeTab();
+        //}
         if($(this).data('layout')=="tab"){
             $(".content-tabs").toggle();
             store("tab",$(this).is(':checked'));
             App.fixIframeTab();
         }
-        if($(this).data('layout')=="addTab"){
-            store("addTab",$(this).is(':checked'));
-        }
+        //if($(this).data('layout')=="addTab"){
+        //    store("addTab",$(this).is(':checked'));
+        //}
     })
 
     $(document).on('click','.sidebar-menu a', function () {

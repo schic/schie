@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.jeespring.modules.job.util;
 
 import com.jeespring.common.utils.StringUtils;
@@ -12,45 +15,33 @@ import java.lang.reflect.Method;
  * @author JeeSpring
  *
  */
-public class ScheduleRunnable implements Runnable
-{
+public class ScheduleRunnable implements Runnable {
     private Object target;
     private Method method;
     private String params;
 
     public ScheduleRunnable(String beanName, String methodName, String params)
-            throws NoSuchMethodException, SecurityException
-    {
+            throws NoSuchMethodException, SecurityException {
         this.target = SpringUtils.getBean(beanName);
         this.params = params;
 
-        if (StringUtils.isNotEmpty(params))
-        {
+        if (StringUtils.isNotEmpty(params)) {
             this.method = target.getClass().getDeclaredMethod(methodName, String.class);
-        }
-        else
-        {
+        } else {
             this.method = target.getClass().getDeclaredMethod(methodName);
         }
     }
 
     @Override
-    public void run()
-    {
-        try
-        {
+    public void run() {
+        try {
             ReflectionUtils.makeAccessible(method);
-            if (StringUtils.isNotEmpty(params))
-            {
+            if (StringUtils.isNotEmpty(params)) {
                 method.invoke(target, params);
-            }
-            else
-            {
+            } else {
                 method.invoke(target);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

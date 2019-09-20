@@ -42,6 +42,7 @@
             <!-- 查询条件 -->
             <form:form id="searchForm" modelAttribute="sysUserOnline" action="${ctx}/sys/sysUserOnline/" method="post"
                        class="form-inline">
+                <input id="isShowSearchForm" name="isShowSearchForm" type="hidden" value="${isShowSearchForm}"/>
                 <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
                 <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
                 <input id="orderBy" name="orderBy" type="hidden" value="${page.orderBy}"/>

@@ -13,7 +13,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.jeespring.modules.sys.service.SystemService;
 
@@ -31,18 +30,17 @@ import com.jeespring.modules.sys.service.SystemService;
  */
 @EnableCaching
 @SpringBootApplication
-@ServletComponentScan(basePackages = {"com.jeespring", "com.schic"})
-@ComponentScan(basePackages = {"com","com.jeespring", "com.schic"})
-@MapperScan(basePackages={"com.jeespring.modules.**.dao","com.schic.schie.modules.*.dao"})
-@EnableScheduling
+@ServletComponentScan(basePackages = { "com.jeespring", "com.schic" })
+@ComponentScan(basePackages = { "com", "com.jeespring", "com.schic" })
+@MapperScan(basePackages = { "com.jeespring.modules.**.dao", "com.schic.schie.modules.**.dao" })
+//@EnableScheduling
 @EnableAutoConfiguration
 @Configuration
 //部署开发在线文档：https://gitee.com/JeeHuangBingGui/jeeSpringCloud/wikis
 //部署开发异常处理在线文档：https://gitee.com/JeeHuangBingGui/jeeSpringCloud/wikis
 //开发文档：https://gitee.com/JeeHuangBingGui/jeeSpringCloud/attach_files
 //单项目版本：https://gitee.com/JeeHuangBingGui/JeeSpringCloudV3.0
-public class JeeSpringDriver extends SpringBootServletInitializer
-{
+public class JeeSpringDriver extends SpringBootServletInitializer {
 
     //部署开发在线文档：https://gitee.com/JeeHuangBingGui/jeeSpringCloud/wikis
     //部署开发异常处理在线文档：https://gitee.com/JeeHuangBingGui/jeeSpringCloud/wikis

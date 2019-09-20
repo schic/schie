@@ -3,16 +3,12 @@
  */
 package com.jeespring.common.persistence;
 
-import com.jeespring.modules.server.entity.SysServer;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 
 /**
  * DAO支持类实现
  *
- * @param <T>
- * * * * @author 黄炳桂 516821420@qq.com
+ * @param <T> * * * @author 黄炳桂 516821420@qq.com
  * @version 2014-05-16
  */
 public interface InterfaceBaseService<T> {
@@ -36,6 +32,7 @@ public interface InterfaceBaseService<T> {
     T getCache(String id);
 
     List<T> totalCache(T entity);
+
     /**
      * 查询统计列表，如果需要分页，请设置分页对象，如：entity.setPage(new Page<T>());
      *
@@ -78,14 +75,14 @@ public interface InterfaceBaseService<T> {
      */
     void delete(T entity);
 
-	/**
-	 * 删除数据（逻辑删除，更新del_flag字段为1,在表包含字段del_flag时，可以调用此方法，将数据隐藏）
-	 * @param entity
-	 * @see public int delete(T entity)
-	 * @return
-     * 	@Deprecated
-	 */
+    /**
+     * 删除数据（逻辑删除，更新del_flag字段为1,在表包含字段del_flag时，可以调用此方法，将数据隐藏）
+     * 
+     * @param entity
+     * @see public int delete(T entity)
+     * @return
+     * @Deprecated
+     */
     void deleteByLogic(T entity);
-
 
 }
