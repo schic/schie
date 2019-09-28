@@ -9,7 +9,6 @@
     <%@include file="/WEB-INF/views/include/treetable.jsp" %>
 </head>
 <body>
-<div class="col-sm-6" style="padding-left: 0px;">
 <!-- 内容-->
 <div class="wrapper">
     <!-- 内容盒子-->
@@ -21,12 +20,13 @@
                 <a id="btnSearchView" href="#" class="btn btn-sm btn-default" title="筛选"><i
                         class="fa fa-filter"></i>筛选</a>
                 <shiro:hasPermission name="test:tree:testTree:add">
-                    <a id="btnAdd" href="${ctx}/test/tree/testTree/form" class="btn btn-default btn-sm" title="新增"><i
+                    <a id="btnAdd" href="${ctx}/test/tree/testTree/form?type=${type}" class="btn btn-default btn-sm" title="新增"><i
                             class="fa fa-plus"></i>新增</a>
                 </shiro:hasPermission>
                 <button data-placement="left" onclick="refresh()"
                         class="btn btn-default btn-sm" title="刷新"><i class="glyphicon glyphicon-repeat"></i>刷新
                 </button>
+				<a id="btnBack" class="btn btn-default">返回</a>
                 <!-- 工具功能 -->
                 <%@ include file="/WEB-INF/views/include/btnGroup.jsp" %>
             </div>
@@ -39,6 +39,9 @@
 						<label>名称：</label>
 						<form:input path="name" htmlEscape="false" maxlength="100" class="form-control input-sm"/>
 					</div>
+				<div class="form-group" style="display: none">
+					<form:input path="type" htmlEscape="false" maxlength="100" class="form-control input-sm"/>
+				</div>
 				<div class="form-group">
                     <button id="btnSearch" class="btn btn-primary"><i class="fa fa-search"></i> 查询</button>
                     <button id="btnReset" class="btn btn-default"><i class="fa fa-refresh"></i> 重置</button>
@@ -50,7 +53,6 @@
 					<tr>
 						<th>名称</th>
 						<th>备注信息</th>
-						<th>组织ID</th>
 						<shiro:hasPermission name="test:tree:testTree:edit"><th>操作</th></shiro:hasPermission>
 					</tr>
 				</thead>
@@ -59,13 +61,10 @@
         </div>
     </div>
 </div>
-</div>
-
 <script type="text/javascript">
 	$(document).ready(function() {
 		var tpl = $("#treeTableTpl").html().replace(/(\/\/\<!\-\-)|(\/\/\-\->)/g,"");
 		var data = ${fns:toJson(list)}, ids = [], rootIds = [];
-		console.log(data);
 		for (var i=0; i<data.length; i++){
 			ids.push(data[i].id);
 		}
@@ -80,9 +79,10 @@
 		for (var i=0; i<rootIds.length; i++){
 			addRow("#treeTableList", tpl, data, rootIds[i], true);
 		}
-
 		$("#treeTable").treeTable({expandLevel : 5});
+	$('#type').val(${type});
 	});
+
 	function addRow(list, tpl, data, pid, root){
 		for (var i=0; i<data.length; i++){
 			var row = data[i];
@@ -94,12 +94,10 @@
 				addRow(list, tpl, data, row.id);
 			}
 		}
-
 	}
 
 	function refresh(){//刷新
-
-		window.location="${ctx}/test/tree/testTree/";
+		window.location="${ctx}/test/tree/testTree/list?type=${type}";
 	}
 </script>
 <script type="text/template" id="treeTableTpl">
@@ -110,7 +108,6 @@
 		<td>
 			{{row.remarks}}
 		</td>
-		<td>{{row.orgid}}</td>
 		<td>
 		<shiro:hasPermission name="test:tree:testTree:view">
 			<a href="${ctx}/test/tree/testTree/form?id={{row.id}}" title="查看"><i class="fa fa-search-plus"></i></a>
@@ -122,11 +119,13 @@
 			<a href="${ctx}/test/tree/testTree/delete?id={{row.id}}" onclick="return confirmx('确认要删除该树及所有子树吗？', this.href)" title="删除"><i class="fa fa-trash-o"></i></a>
 		</shiro:hasPermission>
 		<shiro:hasPermission name="test:tree:testTree:add">
-			<a href="${ctx}/test/tree/testTree/form?parent.id={{row.id}}"><i class="fa fa-plus"></i> 添加下级树</a>
+			<a href="${ctx}/test/tree/testTree/form?parent.id={{row.id}}&type=${type}"><i class="fa fa-plus"></i> 添加下级树</a>
 		</shiro:hasPermission>
 		</td>
 	</tr>
 </script>
+
+
 <!-- 信息-->
 <div id="messageBox">${message}</div>
 <%@ include file="/WEB-INF/views/include/footJs.jsp" %>

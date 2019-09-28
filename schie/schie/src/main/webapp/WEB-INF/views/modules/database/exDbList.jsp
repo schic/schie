@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>DB管理管理</title>
+	<title>DB管理</title>
 	<%@ include file="/WEB-INF/views/include/headMeta.jsp" %>
     <%@ include file="/WEB-INF/views/include/headCss.jsp" %>
     <%@ include file="/WEB-INF/views/include/headJs.jsp" %>

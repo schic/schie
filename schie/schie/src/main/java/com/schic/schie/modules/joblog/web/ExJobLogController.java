@@ -73,7 +73,7 @@ public class ExJobLogController extends AbstractBaseController {
         // Y轴的数据
         Map<String, List<Double>> yAxisData = new HashMap<>();
         List<Double> countList = new ArrayList<>();
-        if (exJobLog.getOrderBy() == "") {
+        if ("".equals(exJobLog.getOrderBy())) {
             exJobLog.setOrderBy("totalDate");
         }
         List<ExJobLog> list = exJobLogService.totalCache(exJobLog);

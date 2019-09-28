@@ -26,17 +26,6 @@
                     <a id="btnAdd" href="${ctx}/resource/exResources/form?resdirId=${resdirId}" title="增加" class="btn btn-default btn-sm"><i
                             class="fa fa-plus"></i>增加</a>
                 </shiro:hasPermission>
-                <%--<shiro:hasPermission name="resource:exResources:del">--%>
-                    <%--<a id="btnDeleteAll" href="${ctx}/resource/exResources/deleteAllByLogic" title="删除"--%>
-                       <%--class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i>删除</a>--%>
-                <%--</shiro:hasPermission>--%>
-                <%--<shiro:hasPermission name="resource:exResources:import">--%>
-                    <%--<table:importExcel url="${ctx}/resource/exResources/import"></table:importExcel><!-- 导入按钮 -->--%>
-                <%--</shiro:hasPermission>--%>
-                <%--<shiro:hasPermission name="resource:exResources:import">--%>
-                    <%--<table:exportExcel url="${ctx}/resource/exResources/export"></table:exportExcel><!-- 导出按钮 -->--%>
-                <%--</shiro:hasPermission>--%>
-                <!-- 工具功能 -->
                 <%@ include file="/WEB-INF/views/include/btnGroup.jsp" %>
             </div>
         </div>
@@ -54,7 +43,6 @@
                     <span>资源名称：</span>
                     <form:input path="name" htmlEscape="false" maxlength="100"  class=" form-control input-sm"/>
                 </div>
-
                 <%--<div class="form-group">--%>
                     <%--<span>审核时间：</span>--%>
                     <%--<input id="beginCheckedTime" name="beginCheckedTime" type="text" maxlength="20" class="laydate-icon form-control layer-date input-sm"--%>
@@ -62,8 +50,6 @@
                     <%--<input id="endCheckedTime" name="endCheckedTime" type="text" maxlength="20" class="laydate-icon form-control layer-date input-sm"--%>
                            <%--value="<fmt:formatDate value="${exResources.endCheckedTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"/>--%>
                 <%--</div>--%>
-
-
                 <div class="form-group">
                     <button id="btnSearch" class="btn btn-primary"><i class="fa fa-search"></i> 查询</button>
                     <button id="btnReset" class="btn btn-default"><i class="fa fa-refresh"></i> 重置</button>
@@ -77,7 +63,6 @@
                     <th> <input type="checkbox" class="i-checks"></th>
                     <th  class="sort-column name hidden-xs">资源名称</th>
                     <th  class="sort-column resType hidden-xs">资源类型</th>
-                    <%--<th  class="sort-column nodeId ">执行节点</th>--%>
                     <th  class="sort-column checkedBy ">审核人</th>
                     <th  class="sort-column checkedTime ">审核时间</th>
                     <th  class="sort-column status hidden-xs">状态</th>
@@ -93,7 +78,6 @@
                             <input type="checkbox" id="${exResources.id}"
                                    name="${exResources.name}"
                                    resType="${exResources.resType}"
-                                   <%--nodeId="${exResources.nodeId}"--%>
                                    muser="${exResources.checkedBy}"
                                    mdate="${exResources.checkedTime}"
                                    status="${exResources.status}"
@@ -106,9 +90,6 @@
                         <td class="">
                                 ${exResources.resType}
                         </td>
-                        <%--<td class="">--%>
-                                <%--${exResources.nodeId}--%>
-                        <%--</td>--%>
                         <td class="hidden-xs">
                                 ${exResources.checkedBy}
                         </td>

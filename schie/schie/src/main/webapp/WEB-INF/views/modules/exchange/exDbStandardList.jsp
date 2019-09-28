@@ -52,20 +52,6 @@
                 <input id="orderBy" name="orderBy" type="hidden" value="${page.orderBy}"/>
                 <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
                 <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-                <%--<div class="form-group">--%>
-                    <%--<span>父级id：</span>--%>
-                 <%--</div>--%>
-                 <%--<div class="form-group">--%>
-                    <%--<span>所有父级id：</span>--%>
-                 <%--</div>--%>
-                 <%--<div class="form-group">--%>
-                    <%--<span>类型：</span>--%>
-                            <%--<form:input path="fType" htmlEscape="false" maxlength="100"  class=" form-control input-sm"/>--%>
-                 <%--</div>--%>
-                 <%--<div class="form-group">--%>
-                     <%--<span>名称：</span>--%>
-                     <%--<form:input path="name" htmlEscape="false" maxlength="100"  class=" form-control input-sm"/>--%>
-                 <%--</div>--%>
                      <div class="form-group">
                     <span>标识符：</span>
                         <form:input path="inId" htmlEscape="false" maxlength="100"  class=" form-control input-sm"/>
@@ -125,10 +111,6 @@
                 <thead>
                     <tr>
                         <th> <input type="checkbox" class="i-checks"></th>
-                        <%--<th  class="sort-column parent.id ">父级id</th>--%>
-                        <%--<th  class="sort-column parentIds ">所有父级id</th>--%>
-                        <%--<th  class="sort-column fType ">类型</th>--%>
-                        <%--<th  class="sort-column name hidden-xs">名称</th>--%>
                         <th  class="sort-column in_id hidden-xs">标识符</th>
                         <th  class="sort-column name_cn hidden-xs">中文名</th>
                         <th  class="sort-column field_name hidden-xs">字段名</th>
@@ -136,7 +118,6 @@
                         <th  class="sort-column datalength hidden-xs">数据长度</th>
                         <th  class="sort-column f_Require hidden-xs">填报要求</th>
                         <th  class="sort-column sort hidden-xs">排序</th>
-                        <%--<th  class="sort-column updateDate hidden-xs">修改时间</th>--%>
                         <th>操作</th>
                     </tr>
                 </thead>

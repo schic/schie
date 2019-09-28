@@ -2,11 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<artifactId>jeespring-web</artifactId>
 	<name>jeespring-web</name>
 	<description>jeespring-web</description>
 	<version>3.0.0</version>
 	<packaging>war</packaging>
+
 	<parent>
 		<groupId>com.jeespring</groupId>
 		<artifactId>jeespring</artifactId>
@@ -128,7 +130,7 @@
 	</dependencies>
 	<build>
 		<plugins>
-			<!-- 打包插件 -->
+			<!-- 打包插件
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -140,7 +142,7 @@
 						<addMavenDescriptor>false</addMavenDescriptor>
 					</archive>
 				</configuration>
-			</plugin>
+			</plugin> -->
 
 			<!-- YUI Compressor (CSS/JS压缩) -->
 			<!--plugin>

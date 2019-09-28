@@ -37,7 +37,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @RequestMapping(value = "/rest/job/sysJobLog")
-@Api(value = "定时任务调度日志接口", description = "定时任务调度日志接口")
+//@Api(value = "定时任务调度日志接口", description = "定时任务调度日志接口")
 public class SysJobLogRestController extends AbstractBaseController {
 
     @Autowired
@@ -190,111 +190,6 @@ public class SysJobLogRestController extends AbstractBaseController {
         }
         sysJobLogService.save(sysJobLog);
         Result result = ResultFactory.getSuccessResult("保存定时任务调度日志成功");
-        return result;
-    }
-
-    /**
-     * 删除定时任务调度日志
-     */
-    // RequiresPermissions("job:sysJobLog:del")
-    @RequestMapping(value = "delete", method = { RequestMethod.POST, RequestMethod.GET })
-    @ApiOperation(value = "删除定时任务调度日志(Content-Type为text/html)", notes = "删除定时任务调度日志(Content-Type为text/html)")
-    @ApiImplicitParam(name = "sysJobLog", value = "定时任务调度日志", dataType = "SysJobLog", paramType = "query")
-    public Result deleteRequestParam(SysJobLog sysJobLog, RedirectAttributes redirectAttributes) {
-        return delete(sysJobLog, redirectAttributes);
-    }
-
-    @RequestMapping(value = "delete/json", method = { RequestMethod.POST })
-    @ApiOperation(value = "删除定时任务调度日志(Content-Type为application/json)", notes = "删除定时任务调度日志(Content-Type为application/json)")
-    @ApiImplicitParam(name = "sysJobLog", value = "定时任务调度日志", dataType = "SysJobLog", paramType = "body")
-    public Result deleteRequestBody(@RequestBody SysJobLog sysJobLog, RedirectAttributes redirectAttributes) {
-        return delete(sysJobLog, redirectAttributes);
-    }
-
-    private Result delete(SysJobLog sysJobLog, RedirectAttributes redirectAttributes) {
-        sysJobLogService.delete(sysJobLog);
-        return ResultFactory.getSuccessResult("删除定时任务调度日志成功");
-    }
-
-    /**
-     * 删除定时任务调度日志（逻辑删除，更新del_flag字段为1,在表包含字段del_flag时，可以调用此方法，将数据隐藏）
-     */
-    @RequestMapping(value = "deleteByLogic", method = { RequestMethod.POST, RequestMethod.GET })
-    @ApiOperation(value = "逻辑删除定时任务调度日志(Content-Type为text/html)", notes = "逻辑删除定时任务调度日志(Content-Type为text/html)")
-    @ApiImplicitParam(name = "sysJobLog", value = "定时任务调度日志", dataType = "SysJobLog", paramType = "query")
-    public Result deleteByLogicRequestParam(SysJobLog sysJobLog, RedirectAttributes redirectAttributes) {
-        return deleteByLogic(sysJobLog, redirectAttributes);
-    }
-
-    /**
-     * 删除定时任务调度日志（逻辑删除，更新del_flag字段为1,在表包含字段del_flag时，可以调用此方法，将数据隐藏）
-     */
-    @RequestMapping(value = "deleteByLogic/json", method = { RequestMethod.POST })
-    @ApiOperation(value = "逻辑删除定时任务调度日志(Content-Type为application/json)", notes = "逻辑删除定时任务调度日志(Content-Type为application/json)")
-    @ApiImplicitParam(name = "sysJobLog", value = "定时任务调度日志", dataType = "SysJobLog", paramType = "body")
-    public Result deleteByLogicRequestBody(@RequestBody SysJobLog sysJobLog, RedirectAttributes redirectAttributes) {
-        return deleteByLogic(sysJobLog, redirectAttributes);
-    }
-
-    private Result deleteByLogic(SysJobLog sysJobLog, RedirectAttributes redirectAttributes) {
-        sysJobLogService.deleteByLogic(sysJobLog);
-        Result result = ResultFactory.getSuccessResult("删除定时任务调度日志成功");
-        return result;
-    }
-
-    /**
-     * 批量删除定时任务调度日志
-     */
-    // RequiresPermissions("job:sysJobLog:del")
-    @RequestMapping(value = "deleteAll", method = { RequestMethod.POST, RequestMethod.GET })
-    @ApiOperation(value = "批量删除定时任务调度日志(Content-Type为text/html)", notes = "批量删除定时任务调度日志(Content-Type为text/html)")
-    @ApiImplicitParam(name = "ids", value = "定时任务调度日志ids,用,隔开", required = false, dataType = "String", paramType = "query")
-    public Result deleteAllRequestParam(String ids, RedirectAttributes redirectAttributes) {
-        return deleteAll(ids, redirectAttributes);
-    }
-
-    @RequestMapping(value = "deleteAll/json", method = { RequestMethod.POST })
-    @ApiOperation(value = "批量删除定时任务调度日志(Content-Type为application/json)", notes = "批量删除定时任务调度日志(Content-Type为application/json)")
-    @ApiImplicitParam(name = "ids", value = "定时任务调度日志ids,用,隔开", required = false, dataType = "String", paramType = "body")
-    public Result deleteAllRequestBody(@RequestBody String ids, RedirectAttributes redirectAttributes) {
-        return deleteAll(ids, redirectAttributes);
-    }
-
-    private Result deleteAll(String ids, RedirectAttributes redirectAttributes) {
-        String[] idArray = ids.split(",");
-        for (String id : idArray) {
-            sysJobLogService.delete(sysJobLogService.get(id));
-        }
-        Result result = ResultFactory.getSuccessResult("删除定时任务调度日志成功");
-        return result;
-    }
-
-    /**
-     * 批量删除定时任务调度日志（逻辑删除，更新del_flag字段为1,在表包含字段del_flag时，可以调用此方法，将数据隐藏）
-     */
-    @RequestMapping(value = "deleteAllByLogic", method = { RequestMethod.POST, RequestMethod.GET })
-    @ApiOperation(value = "逻辑批量删除定时任务调度日志(Content-Type为text/html)", notes = "逻辑批量删除定时任务调度日志(Content-Type为text/html)")
-    @ApiImplicitParam(name = "ids", value = "定时任务调度日志ids,用,隔开", required = false, dataType = "String", paramType = "query")
-    public Result deleteAllByLogicRequestParam(String ids, RedirectAttributes redirectAttributes) {
-        return deleteAllByLogic(ids, redirectAttributes);
-    }
-
-    /**
-     * 批量删除定时任务调度日志（逻辑删除，更新del_flag字段为1,在表包含字段del_flag时，可以调用此方法，将数据隐藏）
-     */
-    @RequestMapping(value = "deleteAllByLogic/json", method = { RequestMethod.POST })
-    @ApiOperation(value = "逻辑批量删除定时任务调度日志(Content-Type为application/json)", notes = "逻辑批量删除定时任务调度日志(Content-Type为application/json)")
-    @ApiImplicitParam(name = "ids", value = "定时任务调度日志ids,用,隔开", required = false, dataType = "String", paramType = "body")
-    public Result deleteAllByLogicRequestBody(@RequestBody String ids, RedirectAttributes redirectAttributes) {
-        return deleteAllByLogic(ids, redirectAttributes);
-    }
-
-    private Result deleteAllByLogic(String ids, RedirectAttributes redirectAttributes) {
-        String[] idArray = ids.split(",");
-        for (String id : idArray) {
-            sysJobLogService.deleteByLogic(sysJobLogService.get(id));
-        }
-        Result result = ResultFactory.getSuccessResult("删除定时任务调度日志成功");
         return result;
     }
 

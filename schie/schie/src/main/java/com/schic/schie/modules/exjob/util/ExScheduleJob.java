@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.schic.schie.modules.exjob.util;
 
@@ -24,11 +24,11 @@ import com.schic.schie.modules.exjob.entity.ExJobLog;
 import com.schic.schie.modules.exjob.service.ExJobLogService;
 
 /**
- * 
-* <p>Title: ExScheduleJob</p>  
-* <p>Description: 定时任务</p>  
-* @author caiwb 
-* @date 2019年8月15日
+ * <p>Title: ExScheduleJob</p>
+ * <p>Description: 定时任务</p>
+ *
+ * @author caiwb
+ * @date 2019年8月15日
  */
 //不允许当前任务多次运行
 @DisallowConcurrentExecution
@@ -56,7 +56,7 @@ public class ExScheduleJob extends QuartzJobBean {
         try {
             // 执行任务
             LOGGER.info("任务开始执行 - 名称：{} ", jobLog.getJobName());
-            ExScheduleCallable task = new ExScheduleCallable(job);
+            ExScheduleCallable task = new ExScheduleCallable(job, jobLog.getId());
             Future<?> future = service.submit(task);
             String result = future.get().toString();
             long times = System.currentTimeMillis() - startTime;

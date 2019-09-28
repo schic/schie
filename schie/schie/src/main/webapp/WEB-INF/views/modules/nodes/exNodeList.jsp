@@ -134,9 +134,6 @@
                         <td class="hidden-xs" align="right">
                             ${exNode.sort}
                         </td>
-                        <%--<td class="hidden-xs">--%>
-                                <%--${exNode.companyId}--%>
-                        <%--</td>--%>
                         <td>
                             <shiro:hasPermission name="nodes:exNode:view">
                                 <a href="${ctx}/nodes/exNode/form?id=${exNode.id}&action=view" title="查看"><i class="fa fa-search-plus"></i></a>
@@ -145,7 +142,7 @@
                                 <a class="btnEdit" href="${ctx}/nodes/exNode/form?id=${exNode.id}" title="修改"  title="修改"><i class="fa fa-pencil"></i></a>
                             </shiro:hasPermission>
                             <shiro:hasPermission name="nodes:exNode:del">
-                                <a class="btnDelete" href="${ctx}/nodes/exNode/deleteByLogic?id=${exNode.id}" onclick="return confirmx('确认要删除该节点管理吗？', this.href)" title="删除"><i class="fa fa-trash-o"></i></a>
+                                <a class="btnDelete" href="${ctx}/nodes/exNode/deleteByLogic?id=${exNode.id}" onclick="return confirmx('确认要删除该节点吗？', this.href)" title="删除"><i class="fa fa-trash-o"></i></a>
                             </shiro:hasPermission>
                         </td>
                     </tr>
@@ -174,7 +171,6 @@
         <%--$("#exTabId").val('${exTabId}');--%>
         <%--$("#orgid").val('${exNodes[0].companyId}');--%>
     <%--});--%>
-
     $('#btnAdd').click(function () {
         var searchForm = $('#searchForm').serialize();
         searchForm = escape(searchForm);

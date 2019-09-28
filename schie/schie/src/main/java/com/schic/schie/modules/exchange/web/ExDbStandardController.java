@@ -158,7 +158,6 @@ public class ExDbStandardController extends AbstractBaseController {
      */
     //	@RequiresPermissions("exchange:exDbStandard:list")
     @RequestMapping(value = { "list", "" })
-
     public String list(ExDbStandard exDbStandard, HttpServletRequest request, HttpServletResponse response,
             Model model) {
         if ("".equals(exDbStandard.getOrgid()) || null == exDbStandard.getOrgid()) {

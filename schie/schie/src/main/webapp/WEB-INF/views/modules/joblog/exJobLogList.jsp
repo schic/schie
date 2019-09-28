@@ -17,13 +17,15 @@
         <div class="box-header">
             <div class="box-title"><i class="fa fa-edit"></i>交换任务调度日志</div>
             <div class="box-tools pull-right">
-                <a id="btnSearchView" href="#" title="查询" class="btn btn-default btn-sm"><i
-                        class="fa fa-filter"></i></a>
-                <a id="btnRefresh" title="刷新" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-repeat"></i></a>
-                <a id="btnTotalView" href="#" title="统计" class="btn btn-default btn-sm"><i class="fa fa-file-pdf-o"></i></a>
+                <a id="btnSearchView" href="#" title="筛选" class="btn btn-default btn-sm"><i
+                        class="fa fa-filter"></i>筛选</a>
+                <a id="btnRefresh" title="刷新" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-repeat"></i>刷新</a>
+                <%--<a id="btnTotalView" href="#" title="统计" class="btn btn-default btn-sm"><i class="fa fa-file-pdf-o"></i></a>--%>
                 <shiro:hasPermission name="joblog:exJobLog:export">
                     <table:exportExcel url="${ctx}/joblog/exJobLog/export"></table:exportExcel><!-- 导出按钮 -->
                 </shiro:hasPermission>
+                <!-- 工具功能 -->
+                <%@ include file="/WEB-INF/views/include/btnGroup.jsp" %>
             </div>
         </div>
         <!-- 内容盒子身体 -->
@@ -67,6 +69,7 @@
                     <th class="column status hidden-xs">执行状态</th>
                     <th class="column exception_Info hidden-xs">简略异常信息</th>
                     <th class="sort-column create_Date hidden-xs">创建时间</th>
+                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -83,6 +86,12 @@
                         </td>
                         <td class="hidden-xs">
                             <fmt:formatDate value="${exJobLog.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+                        </td>
+                        <td>
+                            <shiro:hasPermission name="exbatchlog:exBatchLog:list">
+                                <a id="btnOpenView" class="btnOpenView" joblogid="${exJobLog.id}" href="${ctx}/exbatchlog/exBatchLog?jobLogId=${exJobLog.id}"
+                                   title="查看批量数据交换日志"><i class="fa fa-search-plus"></i></a>
+                            </shiro:hasPermission>
                         </td>
                     </tr>
                 </c:forEach>
@@ -122,5 +131,11 @@
 <%@ include file="/WEB-INF/views/include/footJs.jsp" %>
 <script src="/staticViews/viewBase.js"></script>
 <script src="/staticViews/modules/job/sysJobLogList.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(".btnOpenView").click(function(){
+        top.addTabs({id:$(this).attr('joblogid'),title: "批量数据交换日志-调度日志ID:"+$(this).attr('joblogid'), url: this.href});
+        return false;
+    });
+</script>
 </body>
 </html>

@@ -2,12 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>com.schic</groupId>
 	<artifactId>schie</artifactId>
 	<name>schie</name>
 	<description>schie</description>
-	<!-- <version>1.0.0</version> -->
+	<version>1.0.0</version>
+
 	<packaging>jar</packaging>
+
 	<parent>
 		<groupId>com.jeespring</groupId>
 		<artifactId>jeespring</artifactId>
@@ -17,11 +20,11 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.jeespring</groupId>
-			<artifactId>jeespring-framework</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
+            <groupId>com.jeespring</groupId>
+            <artifactId>jeespring-framework</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20160810</version>
@@ -95,10 +98,10 @@
 	            </executions>
 	        </plugin>-->
 	        
-			<plugin>
+			<!--<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<!-- <version>2.3.2</version> -->
+				&lt;!&ndash; <version>2.3.2</version> &ndash;&gt;
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -107,7 +110,8 @@
 						<extdirs>${lib.dir}</extdirs>
 					</compilerArguments>
 				</configuration>
-			</plugin>
+			</plugin>-->
+
 		</plugins>
 	</build>
 </project>

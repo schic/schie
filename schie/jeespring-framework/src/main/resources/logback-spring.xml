@@ -69,7 +69,12 @@
 		</filter> 
 	</appender>
 	
-	<logger name="com.jeespring" level="INFO">
+	<logger name="com.jeespring" level="DEBUG">
+		<appender-ref ref="infoDailyRollingFile" />
+		<appender-ref ref="severeDailyRollingFile" />
+	</logger>
+
+	<logger name="com.schic" level="DEBUG">
 		<appender-ref ref="infoDailyRollingFile" />
 		<appender-ref ref="severeDailyRollingFile" />
 	</logger>

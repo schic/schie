@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.schic.schie.modules.exjob.util;
 
@@ -30,11 +30,11 @@ import com.schic.schie.modules.exjob.entity.ExJob;
 import com.schic.schie.modules.exjob.entity.McHttpResponse;
 
 /**
- * 
-* <p>Title: ExScheduleCallable</p>  
-* <p>Description: </p>  
-* @author caiwb 
-* @date 2019年8月15日
+ * <p>Title: ExScheduleCallable</p>
+ * <p>Description: </p>
+ *
+ * @author caiwb
+ * @date 2019年8月15日
  */
 public class ExScheduleCallable implements Callable<String> {
 
@@ -42,11 +42,13 @@ public class ExScheduleCallable implements Callable<String> {
     private static final String PARAM_END = "$V{end}";
 
     private ExJob exJob;
+    private String jobLogId;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExScheduleCallable.class);
 
-    public ExScheduleCallable(ExJob exJob) {
+    public ExScheduleCallable(ExJob exJob, String jobLogId) {
         this.exJob = exJob;
+        this.jobLogId = jobLogId;
     }
 
     @Override
@@ -58,7 +60,7 @@ public class ExScheduleCallable implements Callable<String> {
                 //如果是日期类型，则增加的值小于当前值则继续循环，否则循环完后停止循环
                 //如果是整形，在一次循环后没有增量值，则停止循环
 
-                String body = getRequestBody(exJob);
+                String body = getRequestBody(exJob, jobLogId);
                 String response = HttpUtil.post(getRequestUrl(exJob), null, "Plain Body", body);
                 McHttpResponse mcResponse = JSON.parseObject(response, McHttpResponse.class);
 
@@ -158,10 +160,11 @@ public class ExScheduleCallable implements Callable<String> {
         return exJob.getRes().getSql().contains(PARAM_END) && StringUtils.isNotEmpty(exJob.getRes().getDays());
     }
 
-    private static String getRequestBody(ExJob exJob) {
+    private static String getRequestBody(ExJob exJob, String jobLogId) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("cmd", "readdb");
         jsonObject.put("resAskId", exJob.getResAsk().getId());
+        jsonObject.put("jobLogId", jobLogId);
         jsonObject.put("messageServer", Global.getConfig("exjob.messageServer"));
 
         JSONObject source = new JSONObject();
@@ -195,7 +198,7 @@ public class ExScheduleCallable implements Callable<String> {
     }
 
     private static String getRequestUrl(ExJob exJob) {
-        String url = exJob.getResNode().getMonUrl();
+        String url = exJob.getResNode().getSrvUrl();
         return getMcApiUrl(url);
     }
 

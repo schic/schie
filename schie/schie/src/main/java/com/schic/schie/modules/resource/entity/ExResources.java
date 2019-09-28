@@ -599,6 +599,7 @@ public class ExResources extends AbstractBaseEntity<ExResources> {
             for (String s : map.keySet()) {
                 if ("jdbc".equals(s)) {
                     setJdbc(map.get(s));
+                    setDbid(map.get(s));
                 } else if ("sql".equals(s)) {
                     setSql(map.get(s));
                 } else if ("dbid".equals(s)) {
