@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schic.schie.modules.onlinenode.dao.OnlineNodeDao">
+
+    <select id="findList" resultType="OnlineNode">
+        SELECT
+          a.node_id AS "id",
+          a.name,
+          (select sum(t.src_rows) from ex_batch_log t
+            where t.create_date>=#{beginCreateDate} and t.res_node_id=a.node_id and t.is_err='0') AS "exNums",
+          (select count(1) from ex_batch_log t
+            where t.create_date>=#{beginCreateDate} and t.res_node_id=a.node_id and t.is_err='1') AS "errs",
+          (select count(1) from ex_job_log t
+            where t.create_date>=#{beginCreateDate} and t.res_node_id=a.node_id and t.status='0') AS "tasksOk",
+          (select count(1) from ex_job_log t
+            where t.create_date>=#{beginCreateDate} and t.res_node_id=a.node_id and t.status='1') AS "tasksErr"
+        FROM ex_node a
+        where del_flag='0'
+    </select>
+</mapper>
