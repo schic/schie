@@ -1,23 +1,0 @@
-
-Asquid:S1166"%Either log or rethrow this exception.(”ı¾8áóÈ–Ï-
-msquid:S00103"KSplit this 153 characters long line (which is greater than 120 authorized).(¶ƒßÔúÿÿÿÿ8áóÈ–Ï-
-esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(é÷Ïíúÿÿÿÿ
-¦squid:S1200"‘Split this class into smaller and more specialized ones to reduce its dependencies on other classes from 33 to the maximum authorized 20 or less.(ÍĞ¶
-Isquid:S1125"(Remove the literal "true" boolean value.(ôè‘ñıÿÿÿÿ8áóÈ–Ï-
-Ysquid:S1197"8Move the array designator from the variable to the type.(ÑˆÔ¾ıÿÿÿÿ8áóÈ–Ï-
-5squid:S1451"&Add or update the header of this file.
-hsquid:S00103"KSplit this 128 characters long line (which is greater than 120 authorized).(¤Õ¹8€Ü£–Ï-
-Asquid:S1166"%Either log or rethrow this exception.(”ı¾8áóÈ–Ï-
-Usquid:S00105"EReplace all tab characters in this file by sequences of white-spaces.
-Usquid:S1698"9Use the "equals" method if value comparison was intended.(–‡•º8¦‘¦–Ï-
-3squid:S1258"Add a constructor to the class.(ÍĞ¶
-Psquid:S2221"4Catch a list of specific exception subtypes instead.(”ı¾8áóÈ–Ï-
-Asquid:S1166"%Either log or rethrow this exception.(”ı¾8áóÈ–Ï-
-Csquid:S2208".Explicitly import the specific classes needed.(Ñ»ïÒ
-Ysquid:S1197"8Move the array designator from the variable to the type.(ÑˆÔ¾ıÿÿÿÿ8áóÈ–Ï-
-esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(Øú†Ëıÿÿÿÿ
-Csquid:S2208".Explicitly import the specific classes needed.(Î€ŒÙ
-hsquid:S00103"KSplit this 146 characters long line (which is greater than 120 authorized).(Œÿë™8áóÈ–Ï-
-Psquid:S2221"4Catch a list of specific exception subtypes instead.(”ı¾8áóÈ–Ï-
-Psquid:S2221"4Catch a list of specific exception subtypes instead.(”ı¾8áóÈ–Ï-
-msquid:S00103"KSplit this 135 characters long line (which is greater than 120 authorized).(İÅ°ñøÿÿÿÿ8áóÈ–Ï-

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SonarLintProjectSettings">
-    <option name="bindingEnabled" value="true" />
-    <option name="projectKey" value="100000085071115_JY17GX01500" />
-    <option name="serverId" value="mysonar" />
-  </component>
-</project>
