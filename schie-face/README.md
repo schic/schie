@@ -5,8 +5,8 @@
 
 
 ### 前端开发环境要求
-1. vue
-2. eclipse
+1. jeeSpringcloud框架
+2. eclipse或者idea
 
 ### eclipse设置
 1. 所有编码设为utf-8
