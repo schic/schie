@@ -1,0 +1,21 @@
+
+}squid:S1192"cDefine a constant instead of duplicating this literal "è¿™æ˜¯è¯·æ±‚æ‹¿åˆ°çš„è¯·æ±‚ä½“====" 4 times.(¿Ş”£ÿÿÿÿÿ
+5squid:S1451"&Add or update the header of this file.
+Csquid:S1313".Make this IP "127.0.0.1" address configurable.(Ú¢òƒ
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(¿Ş”£ÿÿÿÿÿ
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(¿Ş”£ÿÿÿÿÿ
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(¿Ş”£ÿÿÿÿÿ
+M
+squid:S106"9Replace this use of System.out or System.err by a logger.(³³æø
+h
+squid:S109"TAssign this magic number 500 to a well-named constant, and use the constant instead.(ĞØë
+h
+squid:S109"TAssign this magic number 200 to a well-named constant, and use the constant instead.(ääÿ«
+^squid:CallToDeprecatedMethod"3Remove this use of "description"; it is deprecated.(‘¼±àøÿÿÿÿ
+fsquid:S00103"KSplit this 133 characters long line (which is greater than 120 authorized).(ÖĞöøÿÿÿÿ
+:squid:S1166"%Either log or rethrow this exception.(”ı¾
+³squid:S1845"˜Rename field "LOGGER" to prevent any misunderstanding/clash with field "logger" defined in superclass "com.jeespring.common.web.AbstractBaseController".( ²Ğóüÿÿÿÿ
+bsquid:S2387"H"LOGGER" differs only by case from "logger" in "AbstractBaseController".( ²Ğóüÿÿÿÿ

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schic.schie.modules.epidemic.dao.PTrainDao">
+    
+	<sql id="pTrainColumns">
+					a.id AS "id",
+					a.begin_date AS "beginDate",
+					a.train_num AS "trainNum",
+					a.start_sta AS "startSta",
+					a.arrival_sta AS "arrivalSta",
+					a.arrival_date AS "arrivalDate",
+					a.carriage_num AS "carriageNum",
+					a.seat_num AS "seatNum",
+					a.name AS "name",
+					a.id_number AS "idNumber",
+					a.bingli_id_number AS "bingliIdNumber",
+					a.province AS "province",
+					a.lx_tel AS "lxTel",
+					a.tel_station AS "telStation",
+					a.ptype AS "ptype",
+					a.of_shizhou AS "ofShizhou",
+					a.of_quxian AS "ofQuxian",
+					a.resp_area AS "respArea",
+					a.phone AS "phone",
+					a.habitation AS "habitation",
+					a.create_date AS "createDate"
+	</sql>
+
+	<sql id="pTrainColumnsList">
+					a.id AS "id",
+					a.begin_date AS "beginDate",
+					a.train_num AS "trainNum",
+					a.start_sta AS "startSta",
+					a.arrival_sta AS "arrivalSta",
+					a.arrival_date AS "arrivalDate",
+					a.carriage_num AS "carriageNum",
+					a.seat_num AS "seatNum",
+					a.name AS "name",
+					a.id_number AS "idNumber",
+					a.bingli_id_number AS "bingliIdNumber",
+					a.province AS "province",
+					a.lx_tel AS "lxTel",
+					a.tel_station AS "telStation",
+					a.ptype AS "ptype",
+					a.of_shizhou AS "ofShizhou",
+					a.of_quxian AS "ofQuxian",
+					a.resp_area AS "respArea",
+					a.phone AS "phone",
+					a.habitation AS "habitation",
+					a.create_date AS "createDate"
+	</sql>
+
+	<sql id="pTrainJoins">
+	</sql>
+    
+	<select id="get" resultType="PTrain">
+		SELECT 
+			<include refid="pTrainColumns"/>
+		FROM p_train a
+		<include refid="pTrainJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PTrain">
+		SELECT 
+			<include refid="pTrainColumnsList"/>
+		FROM p_train a
+		<include refid="pTrainJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="beginDate != null and beginDate != ''">
+				AND a.begin_date = #{beginDate}
+			</if>
+			<if test="trainNum != null and trainNum != ''">
+				AND a.train_num = #{trainNum}
+			</if>
+			<if test="startSta != null and startSta != ''">
+				AND a.start_sta = #{startSta}
+			</if>
+			<if test="arrivalSta != null and arrivalSta != ''">
+				AND a.arrival_sta = #{arrivalSta}
+			</if>
+			<if test="arrivalDate != null and arrivalDate != ''">
+				AND a.arrival_date = #{arrivalDate}
+			</if>
+			<if test="carriageNum != null and carriageNum != ''">
+				AND a.carriage_num = #{carriageNum}
+			</if>
+			<if test="seatNum != null and seatNum != ''">
+				AND a.seat_num = #{seatNum}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="idNumber != null and idNumber != ''">
+				AND a.id_number = #{idNumber}
+			</if>
+			<if test="bingliIdNumber != null and bingliIdNumber != ''">
+				AND a.bingli_id_number = #{bingliIdNumber}
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+			<if test="lxTel != null and lxTel != ''">
+				AND a.lx_tel = #{lxTel}
+			</if>
+			<if test="telStation != null and telStation != ''">
+				AND a.tel_station = #{telStation}
+			</if>
+			<if test="ptype != null and ptype != ''">
+				AND a.ptype = #{ptype}
+			</if>
+			<if test="ofShizhou != null and ofShizhou != ''">
+				AND a.of_shizhou = #{ofShizhou}
+			</if>
+			<if test="ofQuxian != null and ofQuxian != ''">
+				AND a.of_quxian = #{ofQuxian}
+			</if>
+			<if test="respArea != null and respArea != ''">
+				AND a.resp_area = #{respArea}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="habitation != null and habitation != ''">
+				AND a.habitation = #{habitation}
+			</if>
+		</where>
+		<choose>
+			<when test="where !=null and where != ''">
+				AND ${where}
+			</when>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PTrain">
+		SELECT 
+			<include refid="pTrainColumnsList"/>
+		FROM p_train a
+		<include refid="pTrainJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO p_train(
+			id,
+			begin_date,
+			train_num,
+			start_sta,
+			arrival_sta,
+			arrival_date,
+			carriage_num,
+			seat_num,
+			name,
+			id_number,
+			bingli_id_number,
+			province,
+			lx_tel,
+			tel_station,
+			ptype,
+			of_shizhou,
+			of_quxian,
+			resp_area,
+			phone,
+			habitation,
+			create_date
+		) VALUES (
+			#{id},
+			#{beginDate},
+			#{trainNum},
+			#{startSta},
+			#{arrivalSta},
+			#{arrivalDate},
+			#{carriageNum},
+			#{seatNum},
+			#{name},
+			#{idNumber},
+			#{bingliIdNumber},
+			#{province},
+			#{lxTel},
+			#{telStation},
+			#{ptype},
+			#{ofShizhou},
+			#{ofQuxian},
+			#{respArea},
+			#{phone},
+			#{habitation},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE p_train SET 	
+			begin_date = #{beginDate},
+			train_num = #{trainNum},
+			start_sta = #{startSta},
+			arrival_sta = #{arrivalSta},
+			arrival_date = #{arrivalDate},
+			carriage_num = #{carriageNum},
+			seat_num = #{seatNum},
+			name = #{name},
+			id_number = #{idNumber},
+			bingli_id_number = #{bingliIdNumber},
+			province = #{province},
+			lx_tel = #{lxTel},
+			tel_station = #{telStation},
+			ptype = #{ptype},
+			of_shizhou = #{ofShizhou},
+			of_quxian = #{ofQuxian},
+			resp_area = #{respArea},
+			phone = #{phone},
+			habitation = #{habitation}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM p_train
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE p_train SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="findUniqueByProperty" resultType="PTrain" statementType="STATEMENT">
+		select * FROM p_train  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="total" resultType="PTrain">
+		SELECT
+			<choose>
+				<when test=" totalType != null and totalType != ''">
+					DATE_FORMAT(a.create_date,'${totalType}') as totalDate,
+				</when>
+				<otherwise>
+				 </otherwise>
+			</choose>
+			count(*) as totalCount
+		FROM
+			p_train a
+		<where>
+			1=1
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="beginDate != null and beginDate != ''">
+				AND a.begin_date = #{beginDate}
+			</if>
+			<if test="trainNum != null and trainNum != ''">
+				AND a.train_num = #{trainNum}
+			</if>
+			<if test="startSta != null and startSta != ''">
+				AND a.start_sta = #{startSta}
+			</if>
+			<if test="arrivalSta != null and arrivalSta != ''">
+				AND a.arrival_sta = #{arrivalSta}
+			</if>
+			<if test="arrivalDate != null and arrivalDate != ''">
+				AND a.arrival_date = #{arrivalDate}
+			</if>
+			<if test="carriageNum != null and carriageNum != ''">
+				AND a.carriage_num = #{carriageNum}
+			</if>
+			<if test="seatNum != null and seatNum != ''">
+				AND a.seat_num = #{seatNum}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="idNumber != null and idNumber != ''">
+				AND a.id_number = #{idNumber}
+			</if>
+			<if test="bingliIdNumber != null and bingliIdNumber != ''">
+				AND a.bingli_id_number = #{bingliIdNumber}
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+			<if test="lxTel != null and lxTel != ''">
+				AND a.lx_tel = #{lxTel}
+			</if>
+			<if test="telStation != null and telStation != ''">
+				AND a.tel_station = #{telStation}
+			</if>
+			<if test="ptype != null and ptype != ''">
+				AND a.ptype = #{ptype}
+			</if>
+			<if test="ofShizhou != null and ofShizhou != ''">
+				AND a.of_shizhou = #{ofShizhou}
+			</if>
+			<if test="ofQuxian != null and ofQuxian != ''">
+				AND a.of_quxian = #{ofQuxian}
+			</if>
+			<if test="respArea != null and respArea != ''">
+				AND a.resp_area = #{respArea}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="habitation != null and habitation != ''">
+				AND a.habitation = #{habitation}
+			</if>
+		</where>
+		<choose>
+			<when test=" groupBy != null and groupBy != '' and totalType != null and totalType != '' ">
+				GROUP BY DATE_FORMAT(a.create_date,'${totalType}'),${groupBy}
+			</when>
+			<when test=" groupBy != null and groupBy != ''">
+				GROUP BY ${groupBy}
+			</when>
+			<when test=" totalType != null and totalType != ''">
+				GROUP BY DATE_FORMAT(a.create_date,'${totalType}')
+			</when>
+			<otherwise>
+			 </otherwise>
+		</choose>
+		<choose>
+			<when test=" orderBy != null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

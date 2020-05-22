@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schic.schie.modules.epidemic.dao.PhqAddrDao">
+    
+	<sql id="phqAddrColumns">
+					a.id AS "id",
+					a.pid AS "pid",
+					a.ptel AS "ptel",
+					a.hq_addr AS "hqAddr",
+					a.stay_hours AS "stayHours",
+					a.create_date AS "createDate"
+	</sql>
+
+	<sql id="phqAddrColumnsList">
+					a.id AS "id",
+					a.pid AS "pid",
+					a.ptel AS "ptel",
+					a.hq_addr AS "hqAddr",
+					a.stay_hours AS "stayHours",
+					a.create_date AS "createDate"
+	</sql>
+
+	<sql id="phqAddrJoins">
+	</sql>
+    
+	<select id="get" resultType="PhqAddr">
+		SELECT 
+			<include refid="phqAddrColumns"/>
+		FROM p_hqaddr a
+		<include refid="phqAddrJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PhqAddr">
+		SELECT 
+			<include refid="phqAddrColumnsList"/>
+		FROM p_hqaddr a
+		<include refid="phqAddrJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="pid != null and pid != ''">
+				AND a.pid = #{pid}
+			</if>
+			<if test="ptel != null and ptel != ''">
+				AND a.ptel = #{ptel}
+			</if>
+			<if test="hqAddr != null and hqAddr != ''">
+				AND a.hq_addr = #{hqAddr}
+			</if>
+			<if test="stayHours != null and stayHours != ''">
+				AND a.stay_hours = #{stayHours}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null ">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="where !=null and where != ''">
+				AND ${where}
+			</when>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PhqAddr">
+		SELECT 
+			<include refid="phqAddrColumnsList"/>
+		FROM p_hqaddr a
+		<include refid="phqAddrJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO p_hqaddr(
+			id,
+			pid,
+			ptel,
+			hq_addr,
+			stay_hours,
+			create_date
+		) VALUES (
+			#{id},
+			#{pid},
+			#{ptel},
+			#{hqAddr},
+			#{stayHours},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE p_hqaddr SET 	
+			pid = #{pid},
+			ptel = #{ptel},
+			hq_addr = #{hqAddr},
+			stay_hours = #{stayHours}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM p_hqaddr
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE p_hqaddr SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="findUniqueByProperty" resultType="PhqAddr" statementType="STATEMENT">
+		select * FROM p_hqaddr  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="total" resultType="PhqAddr">
+		SELECT
+			<choose>
+				<when test=" totalType != null and totalType != ''">
+					DATE_FORMAT(a.create_date,'${totalType}') as totalDate,
+				</when>
+				<otherwise>
+				 </otherwise>
+			</choose>
+			count(*) as totalCount
+		FROM
+			p_hqaddr a
+		<where>
+			1=1
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="pid != null and pid != ''">
+				AND a.pid = #{pid}
+			</if>
+			<if test="ptel != null and ptel != ''">
+				AND a.ptel = #{ptel}
+			</if>
+			<if test="hqAddr != null and hqAddr != ''">
+				AND a.hq_addr = #{hqAddr}
+			</if>
+			<if test="stayHours != null and stayHours != ''">
+				AND a.stay_hours = #{stayHours}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null ">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test=" groupBy != null and groupBy != '' and totalType != null and totalType != '' ">
+				GROUP BY DATE_FORMAT(a.create_date,'${totalType}'),${groupBy}
+			</when>
+			<when test=" groupBy != null and groupBy != ''">
+				GROUP BY ${groupBy}
+			</when>
+			<when test=" totalType != null and totalType != ''">
+				GROUP BY DATE_FORMAT(a.create_date,'${totalType}')
+			</when>
+			<otherwise>
+			 </otherwise>
+		</choose>
+		<choose>
+			<when test=" orderBy != null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schic.schie.modules.epidemic.dao.PCarDao">
+    
+	<sql id="pCarColumns">
+					a.id AS "id",
+					a.type AS "type",
+					a.begin_date AS "beginDate",
+					a.name AS "name",
+					a.id_number AS "idNumber",
+					a.car_position AS "carPosition",
+					a.province AS "province",
+					a.code AS "code",
+					a.lx_tel AS "lxTel",
+					a.of_shizhou AS "ofShizhou",
+					a.of_quxian AS "ofQuxian",
+					a.resp_area AS "respArea",
+					a.phone AS "phone",
+					a.habitation AS "habitation",
+					a.create_date AS "createDate"
+	</sql>
+
+	<sql id="pCarColumnsList">
+					a.id AS "id",
+					a.type AS "type",
+					a.begin_date AS "beginDate",
+					a.name AS "name",
+					a.id_number AS "idNumber",
+					a.car_position AS "carPosition",
+					a.province AS "province",
+					a.code AS "code",
+					a.lx_tel AS "lxTel",
+					a.of_shizhou AS "ofShizhou",
+					a.of_quxian AS "ofQuxian",
+					a.resp_area AS "respArea",
+					a.phone AS "phone",
+					a.habitation AS "habitation",
+					a.create_date AS "createDate"
+	</sql>
+
+	<sql id="pCarJoins">
+	</sql>
+    
+	<select id="get" resultType="PCar">
+		SELECT 
+			<include refid="pCarColumns"/>
+		FROM p_car a
+		<include refid="pCarJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PCar">
+		SELECT 
+			<include refid="pCarColumnsList"/>
+		FROM p_car a
+		<include refid="pCarJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="beginDate != null and beginDate != ''">
+				AND a.begin_date = #{beginDate}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="idNumber != null and idNumber != ''">
+				AND a.id_number = #{idNumber}
+			</if>
+			<if test="carPosition != null and carPosition != ''">
+				AND a.car_position = #{carPosition}
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="lxTel != null and lxTel != ''">
+				AND a.lx_tel = #{lxTel}
+			</if>
+			<if test="ofShizhou != null and ofShizhou != ''">
+				AND a.of_shizhou = #{ofShizhou}
+			</if>
+			<if test="ofQuxian != null and ofQuxian != ''">
+				AND a.of_quxian = #{ofQuxian}
+			</if>
+			<if test="respArea != null and respArea != ''">
+				AND a.resp_area = #{respArea}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="habitation != null and habitation != ''">
+				AND a.habitation = #{habitation}
+			</if>
+		</where>
+		<choose>
+			<when test="where !=null and where != ''">
+				AND ${where}
+			</when>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PCar">
+		SELECT 
+			<include refid="pCarColumnsList"/>
+		FROM p_car a
+		<include refid="pCarJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO p_car(
+			id,
+			type,
+			begin_date,
+			name,
+			id_number,
+			car_position,
+			province,
+			code,
+			lx_tel,
+			of_shizhou,
+			of_quxian,
+			resp_area,
+			phone,
+			habitation,
+			create_date
+		) VALUES (
+			#{id},
+			#{type},
+			#{beginDate},
+			#{name},
+			#{idNumber},
+			#{carPosition},
+			#{province},
+			#{code},
+			#{lxTel},
+			#{ofShizhou},
+			#{ofQuxian},
+			#{respArea},
+			#{phone},
+			#{habitation},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE p_car SET 	
+			type = #{type},
+			begin_date = #{beginDate},
+			name = #{name},
+			id_number = #{idNumber},
+			car_position = #{carPosition},
+			province = #{province},
+			code = #{code},
+			lx_tel = #{lxTel},
+			of_shizhou = #{ofShizhou},
+			of_quxian = #{ofQuxian},
+			resp_area = #{respArea},
+			phone = #{phone},
+			habitation = #{habitation}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM p_car
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE p_car SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="findUniqueByProperty" resultType="PCar" statementType="STATEMENT">
+		select * FROM p_car  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="total" resultType="PCar">
+		SELECT
+			<choose>
+				<when test=" totalType != null and totalType != ''">
+					DATE_FORMAT(a.create_date,'${totalType}') as totalDate,
+				</when>
+				<otherwise>
+				 </otherwise>
+			</choose>
+			count(*) as totalCount
+		FROM
+			p_car a
+		<where>
+			1=1
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+			<if test="beginDate != null and beginDate != ''">
+				AND a.begin_date = #{beginDate}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="idNumber != null and idNumber != ''">
+				AND a.id_number = #{idNumber}
+			</if>
+			<if test="carPosition != null and carPosition != ''">
+				AND a.car_position = #{carPosition}
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province = #{province}
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code = #{code}
+			</if>
+			<if test="lxTel != null and lxTel != ''">
+				AND a.lx_tel = #{lxTel}
+			</if>
+			<if test="ofShizhou != null and ofShizhou != ''">
+				AND a.of_shizhou = #{ofShizhou}
+			</if>
+			<if test="ofQuxian != null and ofQuxian != ''">
+				AND a.of_quxian = #{ofQuxian}
+			</if>
+			<if test="respArea != null and respArea != ''">
+				AND a.resp_area = #{respArea}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone = #{phone}
+			</if>
+			<if test="habitation != null and habitation != ''">
+				AND a.habitation = #{habitation}
+			</if>
+		</where>
+		<choose>
+			<when test=" groupBy != null and groupBy != '' and totalType != null and totalType != '' ">
+				GROUP BY DATE_FORMAT(a.create_date,'${totalType}'),${groupBy}
+			</when>
+			<when test=" groupBy != null and groupBy != ''">
+				GROUP BY ${groupBy}
+			</when>
+			<when test=" totalType != null and totalType != ''">
+				GROUP BY DATE_FORMAT(a.create_date,'${totalType}')
+			</when>
+			<otherwise>
+			 </otherwise>
+		</choose>
+		<choose>
+			<when test=" orderBy != null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

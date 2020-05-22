@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schic.schie.modules.epidemic.dao.PatientsDao">
+    
+	<sql id="patientsColumns">
+					a.id AS "id",
+					a.pname AS "pname",
+					a.ptel AS "ptel",
+					a.of_shizhou AS "ofShizhou",
+					a.sf_id AS "sfId",
+					a.ptype AS "ptype",
+					a.create_date AS "createDate"
+	</sql>
+
+	<sql id="patientsColumnsList">
+					a.id AS "id",
+					a.pname AS "pname",
+					a.ptel AS "ptel",
+					a.of_shizhou AS "ofShizhou",
+					a.sf_id AS "sfId",
+					a.ptype AS "ptype",
+					a.create_date AS "createDate"
+	</sql>
+
+	<sql id="patientsJoins">
+	</sql>
+    
+	<select id="get" resultType="Patients">
+		SELECT 
+			<include refid="patientsColumns"/>
+		FROM patients a
+		<include refid="patientsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Patients">
+		SELECT 
+			<include refid="patientsColumnsList"/>
+		FROM patients a
+		<include refid="patientsJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="pname != null and pname != ''">
+				AND a.pname LIKE 
+					<if test="dbName == 'oracle'">'%'||#{pname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{pname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{pname},'%')</if>
+			</if>
+			<if test="ptel != null and ptel != ''">
+				AND a.ptel = #{ptel}
+			</if>
+			<if test="ofShizhou != null and ofShizhou != ''">
+				AND a.of_shizhou = #{ofShizhou}
+			</if>
+			<if test="sfId != null and sfId != ''">
+				AND a.sf_id = #{sfId}
+			</if>
+			<if test="ptype != null and ptype != ''">
+				AND a.ptype = #{ptype}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null ">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="where !=null and where != ''">
+				AND ${where}
+			</when>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Patients">
+		SELECT 
+			<include refid="patientsColumnsList"/>
+		FROM patients a
+		<include refid="patientsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO patients(
+			id,
+			pname,
+			ptel,
+			of_shizhou,
+			sf_id,
+			ptype,
+			create_date
+		) VALUES (
+			#{id},
+			#{pname},
+			#{ptel},
+			#{ofShizhou},
+			#{sfId},
+			#{ptype},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE patients SET 	
+			pname = #{pname},
+			ptel = #{ptel},
+			of_shizhou = #{ofShizhou},
+			sf_id = #{sfId},
+			ptype = #{ptype}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM patients
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE patients SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="findUniqueByProperty" resultType="Patients" statementType="STATEMENT">
+		select * FROM patients  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="total" resultType="Patients">
+		SELECT
+			<choose>
+				<when test=" totalType != null and totalType != ''">
+					DATE_FORMAT(a.create_date,'${totalType}') as totalDate,
+				</when>
+				<otherwise>
+				 </otherwise>
+			</choose>
+			count(*) as totalCount
+		FROM
+			patients a
+		<where>
+			1=1
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="pname != null and pname != ''">
+				AND a.pname LIKE
+					<if test="dbName == 'oracle'">'%'||#{pname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{pname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{pname},'%')</if>
+			</if>
+			<if test="ptel != null and ptel != ''">
+				AND a.ptel = #{ptel}
+			</if>
+			<if test="ofShizhou != null and ofShizhou != ''">
+				AND a.of_shizhou = #{ofShizhou}
+			</if>
+			<if test="sfId != null and sfId != ''">
+				AND a.sf_id = #{sfId}
+			</if>
+			<if test="ptype != null and ptype != ''">
+				AND a.ptype = #{ptype}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null ">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test=" groupBy != null and groupBy != '' and totalType != null and totalType != '' ">
+				GROUP BY DATE_FORMAT(a.create_date,'${totalType}'),${groupBy}
+			</when>
+			<when test=" groupBy != null and groupBy != ''">
+				GROUP BY ${groupBy}
+			</when>
+			<when test=" totalType != null and totalType != ''">
+				GROUP BY DATE_FORMAT(a.create_date,'${totalType}')
+			</when>
+			<otherwise>
+			 </otherwise>
+		</choose>
+		<choose>
+			<when test=" orderBy != null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+</mapper>
