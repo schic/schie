@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.schic.schie.modules.resource.dao.ExResourcesDao">
+
+	<sql id="exResourcesColumns">
+					a.res_id AS "id",
+					a.company_id AS "companyId",
+					a.resdir_id AS "resdirId",
+					a.node_id AS "nodeId",
+					a.name AS "name",
+					a.resdir_path AS "resdirPath",
+					a.res_type AS "resType",
+					a.ip AS "ip",
+					a.port AS "port",
+					a.enabled AS "enabled",
+					a.checked_by AS "checkedBy",
+					a.checked_time AS "checkedTime",
+					a.status AS "status",
+					a.res_json AS "resJson",
+					a.in_json AS "inJson",
+					a.out_json AS "outJson",
+					a.call_json AS "callJson",
+					a.sub_json AS "subJson",
+					a.sort AS "sort",
+					a.del_flag AS "delFlag",
+					a.cdate AS "cdate",
+					a.cuser AS "cuser",
+					a.mdate AS "mdate",
+					a.muser AS "muser",
+					c.name AS "companyName"
+	</sql>
+
+	<sql id="exResourcesColumnsList">
+					a.res_id AS "id",
+					a.company_id AS "companyId",
+					a.resdir_id AS "resdirId",
+					a.node_id AS "nodeId",
+					a.name AS "name",
+					substr(a.resdir_path,1,30) AS "resdirPath",
+					a.res_type AS "resType",
+					a.ip AS "ip",
+					a.port AS "port",
+					a.enabled AS "enabled",
+					a.checked_by AS "checkedBy",
+					a.checked_time AS "checkedTime",
+					a.status AS "status",
+					a.res_json AS "resJson",
+					a.in_json AS "inJson",
+					a.out_json AS "outJson",
+					a.call_json AS "callJson",
+					a.sub_json AS "subJson",
+					a.sort AS "sort",
+					a.del_flag AS "delFlag",
+					a.cdate AS "cdate",
+					a.cuser AS "cuser",
+					a.mdate AS "mdate",
+					a.muser AS "muser",
+					c.name AS "companyName"
+	</sql>
+
+	<sql id="exResourcesJoins">
+	LEFT JOIN sys_office c ON c.id = a.company_id
+	</sql>
+
+	<select id="get" resultType="ExResources">
+		SELECT
+		<include refid="exResourcesColumns"/>
+		FROM ex_resources a
+		<include refid="exResourcesJoins"/>
+		WHERE a.res_id = #{id}
+	</select>
+
+	<select id="findList" resultType="ExResources">
+		SELECT
+		<include refid="exResourcesColumnsList"/>
+		FROM ex_resources a
+		<include refid="exResourcesJoins"/>
+		<where>
+			<if test="id != null and id != ''">
+				AND a.res_id = #{id}
+			</if>
+			<if test="companyId != null and companyId != ''">
+				AND a.company_id = #{companyId}
+			</if>
+			<if test="resdirId != null and resdirId != ''">
+				AND a.resdir_id = #{resdirId}
+			</if>
+			<if test="nodeId != null and nodeId != ''">
+				AND a.node_id = #{nodeId}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="resdirPath != null and resdirPath != ''">
+				AND a.resdir_path LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{resdirPath}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{resdirPath}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{resdirPath},'%')</if>
+			</if>
+			<if test="resType != null and resType != ''">
+				AND a.res_type = #{resType}
+			</if>
+			<if test="ip != null and ip != ''">
+				AND a.ip = #{ip}
+			</if>
+			<if test="port != null and port != ''">
+				AND a.port = #{port}
+			</if>
+			<if test="enabled != null and enabled != ''">
+				AND a.enabled = #{enabled}
+			</if>
+			<if test="checkedBy != null and checkedBy != ''">
+				AND a.checked_by = #{checkedBy}
+			</if>
+			<if test="beginCheckedTime != null and endCheckedTime != null ">
+				AND a.checked_time BETWEEN #{beginCheckedTime} AND #{endCheckedTime}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="resJson != null and resJson != ''">
+				AND a.res_json = #{resJson}
+			</if>
+			<if test="inJson != null and inJson != ''">
+				AND a.in_json = #{inJson}
+			</if>
+			<if test="outJson != null and outJson != ''">
+				AND a.out_json = #{outJson}
+			</if>
+			<if test="sort != null and sort != ''">
+				AND a.sort = #{sort}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="cuser != null and cuser != ''">
+				AND a.cuser = #{cuser}
+			</if>
+			<if test="muser != null and muser != ''">
+				AND a.muser = #{muser}
+			</if>
+		</where>
+		<choose>
+			<when test="where !=null and where != ''">
+				AND ${where}
+			</when>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY sort ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="ExResources">
+		SELECT
+		<include refid="exResourcesColumnsList"/>
+		FROM ex_resources a
+		<include refid="exResourcesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY mdate desc
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO ex_resources(
+			res_id,
+			company_id,
+			resdir_id,
+			node_id,
+			name,
+			resdir_path,
+			res_type,
+			ip,
+			port,
+			enabled,
+			checked_by,
+			checked_time,
+			status,
+			res_json,
+			call_json,
+			sub_json,
+			out_json,
+			sort,
+			del_flag,
+			cdate,
+			cuser,
+			mdate,
+			muser
+		) VALUES (
+			#{id},
+			#{companyId},
+			#{resdirId},
+			#{nodeId},
+			#{name},
+			#{resdirPath},
+			#{resType},
+			#{ip},
+			#{port},
+			#{enabled},
+			#{checkedBy},
+			#{checkedTime},
+			#{status},
+			#{resJson},
+			#{callJson},
+			#{subJson},
+			#{outJson},
+			#{sort},
+			#{delFlag},
+			CURRENT_DATE,
+			#{cuser},
+			CURRENT_DATE,
+			#{muser}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE ex_resources SET
+			res_id = #{id},
+			company_id = #{companyId},
+			resdir_id = #{resdirId},
+			node_id = #{nodeId},
+			name = #{name},
+			resdir_path = #{resdirPath},
+			res_type = #{resType},
+			ip = #{ip},
+			port = #{port},
+			enabled = #{enabled},
+			checked_by = #{checkedBy},
+			checked_time = #{checkedTime},
+			status = #{status},
+			res_json = #{resJson},
+			in_json = #{inJson},
+			out_json = #{outJson},
+			call_json = #{callJson},
+			sub_json = #{subJson},
+			sort = #{sort},
+			cdate = #{cdate},
+			cuser = #{cuser},
+			mdate = #{mdate},
+			muser = #{muser}
+		WHERE res_id = #{id}
+	</update>
+
+
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM ex_resources
+		WHERE res_id = #{id}
+	</update>
+
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE ex_resources SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE res_id = #{id}
+	</update>
+
+	<select id="findUniqueByProperty" resultType="ExResources" statementType="STATEMENT">
+		select * FROM ex_resources  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="total" resultType="ExResources">
+		SELECT
+		<choose>
+			<when test=" totalType != null and totalType != ''">
+				to_char(a.cdate,'${totalType}') as totalDate,
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		count(*) as totalCount
+		FROM
+		ex_resources a
+		<where>
+			1=1
+			and a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.res_id = #{id}
+			</if>
+			<if test="companyId != null and companyId != ''">
+				AND a.company_id = #{companyId}
+			</if>
+			<if test="resdirId != null and resdirId != ''">
+				AND a.resdir_id = #{resdirId}
+			</if>
+			<if test="nodeId != null and nodeId != ''">
+				AND a.node_id = #{nodeId}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="resdirPath != null and resdirPath != ''">
+				AND a.resdir_path LIKE
+				<if test="dbName == 'oracle' or dbName == 'postgresql'">'%'||#{resdirPath}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{resdirPath}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{resdirPath},'%')</if>
+			</if>
+			<if test="resType != null and resType != ''">
+				AND a.res_type = #{resType}
+			</if>
+			<if test="ip != null and ip != ''">
+				AND a.ip = #{ip}
+			</if>
+			<if test="port != null and port != ''">
+				AND a.port = #{port}
+			</if>
+			<if test="enabled != null and enabled != ''">
+				AND a.enabled = #{enabled}
+			</if>
+			<if test="checkedBy != null and checkedBy != ''">
+				AND a.checked_by = #{checkedBy}
+			</if>
+			<if test="beginCheckedTime != null and endCheckedTime != null ">
+				AND a.checked_time BETWEEN #{beginCheckedTime} AND #{endCheckedTime}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="resJson != null and resJson != ''">
+				AND a.res_json = #{resJson}
+			</if>
+			<if test="inJson != null and inJson != ''">
+				AND a.in_json = #{inJson}
+			</if>
+			<if test="outJson != null and outJson != ''">
+				AND a.out_json = #{outJson}
+			</if>
+			<if test="sort != null and sort != ''">
+				AND a.sort = #{sort}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+			<if test="cuser != null and cuser != ''">
+				AND a.cuser = #{cuser}
+			</if>
+			<if test="muser != null and muser != ''">
+				AND a.muser = #{muser}
+			</if>
+		</where>
+		<choose>
+			<when test=" groupBy != null and groupBy != '' and totalType != null and totalType != '' ">
+				GROUP BY to_char(a.cdate,'${totalType}'),${groupBy}
+			</when>
+			<when test=" groupBy != null and groupBy != ''">
+				GROUP BY ${groupBy}
+			</when>
+			<when test=" totalType != null and totalType != ''">
+				GROUP BY to_char(a.cdate,'${totalType}')
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		<choose>
+			<when test=" orderBy != null and orderBy != ''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+</mapper>
