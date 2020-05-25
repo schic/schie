@@ -1,0 +1,34 @@
+<div>
+	<hr/>
+	<ul>
+		<li th:each="issue : ${resource.issue}">
+			<span th:text="${issue.severity}" style="font-weight: bold;"/>
+			<ul>
+				<li>
+					Type: <span th:text="${issue.code}"/>
+				</li>
+				<li th:if="!${issue.details.isEmpty()}">
+					Details:
+					<ul th:if="!${#lists.isEmpty(issue.details.coding)}">
+						<li>
+							Codes: <span th:text="${NarrativeUtil.join(issue.details.coding)}"/>
+						</li>
+						<li>
+							Text: <pre th:text="${issue.details.text}"/>
+						</li>
+					</ul>
+					<pre th:if="${#lists.isEmpty(issue.details.coding)}" th:text="${issue.details.text}"/>
+				</li>
+				<li th:if="!${#strings.isEmpty(issue.diagnostics)}">
+					Diagnostics: <span th:text="${issue.diagnostics}"/>
+				</li>
+				<li th:if="!${#lists.isEmpty(issue.location)}">
+					Locations:
+					<ul>
+						<li th:each="location : ${issue.location}" th:text="${location}"/>
+					</ul>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>

@@ -1,0 +1,35 @@
+<!--
+    The HTML code in this file will be injected into the template page when any
+    resource is returned. This includes regular resources, bundle, and operation
+    outcomes. Modify this as you see fit. Make sure to back up any changes before
+    upgrading to a newer version, as these templates will be automatically overwritten.
+-->
+<h2><span th:text="${resourceName}"/> Resource&nbsp;&nbsp;<span class="in-header-small">(<a href="#raw">Raw Content</a>)</span></h2>
+<div th:utext="${div}"/>
+<a id="raw" class="anchor"></a>
+<hr/>
+<h3>Raw Content&nbsp;&nbsp;<span class="in-header-small">(<a href="#top">Back to Top</a>)</span></h3>
+<div th:if="!${#strings.isEmpty(rawContentXML)} and !${#strings.isEmpty(rawContentJSON)}">
+    <ul id="rawContentTabs" class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active">
+            <a href="#raw-content-xml" aria-controls="raw-content-xml" role="tab" data-toggle="tab">XML</a>
+        </li>
+        <li role="presentation">
+            <a href="#raw-content-json" aria-controls="raw-content-json" role="tab" data-toggle="tab">JSON</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div id="raw-content-xml" role="tabpanel" class="tab-pane fade active in">
+            <pre th:utext="${rawContentXML}"/>
+        </div>
+        <div id="raw-content-json" role="tabpanel" class="tab-pane fade">
+            <pre th:utext="${rawContentJSON}"/>
+        </div>
+    </div>
+</div>
+<div th:if="!${#strings.isEmpty(rawContentXML)} and ${#strings.isEmpty(rawContentJSON)}">
+    <pre th:utext="${rawContentXML}"/>
+</div>
+<div th:if="${#strings.isEmpty(rawContentXML)} and !${#strings.isEmpty(rawContentJSON)}">
+    <pre th:utext="${rawContentJSON}"/>
+</div>

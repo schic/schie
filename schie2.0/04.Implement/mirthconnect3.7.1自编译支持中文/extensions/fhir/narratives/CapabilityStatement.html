@@ -1,0 +1,101 @@
+<div>
+	<hr/>
+	<h4 th:text="${resource.name}"/>
+	<ul>
+		<li>Identifier URL: <span><a th:text="${resource.url}" th:attr="href=${resource.url}"/></span></li>
+		<li>Publisher: <span th:text="${resource.publisher}"></span></li>
+		<li>Software: <span th:text="${resource.software.name} + ' ' + ${resource.software.version}"></span></li>
+		<li>FHIR Version: <a href="http://hl7.org/fhir/STU3/" th:text="${resource.fhirVersion}"></a></li>
+		<li>Supported Formats: <span th:text="${NarrativeUtil.join(resource.getFormat()).toUpperCase()}"></span></li>
+		<li>System Interactions: <span th:if="${ConformanceUtil.getSystemInteractions(resource).length} > 0" th:text="${NarrativeUtil.join(ConformanceUtil.getSystemInteractions(resource))}"></span><span th:if="${ConformanceUtil.getSystemInteractions(resource).length} == 0">None</span></li>
+		<li><a href="#resourceInteractions">Resource Interactions</a></li>
+		<li th:if="${ConformanceUtil.getSystemSearchParams(resource).length} > 0"><a href="#systemSearchParams">System Search Parameters</a></li>
+		<li th:if="!${#maps.isEmpty(ConformanceUtil.getResourceSearchParams(resource))}"><a href="#resourceSearchParams">Resource Search Parameters</a></li>
+		<li th:if="!${#lists.isEmpty(ConformanceUtil.getRest(resource).operation)}"><a href="#operations">Operations</a></li>
+	</ul>
+
+	<a id="resourceInteractions" class="anchor"></a>
+	<hr/>
+	<h3>Resource Interactions  <span class="in-header-small">(<a href="#top">Back to Top</a>)</span></h3>
+	<table class="table table-bordered table-striped table-condensed">
+		<tr>
+			<td><b>Resource</b></td>
+			<td th:each="interaction : ${ConformanceUtil.interactionTypes}"><b th:text="${interaction.display}"/></td>
+		</tr>
+		<tr th:each="resourceType : ${ConformanceUtil.resourceTypes}">
+			<td>
+				<span th:if="!${ConformanceUtil.hasInteraction(resource, resourceType, ConformanceUtil.getInteractionType('search-type'))}" th:text="${resourceType}"/>
+				<a th:if="${ConformanceUtil.hasInteraction(resource, resourceType, ConformanceUtil.getInteractionType('search-type'))}" th:text="${resourceType}" th:attr="href=${resourceType}"/>
+			</td>
+			<td th:each="interactionType : ${ConformanceUtil.interactionTypes}" th:with="hasInteration = ${ConformanceUtil.hasInteraction(resource, resourceType, interactionType)}">
+				<span th:if="${hasInteration}" class="glyphicon glyphicon-ok text-success"/>
+				<span th:if="!${hasInteration}" class="glyphicon glyphicon-remove text-danger"/>
+			</td>
+		</tr>
+	</table>
+
+	<div th:if="${ConformanceUtil.getSystemSearchParams(resource).length} > 0">
+		<a id="systemSearchParams" class="anchor"></a>
+		<hr/>
+		<h3>System Search Parameters  <span class="in-header-small">(<a href="#top">Back to Top</a>)</span></h3>
+		<ul>
+			<li th:each="searchParam : ${ConformanceUtil.getSystemSearchParams(resource)}">
+				<span><b th:text="${searchParam.name}"/></span>
+				<ul>
+					<li th:if="!${#strings.isEmpty(searchParam.definition)}">
+						Definition: <a th:text="${searchParam.definition}" th:attr="href=${searchParam.definition}"/>
+					</li>
+					<li th:if="!${#strings.isEmpty(searchParam.type)}">
+						Type: <span th:text="${searchParam.type}"/>
+					</li>
+					<li th:if="!${#strings.isEmpty(searchParam.documentation)}">
+						Description: <span th:text="${searchParam.documentation}"/>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<div th:if="!${#maps.isEmpty(ConformanceUtil.getResourceSearchParams(resource))}">
+		<a id="resourceSearchParams" class="anchor"></a>
+		<hr/>
+		<h3>Resource Search Parameters  <span class="in-header-small">(<a href="#top">Back to Top</a>)</span></h3>
+		<ul>
+			<li th:each="entry : ${ConformanceUtil.getResourceSearchParams(resource)}">
+				<span><b><u th:text="${entry.key}"/></b></span>
+				<ul>
+					<li th:each="searchParam : ${entry.value}">
+						<span><b th:text="${searchParam.name}"/></span>
+						<ul>
+							<li th:if="!${#strings.isEmpty(searchParam.definition)}">
+								Definition: <a th:text="${searchParam.definition}" th:attr="href=${searchParam.definition}"/>
+							</li>
+							<li th:if="!${#strings.isEmpty(searchParam.type)}">
+								Type: <span th:text="${searchParam.type}"/>
+							</li>
+							<li th:if="!${#strings.isEmpty(searchParam.documentation)}">
+								Description: <span th:text="${searchParam.documentation}"/>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<div th:if="!${#lists.isEmpty(ConformanceUtil.getRest(resource).operation)}">
+		<a id="operations" class="anchor"></a>
+		<hr/>
+		<h3>Operations  <span class="in-header-small">(<a href="#top">Back to Top</a>)</span></h3>
+		<ul>
+			<li th:each="operation : ${ConformanceUtil.getRest(resource).operation}">
+				<span><b th:text="${operation.name}"/></span>
+				<ul>
+					<li>
+						Definition: <a th:text="${operation.definition.reference}" th:attr="href=${operation.definition.reference}"/>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>

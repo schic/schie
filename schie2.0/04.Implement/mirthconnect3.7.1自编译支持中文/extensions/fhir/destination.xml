@@ -1,0 +1,44 @@
+<connectorMetaData path="fhir">
+	<name>FHIR Sender</name>
+	<author>Mirth Corporation</author>
+	<pluginVersion>3.7.1.b258</pluginVersion>
+	<mirthVersion>3.7.1</mirthVersion>
+	<url>http://www.mirthcorp.com</url>
+	<description>This connector allows Mirth to send FHIR messages.</description>
+	<clientClassName>com.mirth.connect.connectors.fhir.client.FhirSender</clientClassName>
+	<serverClassName>com.mirth.connect.connectors.fhir.server.FhirDispatcher</serverClassName>
+	<sharedClassName>com.mirth.connect.connectors.fhir.shared.FhirDispatcherProperties</sharedClassName>
+	<userutilPackages>
+		<string>com.mirth.connect.connectors.fhir.server.userutil</string>
+		<string>com.mirth.connect.connectors.fhir.shared.userutil</string>
+	</userutilPackages>
+	<!-- The server JAR must be listed first because it overrides HAPI classes -->
+	<library type="SERVER" path="fhir-server.jar" />
+	<library type="CLIENT" path="fhir-client.jar" />
+	<library type="CLIENT" path="lib/jsonbuilder-client.jar" />
+	<library type="CLIENT" path="src/fhir-userutil-sources.jar" />
+	<library type="SHARED" path="fhir-shared.jar" />
+	<library type="SHARED" path="lib/jsonbuilder-shared.jar" />
+	<library type="SHARED" path="lib/hapi-fhir-base-3.2.0.jar" />
+	<library type="SHARED" path="lib/hapi-fhir-structures-dstu3-3.2.0.jar" />
+	<library type="SHARED" path="lib/hapi-fhir-utilities-3.2.0.jar" />
+	<library type="SHARED" path="lib/gson-2.8.1.jar" />
+	<library type="SERVER" path="lib/attoparser-2.0.4.RELEASE.jar" />
+	<library type="SERVER" path="lib/hapi-fhir-structures-dstu2-3.2.0.jar" />
+	<library type="SERVER" path="lib/hapi-fhir-structures-dstu2.1-3.2.0.jar" />
+	<library type="SERVER" path="lib/hapi-fhir-structures-hl7org-dstu2-3.2.0.jar" />
+	<library type="SERVER" path="lib/hapi-fhir-structures-r4-3.2.0.jar" />
+	<library type="SERVER" path="lib/hapi-fhir-validation-resources-dstu2-3.2.0.jar" />
+	<library type="SERVER" path="lib/hapi-fhir-validation-resources-dstu2.1-3.2.0.jar" />
+	<library type="SERVER" path="lib/hapi-fhir-validation-resources-dstu3-3.2.0.jar" />
+	<library type="SERVER" path="lib/hapi-fhir-validation-resources-r4-3.2.0.jar" />
+	<library type="SERVER" path="lib/ognl-3.1.12.jar" />
+	<library type="SERVER" path="lib/thymeleaf-3.0.7.RELEASE.jar" />
+	<library type="SERVER" path="lib/unbescape-1.1.5.RELEASE.jar" />
+	<apiProvider type="SERVLET_INTERFACE" name="com.mirth.connect.connectors.fhir.shared.FhirServletInterface"/>
+	<apiProvider type="SERVER_CLASS" name="com.mirth.connect.connectors.fhir.server.FhirServlet"/>
+	<apiProvider type="SERVER_CLASS" name="com.mirth.connect.connectors.fhir.server.SecureServletFeature"/>
+	<transformers></transformers>
+	<protocol>fhir</protocol>
+	<type>DESTINATION</type>
+</connectorMetaData>

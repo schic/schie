@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<!--
+		This is the overall HTML template for pages served up by the
+		FHIR Listener connector. Modify this as you see fit. Make sure
+		to back up any changes before upgrading to a newer version,
+		as these templates will be automatically overwritten.
+	-->
+	<head>
+		<meta charset="utf-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<title th:text="${title}"/>
+		<link th:attr="href = ${baseContextPath} + '/assets/css/bootstrap.min.css'" rel="stylesheet"/>
+		<link th:attr="href = ${baseContextPath} + '/assets/css/hapi-narrative.css'" rel="stylesheet"/>
+		<link th:attr="href = ${baseContextPath} + '/assets/css/main.css'" rel="stylesheet"/>
+		<link rel="icon" th:attr="href = ${baseContextPath} + '/favicon.ico'" type="image/x-icon"/>
+		<link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+	</head>
+
+	<body>
+		<nav class="navbar navbar-fixed-top">
+			<div class="container">
+				<a href="https://www.mirth.com/Products-and-Services/Mirth-Connect">
+					<img id="mclogo" th:attr="src = ${baseContextPath} + '/assets/images/MConn_Logo_TB_90px.png'"/>
+				</a>
+				<a href="http://hl7.org/fhir/">
+					<img id="fhirlogo" th:attr="src = ${baseContextPath} + '/assets/images/fhir-logo-www.png'"/>
+				</a>
+				<span id="headertext">
+					<b>STU3 Server</b>
+				</span>
+			</div>
+		</nav>
+		<a id="top" class="anchor"></a>
+		<div id="mainContainer" class="container" th:utext="${div}"/>
+		<nav id="footer" class="navbar navbar-fixed-bottom fhir">
+			<div class="container fhirdiv">
+				<a th:attr="href = ${baseContextPath} + '/'">Server Home</a>
+				<span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+				<a th:attr="href = ${baseContextPath} + '/metadata'">Capability Statement</a>
+				<span>&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;FHIR © HL7.org 2011+.&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;FHIR Version </span>
+				<a href="http://hl7.org/fhir/STU3/">[[${fhirVersion}]]</a>
+			</div>
+		</nav>
+		<script th:attr="src = ${baseContextPath} + '/assets/js/jquery-2.1.4.min.js'"></script>
+		<script th:attr="src = ${baseContextPath} + '/assets/js/bootstrap.min.js'"></script>
+		<script>
+		    $(document).ready(function() {
+		        $('#rawContentTabs > li > a').click(function (e) {
+		            e.preventDefault();
+		            $(this).tab('show');
+		        });
+		    });
+		</script>
+	</body>
+</html>

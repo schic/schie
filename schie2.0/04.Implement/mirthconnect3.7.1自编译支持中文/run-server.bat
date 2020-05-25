@@ -1,0 +1,1 @@
+java -jar mirth-server-launcher.jar

@@ -1,0 +1,14 @@
+----------------------------------------------------------------
+Mon Jul 22 11:02:42 CST 2019:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-016c-17a1-94a2-000006f48338 
+on database directory D:\yh\projects\四川\通用数据交换平台\07.Document\Mirth Connect\mirth371自编译支持中文\appdata\mirthdb with class loader java.net.URLClassLoader@246b179d 
+Loaded from file:/D:/yh/projects/四川/通用数据交换平台/07.Document/Mirth%20Connect/mirth371自编译支持中文/server-lib/database/derby-10.10.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_65-b17
+user.dir=D:\yh\projects\四川\通用数据交换平台\07.Document\Mirth Connect\mirth371自编译支持中文
+os.name=Windows 7
+os.arch=amd64
+os.version=6.1
+derby.system.home=null
+derby.stream.error.method=com.mirth.connect.server.Mirth.getNullOutputStream
+Database Class Loader started - derby.database.classpath=''

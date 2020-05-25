@@ -1,0 +1,13 @@
+<!--
+    The HTML code in this file will be injected into the template page when a
+    request comes in at GET [base] without any query parameters. Modify this
+    as you see fit. Make sure to back up any changes before upgrading to a
+    newer version, as these templates will be automatically overwritten.
+-->
+<h2><span th:text="${name}"/> &mdash; Welcome to the Base URL!</h2>
+<hr/>
+<p>
+	This FHIR is powered by Mirth Connect and implements FHIR version <a href="http://hl7.org/fhir/STU3/">[[${fhirVersion}]]</a>.
+	<br/>
+	To see what resources, interactions, and operations are supported, check out the capability statement at <a href="metadata">/metadata</a>.
+</p>

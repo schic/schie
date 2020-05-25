@@ -1,0 +1,15 @@
+<div>
+	<hr/>
+	<ul>
+		<li>Bundle Type: <span th:text="${resource.type}"></span></li>
+		<li>Total Entries: <span th:text="${resource.total}"></span></li>
+		<li th:if="${resource.total} > 0">Entries:
+			<ul>
+				<li th:each="entry : ${resource.entry}">
+					<a th:if="${entry.fullUrl} != null" th:attr="href=${entry.fullUrl}" th:text="${NarrativeUtil.getBundleEntryName(entry)}"></a>
+					<span th:if="${entry.fullUrl} == null" th:text="${NarrativeUtil.getBundleEntryName(entry)}"></span>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>

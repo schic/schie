@@ -1,0 +1,63 @@
+nav {
+    background-color: #E6E6E6 !important;
+    border-radius: 0 !important;
+    padding: 10px 0 0 0;
+}
+
+#mclogo {
+    height: 50px;
+    margin: 14px 0 15px 0;
+}
+
+#fhirlogo {
+    height: 50px;
+    margin: 0 0 0 20px;
+    vertical-align: top;
+}
+
+#headertext {
+    font-size: large;
+    color: #AD1F2F;
+    margin: 20px 0 0 0;
+}
+
+#mainContainer {
+    padding-top: 100px;
+    padding-bottom: 40px;
+}
+
+.fhir {
+    background-color: #AD1F2F !important;
+    color: #FFF;
+}
+
+.fhir a {
+    color: #FFD700;
+    cursor: pointer;
+}
+
+.fhirdiv {
+    padding: 5px 0 5px 20px;
+}
+
+#footer {
+    min-height: 0 !important;
+    padding: 0;
+}
+
+.glyphicon.text-success {
+    color: #0D0;
+}
+
+.in-header-small {
+    font-size: 14px;
+    line-height: 1.42857143;
+    vertical-align: middle;
+}
+
+.anchor {
+    display: block;
+    position: relative;
+    top: -100px;
+    visibility: hidden;
+}

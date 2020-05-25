@@ -1,0 +1,13 @@
+<pluginMetaData path="xsltstep">
+	<name>XSLT Transformer Step</name>
+	<author>Mirth Corporation</author>
+	<pluginVersion>3.7.1</pluginVersion>
+	<mirthVersion>3.7.1</mirthVersion>
+	<url>http://www.mirthcorp.com</url>
+	<description>This plugin provides a XSLT support step-type for Mirth Connect transformers</description>
+	<clientClasses>
+		<string>com.mirth.connect.plugins.xsltstep.XsltStepPlugin</string>
+	</clientClasses>
+	<library type="CLIENT" path="xsltstep-client.jar" />
+	<library type="SHARED" path="xsltstep-shared.jar" />
+</pluginMetaData>
