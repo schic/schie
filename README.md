@@ -21,7 +21,7 @@
     交换任务管理:  针对平台中的交换任务进行管理<br/>
     机构管理、用户管理、在线日志。。。。。。<br/>
 ### 框架开发文档
-        https://github.com/schic/schie/tree/master/schie2.0/02.%E9%9C%80%E6%B1%82
+https://github.com/schic/schie/tree/master/schie2.0/02.%E9%9C%80%E6%B1%82
 
 ### web开发文档
 
