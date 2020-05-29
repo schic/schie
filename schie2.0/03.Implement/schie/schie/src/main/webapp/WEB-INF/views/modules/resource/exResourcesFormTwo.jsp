@@ -285,7 +285,7 @@
 							<a id="btnSubmit1" class="btn btn-primary" >保存</a>
 							<a id="btnSubmit2"class="btn btn-default btnSubmit" >保存并提交</a>
 						</c:if>
-						<a id="btnBack" class="btn btn-default">返回</a>
+						<a id="btnBack" class="btn btn-default" >返回</a>
 						<c:if test="${action eq 'sh'}">
 							<a id="btnView1" class="btn btn-danger pull-right " style="margin-right: 80px;"
 							   href="${ctx}/exapprove/exResApprove/feedback?result=no&resId=${exResources.id}"

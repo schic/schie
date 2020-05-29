@@ -102,7 +102,7 @@ public class TestTreeController extends AbstractBaseController {
      */
     //@RequiresPermissions(value={"test:tree:testTree:view","test:tree:testTree:add","test:tree:testTree:edit"},logical=Logical.OR)
     @RequestMapping(value = "form")
-    public String form(TestTree testTree, Model model) {
+    public String form(TestTree testTree, Model model,HttpServletRequest request) {
         if (testTree.getParent() != null && StringUtils.isNotBlank(testTree.getParent().getId())) {
             testTree.setParent(testTreeService.get(testTree.getParent().getId()));
             // 获取排序号，最末节点排序号+30
@@ -121,6 +121,7 @@ public class TestTreeController extends AbstractBaseController {
         if (testTree.getSort() == null) {
             testTree.setSort(30);
         }
+        model.addAttribute("action", request.getParameter("action"));
         model.addAttribute("testTree", testTree);
         return "modules/test/tree/testTreeForm";
     }
@@ -130,9 +131,9 @@ public class TestTreeController extends AbstractBaseController {
      */
     //@RequiresPermissions(value={"test:tree:testTree:add","test:tree:testTree:edit"},logical=Logical.OR)
     @RequestMapping(value = "save")
-    public String save(TestTree testTree, Model model, RedirectAttributes redirectAttributes) {
+    public String save(TestTree testTree, Model model, RedirectAttributes redirectAttributes,HttpServletRequest request) {
         if (!beanValidator(model, testTree)) {
-            return form(testTree, model);
+            return form(testTree, model,request);
         }
         if (!(" ").equals(testTree.getParentId())) {
             TestTree tree = new TestTree();

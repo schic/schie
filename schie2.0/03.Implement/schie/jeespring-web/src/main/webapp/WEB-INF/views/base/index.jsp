@@ -77,7 +77,7 @@
           </li> -->
           
           <!-- User Account: style can be found in dropdown.less -->
-          <li class="dropdown user user-menu">
+          <li class="dropdown user user-menu" >
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="${fns:getUser().photo }" class="user-image" alt="User Image"/>
               <span class="hidden-xs">${fns:getUser().name}</span>
@@ -123,7 +123,7 @@
           </li>
           <!-- Control Sidebar Toggle Button -->
           <li>
-            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+            <a href="#" ><i class="fa fa-gears"></i></a>
           </li>
         </ul>
       </div>

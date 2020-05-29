@@ -18,7 +18,7 @@
     <div class="box box-main">
         <!-- 内容盒子头部 -->
         <div class="box-header">
-            <div class="box-title"><i class="fa fa-edit"></i>节点管理</div>
+            <div class="box-title"><i class="fa fa-edit"></i>mc节点管理</div>
             <div class="box-tools pull-right">
                 <a id="btnSearchView" href="#" title="筛选1" class="btn btn-default btn-sm"><i
                         class="fa fa-filter"></i>筛选</a>

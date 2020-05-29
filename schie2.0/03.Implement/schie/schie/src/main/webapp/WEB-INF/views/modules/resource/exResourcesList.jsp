@@ -17,7 +17,7 @@
     <div class="box box-main">
         <!-- 内容盒子头部 -->
         <div class="box-header">
-            <div class="box-title"><i class="fa fa-edit"></i>资源管理</div>
+            <div class="box-title"><i class="fa fa-edit"></i>数据资源管理</div>
             <div class="box-tools pull-right">
                 <a id="btnSearchView" href="#" title="筛选" class="btn btn-default btn-sm"><i
                         class="fa fa-filter"></i>筛选</a>

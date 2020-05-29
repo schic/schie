@@ -18,8 +18,7 @@
             <!-- 内容盒子头部 -->
             <div class="box-header">
                 <div class="box-title">
-                    <i class="fa fa-edit"></i>数据表
-                </div>
+                    <i class="fa fa-edit"></i>数据表目录</div>
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" id="btnEdit" title="管理">
                         <i class="fa fa-address-card"></i></button>

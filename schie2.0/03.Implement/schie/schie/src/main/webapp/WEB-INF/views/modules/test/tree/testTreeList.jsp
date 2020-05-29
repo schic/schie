@@ -110,8 +110,8 @@
 		</td>
 		<td>
 		<shiro:hasPermission name="test:tree:testTree:view">
-			<a href="${ctx}/test/tree/testTree/form?id={{row.id}}" title="查看"><i class="fa fa-search-plus"></i></a>
-			</shiro:hasPermission>
+			<a href="${ctx}/test/tree/testTree/form?id={{row.id}}&action=view" title="查看"><i class="fa fa-search-plus"></i></a>
+		</shiro:hasPermission>
 		<shiro:hasPermission name="test:tree:testTree:edit">
 			<a href="${ctx}/test/tree/testTree/form?id={{row.id}}" title="修改"><i class="fa fa-pencil"></i></a>
 		</shiro:hasPermission>
