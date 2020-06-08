@@ -83,12 +83,12 @@ spring:
     
     #pgsql
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://127.0.0.1:5432/exchange?currentSchema=public
+    url: jdbc:postgresql://172.16.3.150:5432/exchange?currentSchema=public
 #    url: jdbc:postgresql://125.70.227.59:50193/exchange?currentSchema=public
 #    url: jdbc:postgresql://10.10.10.55:5432/exchange?currentSchema=public
 #    url: jdbc:postgresql://172.18.16.97:5432/exchange?currentSchema=public
-    username: postgres
-    password: postgres
+    username: schier
+    password: schier
     
     # 下面为连接池的补充设置，应用到上面所有数据源中
     # 初始化大小，最小，最大
