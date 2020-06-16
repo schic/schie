@@ -1,0 +1,161 @@
+/*
+ * Copyright (c) Mirth Corporation. All rights reserved.
+ * 
+ * http://www.mirthcorp.com
+ * 
+ * The software in this package is published under the terms of the MPL license a copy of which has
+ * been included with this distribution in the LICENSE.txt file.
+ */
+
+package com.mirth.connect.client.ui.codetemplate;
+
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+
+import net.miginfocom.swing.MigLayout;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EvaluatorException;
+
+import com.mirth.connect.client.ui.UIConstants;
+import com.mirth.connect.client.ui.components.rsta.MirthRTextScrollPane;
+import com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties;
+import com.mirth.connect.model.codetemplates.CodeTemplate;
+import com.mirth.connect.model.codetemplates.CodeTemplateProperties;
+import com.mirth.connect.model.codetemplates.CodeTemplateProperties.CodeTemplateType;
+import com.mirth.connect.model.codetemplates.ContextType;
+import com.mirth.connect.util.CodeTemplateUtil;
+import com.mirth.connect.util.JavaScriptSharedUtil;
+
+public class BasicCodeTemplatePropertiesPanel extends CodeTemplatePropertiesPanel {
+
+    private CodeTemplateType type;
+
+    public BasicCodeTemplatePropertiesPanel(CodeTemplatePanel parent, DocumentListener codeChangeListener) {
+        super(parent, codeChangeListener);
+        initComponents();
+        initLayout();
+    }
+
+    @Override
+    public List<Pair<Pair<Component, String>, Pair<Component, String>>> getRows() {
+        List<Pair<Pair<Component, String>, Pair<Component, String>>> rows = new ArrayList<Pair<Pair<Component, String>, Pair<Component, String>>>();
+        rows.add(new ImmutablePair<Pair<Component, String>, Pair<Component, String>>(new ImmutablePair<Component, String>(templateCodeLabel, "newline, top, right"), new ImmutablePair<Component, String>(containerPanel, "grow, push, sx, w :400, h 127:127")));
+        return rows;
+    }
+
+    @Override
+    public CodeTemplateProperties getProperties() {
+        return new BasicCodeTemplateProperties(type, templateCodeTextArea.getText());
+    }
+
+    @Override
+    public CodeTemplateProperties getDefaults() {
+        return new BasicCodeTemplateProperties(CodeTemplateType.FUNCTION, CodeTemplate.DEFAULT_CODE);
+    }
+
+    @Override
+    public void setProperties(CodeTemplateProperties properties) {
+        type = CodeTemplateType.fromString(properties.getPluginPointName());
+        templateCodeTextArea.setText(properties.getCode());
+    }
+
+    @Override
+    public String checkProperties(CodeTemplateProperties properties, boolean highlight) {
+        try {
+            JavaScriptSharedUtil.getGlobalContextForValidation().compileString("function rhinoWrapper() {" + properties.getCode() + "\n}", UUID.randomUUID().toString(), 1, null);
+        } catch (EvaluatorException e) {
+            return "Error on line " + e.lineNumber() + ": " + e.getMessage() + ".";
+        } catch (Exception e) {
+            return "Unknown error occurred during validation.";
+        } finally {
+            Context.exit();
+        }
+
+        return null;
+    }
+
+    @Override
+    public void resetInvalidProperties() {}
+
+    @Override
+    public void setVisible(boolean visible) {
+        templateCodeLabel.setVisible(visible);
+        containerPanel.setVisible(visible);
+    }
+
+    private void initComponents() {
+        containerPanel = new JPanel();
+        containerPanel.setBackground(UIConstants.BACKGROUND_COLOR);
+
+        templateCodeLabel = new JLabel("Code:");
+        templateCodeTextArea = new MirthRTextScrollPane(ContextType.GLOBAL_DEPLOY);
+        templateCodeTextArea.getDocument().addDocumentListener(codeChangeListener);
+        templateCodeTextArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void removeUpdate(DocumentEvent evt) {
+                codeChanged(evt);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent evt) {
+                codeChanged(evt);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent evt) {
+                codeChanged(evt);
+            }
+
+            private void codeChanged(DocumentEvent evt) {
+                try {
+                    if (evt.getDocument().getLength() >= 3 && StringUtils.equals(evt.getDocument().getText(0, 3), "/**")) {
+                        templateAutoGenerateDocumentationButton.setText("Update JSDoc");
+                    } else {
+                        templateAutoGenerateDocumentationButton.setText("Generate JSDoc");
+                    }
+                } catch (BadLocationException e) {
+                }
+            }
+        });
+
+        templateAutoGenerateDocumentationButton = new JButton("Update JSDoc");
+        templateAutoGenerateDocumentationButton.setToolTipText("<html>Generates/updates a JSDoc at the beginning of your<br/>code, with parameter/return annotations as needed.</html>");
+        templateAutoGenerateDocumentationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                String currentText = templateCodeTextArea.getText();
+                String newText = CodeTemplateUtil.updateCode(templateCodeTextArea.getText());
+                templateCodeTextArea.setText(newText, false);
+                if (!currentText.equals(newText)) {
+                    parent.setSaveEnabled(true);
+                }
+            }
+        });
+    }
+
+    private void initLayout() {
+        containerPanel.setLayout(new MigLayout("insets 0, novisualpadding, hidemode 3, fill"));
+        containerPanel.add(templateCodeTextArea, "grow, push");
+        containerPanel.add(templateAutoGenerateDocumentationButton, "newline, right");
+    }
+
+    private JLabel templateCodeLabel;
+    private JPanel containerPanel;
+    private MirthRTextScrollPane templateCodeTextArea;
+    private JButton templateAutoGenerateDocumentationButton;
+}
