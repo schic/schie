@@ -107,9 +107,9 @@ public class ChannelTableNode extends AbstractChannelTableNode {
         }
 
         if (channel.getExportData().getMetadata().isEnabled()) {
-            row[i++] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/bullet_blue.png")), "Enabled");
+            row[i++] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("ChannelTableNode.0"))), Messages.getString("ChannelTableNode.1")); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
-            row[i++] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/bullet_black.png")), "Disabled");
+            row[i++] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("ChannelTableNode.2"))), Messages.getString("ChannelTableNode.3")); //$NON-NLS-1$ //$NON-NLS-2$
         }
         row[i++] = PlatformUI.MIRTH_FRAME.dataTypeToDisplayName.get(channel.getSourceConnector().getTransformer().getInboundDataType());
         row[i++] = new ChannelTableNameEntry(channel.getName());
@@ -143,13 +143,13 @@ public class ChannelTableNode extends AbstractChannelTableNode {
             }
 
             if (groupStatus.getChannelStatuses().isEmpty()) {
-                row[offset + STATUS_COLUMN_NUMBER] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/bullet_black.png")), "N/A");
+                row[offset + STATUS_COLUMN_NUMBER] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("ChannelTableNode.4"))), Messages.getString("ChannelTableNode.5")); //$NON-NLS-1$ //$NON-NLS-2$
             } else if (allEnabled) {
-                row[offset + STATUS_COLUMN_NUMBER] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/bullet_blue.png")), "Enabled");
+                row[offset + STATUS_COLUMN_NUMBER] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("ChannelTableNode.6"))), Messages.getString("ChannelTableNode.7")); //$NON-NLS-1$ //$NON-NLS-2$
             } else if (allDisabled) {
-                row[offset + STATUS_COLUMN_NUMBER] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/bullet_black.png")), "Disabled");
+                row[offset + STATUS_COLUMN_NUMBER] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("ChannelTableNode.8"))), Messages.getString("ChannelTableNode.9")); //$NON-NLS-1$ //$NON-NLS-2$
             } else {
-                row[offset + STATUS_COLUMN_NUMBER] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/bullet_orange.png")), "Mixed");
+                row[offset + STATUS_COLUMN_NUMBER] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("ChannelTableNode.10"))), Messages.getString("ChannelTableNode.11")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
     }

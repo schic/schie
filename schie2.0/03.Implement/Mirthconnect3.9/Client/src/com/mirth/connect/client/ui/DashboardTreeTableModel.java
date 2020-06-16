@@ -106,7 +106,7 @@ public class DashboardTreeTableModel extends SortableTreeTableModel {
     @Override
     public Object getChild(Object parent, int index) {
         if (!isValidTreeTableNode(parent)) {
-            throw new IllegalArgumentException("parent must be a TreeTableNode managed by this model");
+            throw new IllegalArgumentException(Messages.getString("DashboardTreeTableModel.0")); //$NON-NLS-1$
         }
 
         return ((TreeTableNode) parent).getChildAt(index);
@@ -115,7 +115,7 @@ public class DashboardTreeTableModel extends SortableTreeTableModel {
     @Override
     public int getChildCount(Object parent) {
         if (!isValidTreeTableNode(parent)) {
-            throw new IllegalArgumentException("parent must be a TreeTableNode managed by this model");
+            throw new IllegalArgumentException(Messages.getString("DashboardTreeTableModel.1")); //$NON-NLS-1$
         }
 
         return ((TreeTableNode) parent).getChildCount();
@@ -133,11 +133,11 @@ public class DashboardTreeTableModel extends SortableTreeTableModel {
     @Override
     public Object getValueAt(Object node, int column) {
         if (!isValidTreeTableNode(node)) {
-            throw new IllegalArgumentException("node must be a valid node managed by this model");
+            throw new IllegalArgumentException(Messages.getString("DashboardTreeTableModel.2")); //$NON-NLS-1$
         }
 
         if (column < 0 || column >= getColumnCount()) {
-            throw new IllegalArgumentException("column must be a valid index");
+            throw new IllegalArgumentException(Messages.getString("DashboardTreeTableModel.3")); //$NON-NLS-1$
         }
 
         TreeTableNode ttn = (TreeTableNode) node;
@@ -152,11 +152,11 @@ public class DashboardTreeTableModel extends SortableTreeTableModel {
     @Override
     public boolean isCellEditable(Object node, int column) {
         if (!isValidTreeTableNode(node)) {
-            throw new IllegalArgumentException("node must be a valid node managed by this model");
+            throw new IllegalArgumentException(Messages.getString("DashboardTreeTableModel.4")); //$NON-NLS-1$
         }
 
         if (column < 0 || column >= getColumnCount()) {
-            throw new IllegalArgumentException("column must be a valid index");
+            throw new IllegalArgumentException(Messages.getString("DashboardTreeTableModel.5")); //$NON-NLS-1$
         }
 
         TreeTableNode ttn = (TreeTableNode) node;
@@ -171,7 +171,7 @@ public class DashboardTreeTableModel extends SortableTreeTableModel {
     @Override
     public boolean isLeaf(Object node) {
         if (!isValidTreeTableNode(node)) {
-            throw new IllegalArgumentException("node must be a TreeTableNode managed by this model");
+            throw new IllegalArgumentException(Messages.getString("DashboardTreeTableModel.6")); //$NON-NLS-1$
         }
 
         return ((TreeTableNode) node).isLeaf();
@@ -180,11 +180,11 @@ public class DashboardTreeTableModel extends SortableTreeTableModel {
     @Override
     public void setValueAt(Object value, Object node, int column) {
         if (!isValidTreeTableNode(node)) {
-            throw new IllegalArgumentException("node must be a valid node managed by this model");
+            throw new IllegalArgumentException(Messages.getString("DashboardTreeTableModel.7")); //$NON-NLS-1$
         }
 
         if (column < 0 || column >= getColumnCount()) {
-            throw new IllegalArgumentException("column must be a valid index");
+            throw new IllegalArgumentException(Messages.getString("DashboardTreeTableModel.8")); //$NON-NLS-1$
         }
 
         TreeTableNode ttn = (TreeTableNode) node;

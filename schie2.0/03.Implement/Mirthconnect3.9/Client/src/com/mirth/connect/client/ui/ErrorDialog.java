@@ -33,12 +33,12 @@ public class ErrorDialog extends MirthDialog {
     private void initialize(String message) {
         this.parent = PlatformUI.MIRTH_FRAME;
         initComponents();
-        question.setBackground(UIManager.getColor("Control"));
-        errorContent.setBackground(UIManager.getColor("Control"));
-        image.setIcon((Icon) UIManager.get("OptionPane.errorIcon"));
+        question.setBackground(UIManager.getColor(Messages.getString("ErrorDialog.0"))); //$NON-NLS-1$
+        errorContent.setBackground(UIManager.getColor(Messages.getString("ErrorDialog.1"))); //$NON-NLS-1$
+        image.setIcon((Icon) UIManager.get(Messages.getString("ErrorDialog.2"))); //$NON-NLS-1$
         questionPane.setBorder(null);
         try {
-            message = java.net.URLDecoder.decode(message, "UTF-8");
+            message = java.net.URLDecoder.decode(message, Messages.getString("ErrorDialog.3")); //$NON-NLS-1$
         } catch (Exception e) {
         }
         loadContent(message);
@@ -84,9 +84,9 @@ public class ErrorDialog extends MirthDialog {
         image = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Error");
+        setTitle(Messages.getString("ErrorDialog.4")); //$NON-NLS-1$
 
-        cancel.setText("Close");
+        cancel.setText(Messages.getString("ErrorDialog.5")); //$NON-NLS-1$
         cancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelActionPerformed(evt);
@@ -100,7 +100,7 @@ public class ErrorDialog extends MirthDialog {
         question.setBackground(new java.awt.Color(224, 223, 227));
         question.setBorder(null);
         question.setEditable(false);
-        question.setText("An unexpected error has occurred.  If this is a severe error and you are on NextGen Healthcare Support, please contact the NextGen Healthcare Help Desk.");
+        question.setText(Messages.getString("ErrorDialog.6")); //$NON-NLS-1$
         question.setFocusable(false);
         questionPane.setViewportView(question);
 

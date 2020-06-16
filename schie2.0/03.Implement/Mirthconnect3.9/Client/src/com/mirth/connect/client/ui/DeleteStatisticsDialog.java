@@ -67,37 +67,37 @@ public class DeleteStatisticsDialog extends MirthDialog {
         jTextPane1 = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Clear Statistics");
+        setTitle(Messages.getString("DeleteStatisticsDialog.0")); //$NON-NLS-1$
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        invertButton.setText("Invert Selection");
+        invertButton.setText(Messages.getString("DeleteStatisticsDialog.1")); //$NON-NLS-1$
         invertButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 invertButtonActionPerformed(evt);
             }
         });
 
-        okButton.setText("OK");
+        okButton.setText(Messages.getString("DeleteStatisticsDialog.2")); //$NON-NLS-1$
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
         });
 
-        deleteReceived.setText("Received");
+        deleteReceived.setText(Messages.getString("DeleteStatisticsDialog.3")); //$NON-NLS-1$
         deleteReceived.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         deleteReceived.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
-        deleteFiltered.setText("Filtered");
+        deleteFiltered.setText(Messages.getString("DeleteStatisticsDialog.4")); //$NON-NLS-1$
         deleteFiltered.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         deleteFiltered.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
-        deleteSent.setText("Sent");
+        deleteSent.setText(Messages.getString("DeleteStatisticsDialog.5")); //$NON-NLS-1$
         deleteSent.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         deleteSent.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
-        deleteErrored.setText("Errored");
+        deleteErrored.setText(Messages.getString("DeleteStatisticsDialog.6")); //$NON-NLS-1$
         deleteErrored.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         deleteErrored.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
@@ -106,7 +106,7 @@ public class DeleteStatisticsDialog extends MirthDialog {
         jTextPane1.setBackground(new java.awt.Color(226, 226, 226));
         jTextPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jTextPane1.setEditable(false);
-        jTextPane1.setText("Please select the statistics that you would like to reset:");
+        jTextPane1.setText(Messages.getString("DeleteStatisticsDialog.7")); //$NON-NLS-1$
         jTextPane1.setAutoscrolls(false);
         jTextPane1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jTextPane1.setEnabled(false);

@@ -68,36 +68,36 @@ public class ChannelTableColumnFactory extends ColumnFactory {
                 column.setMaxWidth(UIConstants.MIN_WIDTH);
                 column.setMinWidth(UIConstants.MIN_WIDTH);
                 column.setCellRenderer(new ImageCellRenderer());
-                column.setToolTipText("<html><body>The status of this channel. Possible values are enabled and disabled.<br>Only enabled channels can be deployed.</body></html>");
+                column.setToolTipText(Messages.getString("ChannelTableColumnFactory.0")); //$NON-NLS-1$
                 break;
 
             case DATA_TYPE_COLUMN_NUMBER:
                 column.setMaxWidth(UIConstants.MIN_WIDTH);
                 column.setMinWidth(UIConstants.MIN_WIDTH);
-                column.setToolTipText("<html><body>The inbound data type of this channel's source connector.</body></html>");
+                column.setToolTipText(Messages.getString("ChannelTableColumnFactory.1")); //$NON-NLS-1$
                 break;
 
             case NAME_COLUMN_NUMBER:
                 column.setMinWidth(150);
-                column.setToolTipText("<html><body>The name of this channel.</body></html>");
+                column.setToolTipText(Messages.getString("ChannelTableColumnFactory.2")); //$NON-NLS-1$
                 break;
 
             case ID_COLUMN_NUMBER:
                 column.setMinWidth(215);
                 column.setMaxWidth(215);
-                column.setToolTipText("<html><body>The unique id of this channel.</body></html>");
+                column.setToolTipText(Messages.getString("ChannelTableColumnFactory.3")); //$NON-NLS-1$
                 break;
 
             case LOCAL_CHANNEL_ID_COLUMN_NUMBER:
                 column.setMinWidth(60);
                 column.setMaxWidth(60);
                 column.setCellRenderer(new NumberCellRenderer(SwingConstants.CENTER, false));
-                column.setToolTipText("<html><body>The local id of this channel used as part of the names for the message tables.</body></html>");
+                column.setToolTipText(Messages.getString("ChannelTableColumnFactory.4")); //$NON-NLS-1$
                 break;
 
             case DESCRIPTION_COLUMN_NUMBER:
                 column.setMinWidth(UIConstants.MIN_WIDTH);
-                column.setToolTipText("<html><body>The description of this channel.</body></html>");
+                column.setToolTipText(Messages.getString("ChannelTableColumnFactory.5")); //$NON-NLS-1$
                 break;
 
             case DEPLOYED_REVISION_DELTA_COLUMN_NUMBER:
@@ -105,7 +105,7 @@ public class ChannelTableColumnFactory extends ColumnFactory {
                 column.setMinWidth(50);
                 column.setCellRenderer(new NumberCellRenderer(SwingConstants.CENTER, false));
                 column.setResizable(false);
-                column.setToolTipText("<html><body>The number of times this channel was saved since it was deployed.<br>Rev \u0394 = Channel Revision - Deployed Revision<br>This value will be highlighted if it is greater than 0,<br/><b>or</b> if any code templates linked to this channel have changed.</body></html>");
+                column.setToolTipText(Messages.getString("ChannelTableColumnFactory.6")); //$NON-NLS-1$
                 break;
 
             case LAST_DEPLOYED_COLUMN_NUMBER:
@@ -113,7 +113,7 @@ public class ChannelTableColumnFactory extends ColumnFactory {
                 column.setMaxWidth(95);
                 column.setCellRenderer(new DateCellRenderer());
                 column.setResizable(false);
-                column.setToolTipText("<html><body>The time this channel was last deployed.<br>This value will be highlighted if it is within the last two minutes.</body></html>");
+                column.setToolTipText(Messages.getString("ChannelTableColumnFactory.7")); //$NON-NLS-1$
                 break;
 
             case LAST_MODIFIED_COLUMN_NUMBER:
@@ -121,7 +121,7 @@ public class ChannelTableColumnFactory extends ColumnFactory {
                 column.setMaxWidth(95);
                 column.setCellRenderer(new DateCellRenderer());
                 column.setResizable(false);
-                column.setToolTipText("<html><body>The time this channel was last modified.</body></html>");
+                column.setToolTipText(Messages.getString("ChannelTableColumnFactory.8")); //$NON-NLS-1$
                 break;
 
             default:

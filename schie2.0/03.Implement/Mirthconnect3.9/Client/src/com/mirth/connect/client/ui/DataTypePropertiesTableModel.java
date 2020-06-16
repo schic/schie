@@ -99,38 +99,38 @@ public class DataTypePropertiesTableModel extends SortableTreeTableModel {
             if (inbound) {
                 // Show serialization if inbound
                 if (!serializationProperties.isEmpty()) {
-                    createAndInsertNode("Serialization", "These properties are used to convert the inbound message to XML.", serializationProperties, defaultProperties.getSerializationProperties());
+                    createAndInsertNode(Messages.getString("DataTypePropertiesTableModel.0"), Messages.getString("DataTypePropertiesTableModel.1"), serializationProperties, defaultProperties.getSerializationProperties()); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             } else {
                 // Show deserialization if outbound
                 if (!deserializationProperties.isEmpty()) {
-                    createAndInsertNode("Deserialization", "These properties are used to convert the transformed XML message into the specified data type", deserializationProperties, defaultProperties.getDeserializationProperties());
+                    createAndInsertNode(Messages.getString("DataTypePropertiesTableModel.2"), Messages.getString("DataTypePropertiesTableModel.3"), deserializationProperties, defaultProperties.getDeserializationProperties()); //$NON-NLS-1$ //$NON-NLS-2$
                 }
 
                 // Show serialization as Template Serialization if outbound
                 if (!serializationProperties.isEmpty()) {
-                    createAndInsertNode("Template Serialization", "These properties are used to convert the outbound message template to XML.", serializationProperties, defaultProperties.getSerializationProperties());
+                    createAndInsertNode(Messages.getString("DataTypePropertiesTableModel.4"), Messages.getString("DataTypePropertiesTableModel.5"), serializationProperties, defaultProperties.getSerializationProperties()); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
 
             // Show batch if inbound
             if (!batchProperties.isEmpty() && inbound) {
-                createAndInsertNode("Batch", "These properties are used when reading in batch files and have no effect unless Process Batch is enabled in the source connector.", batchProperties, defaultProperties.getBatchProperties());
+                createAndInsertNode(Messages.getString("DataTypePropertiesTableModel.6"), Messages.getString("DataTypePropertiesTableModel.7"), batchProperties, defaultProperties.getBatchProperties()); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             // Show response generation if inbound
             if (!responseGenerationProperties.isEmpty() && inbound) {
-                createAndInsertNode("Response Generation", "These properties are used when responses are automatically generated.", responseGenerationProperties, defaultProperties.getResponseGenerationProperties());
+                createAndInsertNode(Messages.getString("DataTypePropertiesTableModel.8"), Messages.getString("DataTypePropertiesTableModel.9"), responseGenerationProperties, defaultProperties.getResponseGenerationProperties()); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             // Show response validation if outbound
             if (!responseValidationProperties.isEmpty() && inbound) {
-                createAndInsertNode("Response Validation", "These properties are used to validate the response received by a destination connector and have no effect unless Validate Response is enabled in the destination connector.", responseValidationProperties, defaultProperties.getResponseValidationProperties());
+                createAndInsertNode(Messages.getString("DataTypePropertiesTableModel.10"), Messages.getString("DataTypePropertiesTableModel.11"), responseValidationProperties, defaultProperties.getResponseValidationProperties()); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             // If no properties have been added, indicate that the data type has no properties
             if (root.getChildCount() == 0) {
-                insertNodeInto(new DataTypePropertiesTableNode(" This data type has no properties.", ""), root);
+                insertNodeInto(new DataTypePropertiesTableNode(Messages.getString("DataTypePropertiesTableModel.12"), Messages.getString("DataTypePropertiesTableModel.13")), root); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
     }

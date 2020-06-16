@@ -19,10 +19,10 @@ import javax.swing.UIManager;
 public class CustomErrorDialog extends MirthDialog {
 
     private Frame parent;
-    public static final String ERROR_SAVING_CHANNEL = "There was an error in the validation of your channel.  It has been DISABLED and saved.  Before you can deploy you must fix the following error(s):";
-    public static final String ERROR_VALIDATING_CONNECTOR = "There was an error in the validation of your connector.  Please fix the following error(s):";
-    public static final String ERROR_ENABLING_CHANNEL = "The channel was not configured properly.  Please fix the following problem(s) in the channel before trying to enable it again:";
-    public static final String ERROR_VALIDATING_GLOBAL_SCRIPTS = "There was an error in the validation of your global scripts.  Please fix the following error(s):";
+    public static final String ERROR_SAVING_CHANNEL = Messages.getString("CustomErrorDialog.0"); //$NON-NLS-1$
+    public static final String ERROR_VALIDATING_CONNECTOR = Messages.getString("CustomErrorDialog.1"); //$NON-NLS-1$
+    public static final String ERROR_ENABLING_CHANNEL = Messages.getString("CustomErrorDialog.2"); //$NON-NLS-1$
+    public static final String ERROR_VALIDATING_GLOBAL_SCRIPTS = Messages.getString("CustomErrorDialog.3"); //$NON-NLS-1$
 
     public CustomErrorDialog(java.awt.Frame owner, String errorMessage, String errorQuestion) {
         super(owner);
@@ -40,9 +40,9 @@ public class CustomErrorDialog extends MirthDialog {
 
         question.setText(errorQuestion);
 
-        question.setBackground(UIManager.getColor("Control"));
-        errorContent.setBackground(UIManager.getColor("Control"));
-        image.setIcon((Icon) UIManager.get("OptionPane.errorIcon"));
+        question.setBackground(UIManager.getColor(Messages.getString("CustomErrorDialog.4"))); //$NON-NLS-1$
+        errorContent.setBackground(UIManager.getColor(Messages.getString("CustomErrorDialog.5"))); //$NON-NLS-1$
+        image.setIcon((Icon) UIManager.get(Messages.getString("CustomErrorDialog.6"))); //$NON-NLS-1$
         questionPane.setBorder(null);
         errorContent.setText(errorMessage);
         errorContent.setCaretPosition(0);
@@ -82,7 +82,7 @@ public class CustomErrorDialog extends MirthDialog {
         errorContent = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Error(s)");
+        setTitle(Messages.getString("CustomErrorDialog.7")); //$NON-NLS-1$
 
         questionPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -92,7 +92,7 @@ public class CustomErrorDialog extends MirthDialog {
         question.setFocusable(false);
         questionPane.setViewportView(question);
 
-        cancel.setText("Close");
+        cancel.setText(Messages.getString("CustomErrorDialog.8")); //$NON-NLS-1$
         cancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelActionPerformed(evt);

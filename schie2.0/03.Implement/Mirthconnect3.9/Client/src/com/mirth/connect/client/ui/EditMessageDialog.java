@@ -113,7 +113,7 @@ public class EditMessageDialog extends MirthDialog implements DropTargetListener
 
     private void initDestinationConnectorTable(Map<Integer, String> destinationConnectors, List<Integer> selectedMetaDataIds) {
         mirthTable1 = new ItemSelectionTable();
-        mirthTable1.setModel(new ItemSelectionTableModel<Integer, String>(destinationConnectors, selectedMetaDataIds, "Destination", "Included"));
+        mirthTable1.setModel(new ItemSelectionTableModel<Integer, String>(destinationConnectors, selectedMetaDataIds, Messages.getString("EditMessageDialog.0"), Messages.getString("EditMessageDialog.1"))); //$NON-NLS-1$ //$NON-NLS-2$
         jScrollPane1.setViewportView(mirthTable1);
     }
 
@@ -129,7 +129,7 @@ public class EditMessageDialog extends MirthDialog implements DropTargetListener
 
         sourceMapTable = new MirthTable();
 
-        sourceMapTable.setModel(new RefreshTableModel(data, new Object[] { "Variable", "Value" }) {
+        sourceMapTable.setModel(new RefreshTableModel(data, new Object[] { Messages.getString("EditMessageDialog.2"), Messages.getString("EditMessageDialog.3") }) { //$NON-NLS-1$ //$NON-NLS-2$
             @Override
             public boolean isCellEditable(int row, int column) {
                 return true;
@@ -146,7 +146,7 @@ public class EditMessageDialog extends MirthDialog implements DropTargetListener
         sourceMapTable.getTableHeader().setReorderingAllowed(false);
         sourceMapTable.setSortable(true);
 
-        if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+        if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("EditMessageDialog.4"), true)) { //$NON-NLS-1$
             sourceMapTable.setHighlighters(HighlighterFactory.createAlternateStriping(UIConstants.HIGHLIGHTER_COLOR, UIConstants.BACKGROUND_COLOR));
         }
 
@@ -376,7 +376,7 @@ public class EditMessageDialog extends MirthDialog implements DropTargetListener
             textPane.setText(message);
         } else {
             textPane.setDocument(newDoc);
-            textPane.setText("");
+            textPane.setText(Messages.getString("EditMessageDialog.5")); //$NON-NLS-1$
         }
 
         textPane.setCaretPosition(0);
@@ -387,7 +387,7 @@ public class EditMessageDialog extends MirthDialog implements DropTargetListener
         int num = 1;
 
         do {
-            key = "key" + num++;
+            key = Messages.getString("EditMessageDialog.6") + num++; //$NON-NLS-1$
         } while (sourceMapKeyExists(key));
 
         return key;
@@ -447,20 +447,20 @@ public class EditMessageDialog extends MirthDialog implements DropTargetListener
         jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Message");
+        setTitle(Messages.getString("EditMessageDialog.7")); //$NON-NLS-1$
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        newButton.setText("New");
-        newButton.setToolTipText("Close this message sender dialog.");
+        newButton.setText(Messages.getString("EditMessageDialog.8")); //$NON-NLS-1$
+        newButton.setToolTipText(Messages.getString("EditMessageDialog.9")); //$NON-NLS-1$
         newButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newButtonActionPerformed(evt);
             }
         });
 
-        processMessageButton.setText("Process Message");
-        processMessageButton.setToolTipText("Process the message displayed in the editor above.");
+        processMessageButton.setText(Messages.getString("EditMessageDialog.10")); //$NON-NLS-1$
+        processMessageButton.setToolTipText(Messages.getString("EditMessageDialog.11")); //$NON-NLS-1$
         processMessageButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 processMessageButtonActionPerformed(evt);
@@ -471,20 +471,20 @@ public class EditMessageDialog extends MirthDialog implements DropTargetListener
 
         jScrollPane1.setViewportView(mirthTable1);
 
-        jLabel1.setText("Send to the following destination(s):");
+        jLabel1.setText(Messages.getString("EditMessageDialog.12")); //$NON-NLS-1$
 
         buttonPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        openBinaryFileButton.setText("Open Binary File...");
-        openBinaryFileButton.setToolTipText("<html>Open a binary file into the editor above.<br>The file will be encoded and displayed as Base64.</html>");
+        openBinaryFileButton.setText(Messages.getString("EditMessageDialog.13")); //$NON-NLS-1$
+        openBinaryFileButton.setToolTipText(Messages.getString("EditMessageDialog.14")); //$NON-NLS-1$
         openBinaryFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openBinaryFileButtonActionPerformed(evt);
             }
         });
 
-        openTextFileButton.setText("Open Text File...");
-        openTextFileButton.setToolTipText("Open a text file into the editor above.");
+        openTextFileButton.setText(Messages.getString("EditMessageDialog.15")); //$NON-NLS-1$
+        openTextFileButton.setToolTipText(Messages.getString("EditMessageDialog.16")); //$NON-NLS-1$
         openTextFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openTextFileButtonActionPerformed(evt);
@@ -508,20 +508,20 @@ public class EditMessageDialog extends MirthDialog implements DropTargetListener
                 .addComponent(openTextFileButton))
         );
 
-        sourceMapLabel.setText("Include the following source map variables:");
+        sourceMapLabel.setText(Messages.getString("EditMessageDialog.17")); //$NON-NLS-1$
 
         sourceMapScrollPane.setViewportView(sourceMapTable);
 
-        closeButton1.setText("Close");
-        closeButton1.setToolTipText("Close this message sender dialog.");
+        closeButton1.setText(Messages.getString("EditMessageDialog.18")); //$NON-NLS-1$
+        closeButton1.setToolTipText(Messages.getString("EditMessageDialog.19")); //$NON-NLS-1$
         closeButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 closeButtonActionPerformed(evt);
             }
         });
 
-        deleteButton.setText("Delete");
-        deleteButton.setToolTipText("Close this message sender dialog.");
+        deleteButton.setText(Messages.getString("EditMessageDialog.20")); //$NON-NLS-1$
+        deleteButton.setToolTipText(Messages.getString("EditMessageDialog.21")); //$NON-NLS-1$
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteButtonActionPerformed(evt);
@@ -624,7 +624,7 @@ public class EditMessageDialog extends MirthDialog implements DropTargetListener
         }
 
         ((DefaultTableModel) sourceMapTable.getModel()).addRow(new Object[] { getNewSourceMapKey(),
-                "" });
+                Messages.getString("EditMessageDialog.22") }); //$NON-NLS-1$
         sourceMapTable.setRowSelectionInterval(sourceMapTable.getRowCount() - 1, sourceMapTable.getRowCount() - 1);
         sourceMapTable.scrollRowToVisible(sourceMapTable.getRowCount() - 1);
     }//GEN-LAST:event_newButtonActionPerformed

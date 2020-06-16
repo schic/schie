@@ -135,17 +135,17 @@ import com.mirth.connect.util.PropertyVerifier;
 
 /** The channel editor panel. Majority of the client application */
 public class ChannelSetup extends JPanel {
-    private static final String METADATA_NAME_COLUMN_NAME = "Column Name";
-    private static final String METADATA_TYPE_COLUMN_NAME = "Type";
-    private static final String METADATA_MAPPING_COLUMN_NAME = "Variable Mapping";
-    private static final String DESTINATION_DEFAULT = "Channel Writer";
-    private static final String SOURCE_DEFAULT = "Channel Reader";
-    private static final String DATABASE_READER = "Database Reader";
-    private static final String STATUS_COLUMN_NAME = "Status";
-    private static final String METADATA_COLUMN_NAME = "Id";
-    private static final String DESTINATION_COLUMN_NAME = "Destination";
-    private static final String CONNECTOR_TYPE_COLUMN_NAME = "Connector Type";
-    private static final String DESTINATION_CHAIN_COLUMN_NAME = "Chain";
+    private static final String METADATA_NAME_COLUMN_NAME = Messages.getString("ChannelSetup.0"); //$NON-NLS-1$
+    private static final String METADATA_TYPE_COLUMN_NAME = Messages.getString("ChannelSetup.1"); //$NON-NLS-1$
+    private static final String METADATA_MAPPING_COLUMN_NAME = Messages.getString("ChannelSetup.2"); //$NON-NLS-1$
+    private static final String DESTINATION_DEFAULT = Messages.getString("ChannelSetup.3"); //$NON-NLS-1$
+    private static final String SOURCE_DEFAULT = Messages.getString("ChannelSetup.4"); //$NON-NLS-1$
+    private static final String DATABASE_READER = Messages.getString("ChannelSetup.5"); //$NON-NLS-1$
+    private static final String STATUS_COLUMN_NAME = Messages.getString("ChannelSetup.6"); //$NON-NLS-1$
+    private static final String METADATA_COLUMN_NAME = Messages.getString("ChannelSetup.7"); //$NON-NLS-1$
+    private static final String DESTINATION_COLUMN_NAME = Messages.getString("ChannelSetup.8"); //$NON-NLS-1$
+    private static final String CONNECTOR_TYPE_COLUMN_NAME = Messages.getString("ChannelSetup.9"); //$NON-NLS-1$
+    private static final String DESTINATION_CHAIN_COLUMN_NAME = Messages.getString("ChannelSetup.10"); //$NON-NLS-1$
     private static final int SOURCE_TAB_INDEX = 1;
     private static final int DESTINATIONS_TAB_INDEX = 2;
     private static final int SCRIPTS_TAB_INDEX = 3;
@@ -288,10 +288,10 @@ public class ChannelSetup extends JPanel {
      * Is called to load the transformer pane on either the source or destination
      */
     public String editTransformer() {
-        String name = "";
+        String name = Messages.getString("ChannelSetup.11"); //$NON-NLS-1$
 
         if (channelView.getSelectedIndex() == SOURCE_TAB_INDEX) {
-            name = "Source";
+            name = Messages.getString("ChannelSetup.12"); //$NON-NLS-1$
             transformerPane.setProperties(currentChannel.getSourceConnector(), currentChannel.getSourceConnector().getTransformer(), false);
         } else if (channelView.getSelectedIndex() == DESTINATIONS_TAB_INDEX) {
             Connector destination = currentChannel.getDestinationConnectors().get(destinationTable.getSelectedModelIndex());
@@ -313,7 +313,7 @@ public class ChannelSetup extends JPanel {
      * Is called to load the response transformer pane on the destination
      */
     public String editResponseTransformer() {
-        String name = "";
+        String name = Messages.getString("ChannelSetup.13"); //$NON-NLS-1$
 
         if (channelView.getSelectedIndex() == DESTINATIONS_TAB_INDEX) {
             Connector destination = currentChannel.getDestinationConnectors().get(destinationTable.getSelectedModelIndex());
@@ -333,10 +333,10 @@ public class ChannelSetup extends JPanel {
 
     /** Is called to load the filter pane on either the source or destination */
     public String editFilter() {
-        String name = "";
+        String name = Messages.getString("ChannelSetup.14"); //$NON-NLS-1$
 
         if (channelView.getSelectedIndex() == SOURCE_TAB_INDEX) {
-            name = "Source";
+            name = Messages.getString("ChannelSetup.15"); //$NON-NLS-1$
             filterPane.setProperties(currentChannel.getSourceConnector(), currentChannel.getSourceConnector().getFilter(), false);
         } else if (channelView.getSelectedIndex() == DESTINATIONS_TAB_INDEX) {
             Connector destination = currentChannel.getDestinationConnectors().get(destinationTable.getSelectedModelIndex());
@@ -402,9 +402,9 @@ public class ChannelSetup extends JPanel {
                 currentChannel.addDestination(connector);
 
                 if (connector.isEnabled()) {
-                    tableData[i][0] = new CellData(new ImageIcon(Frame.class.getResource("images/bullet_blue.png")), UIConstants.ENABLED_STATUS);
+                    tableData[i][0] = new CellData(new ImageIcon(Frame.class.getResource(Messages.getString("ChannelSetup.16"))), UIConstants.ENABLED_STATUS); //$NON-NLS-1$
                 } else {
-                    tableData[i][0] = new CellData(new ImageIcon(Frame.class.getResource("images/bullet_black.png")), UIConstants.DISABLED_STATUS);
+                    tableData[i][0] = new CellData(new ImageIcon(Frame.class.getResource(Messages.getString("ChannelSetup.17"))), UIConstants.DISABLED_STATUS); //$NON-NLS-1$
                 }
                 tableData[i][1] = connector.getName();
                 tableData[i][2] = connector.getMetaDataId();
@@ -418,9 +418,9 @@ public class ChannelSetup extends JPanel {
             } else {
 
                 if (destinationConnectors.get(i).isEnabled()) {
-                    tableData[i][0] = new CellData(new ImageIcon(Frame.class.getResource("images/bullet_blue.png")), UIConstants.ENABLED_STATUS);
+                    tableData[i][0] = new CellData(new ImageIcon(Frame.class.getResource(Messages.getString("ChannelSetup.18"))), UIConstants.ENABLED_STATUS); //$NON-NLS-1$
                 } else {
-                    tableData[i][0] = new CellData(new ImageIcon(Frame.class.getResource("images/bullet_black.png")), UIConstants.DISABLED_STATUS);
+                    tableData[i][0] = new CellData(new ImageIcon(Frame.class.getResource(Messages.getString("ChannelSetup.19"))), UIConstants.DISABLED_STATUS); //$NON-NLS-1$
                 }
                 tableData[i][1] = destinationConnectors.get(i).getName();
                 tableData[i][2] = destinationConnectors.get(i).getMetaDataId();
@@ -463,7 +463,7 @@ public class ChannelSetup extends JPanel {
      * Get the name that should be used for a new destination so that it is unique.
      */
     private String getNewDestinationName(int size) {
-        String temp = "Destination ";
+        String temp = Messages.getString("ChannelSetup.20"); //$NON-NLS-1$
 
         for (int i = 1; i <= size; i++) {
             boolean exists = false;
@@ -476,7 +476,7 @@ public class ChannelSetup extends JPanel {
                 return temp + i;
             }
         }
-        return "";
+        return Messages.getString("ChannelSetup.21"); //$NON-NLS-1$
     }
 
     /** Loads a selected connector and returns true on success. */
@@ -579,7 +579,7 @@ public class ChannelSetup extends JPanel {
         destinationConnectorTypeComboBox.setModel(new DefaultComboBoxModel(LoadedExtensions.getInstance().getDestinationConnectors().keySet().toArray()));
 
         Connector sourceConnector = makeNewConnector(false);
-        sourceConnector.setName("sourceConnector");
+        sourceConnector.setName(Messages.getString("ChannelSetup.22")); //$NON-NLS-1$
         sourceConnector.setTransportName(SOURCE_DEFAULT);
         Transformer sourceTransformer = new Transformer();
 
@@ -611,7 +611,7 @@ public class ChannelSetup extends JPanel {
                 defaultQueueBufferSize = serverSettings.getQueueBufferSize();
             }
         } catch (ClientException e) {
-            parent.alertThrowable(parent, e, "Error loading default metadata columns: " + e.getMessage());
+            parent.alertThrowable(parent, e, Messages.getString("ChannelSetup.23") + e.getMessage()); //$NON-NLS-1$
         }
 
         loadChannelInfo();
@@ -700,15 +700,15 @@ public class ChannelSetup extends JPanel {
     }
 
     private void updateChannelId() {
-        channelIdField.setText("Id: " + currentChannel.getId());
+        channelIdField.setText(Messages.getString("ChannelSetup.24") + currentChannel.getId()); //$NON-NLS-1$
     }
 
     private void updateRevision() {
-        revisionLabel.setText("Revision: " + currentChannel.getRevision());
+        revisionLabel.setText(Messages.getString("ChannelSetup.25") + currentChannel.getRevision()); //$NON-NLS-1$
     }
 
     private void updateLastModified() {
-        lastModifiedLabel.setText("Last Modified: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentChannel.getExportData().getMetadata().getLastModified().getTime()));
+        lastModifiedLabel.setText(Messages.getString("ChannelSetup.26") + new SimpleDateFormat(Messages.getString("ChannelSetup.27")).format(currentChannel.getExportData().getMetadata().getLastModified().getTime())); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /** Load all of the saved channel information into the channel editor */
@@ -716,7 +716,7 @@ public class ChannelSetup extends JPanel {
         boolean enabled = parent.isSaveEnabled();
         ChannelProperties properties = currentChannel.getProperties();
         ChannelMetadata metadata = currentChannel.getExportData().getMetadata();
-        parent.setPanelName("Edit Channel - " + currentChannel.getName());
+        parent.setPanelName(Messages.getString("ChannelSetup.28") + currentChannel.getName()); //$NON-NLS-1$
         nameField.setText(currentChannel.getName());
         summaryDescriptionText.setText(currentChannel.getDescription());
         updateChannelId();
@@ -780,7 +780,7 @@ public class ChannelSetup extends JPanel {
         Integer pruneContentDays = metadata.getPruningSettings().getPruneContentDays();
 
         if (pruneMetaDataDays == null) {
-            metadataPruningDaysTextField.setText("");
+            metadataPruningDaysTextField.setText(Messages.getString("ChannelSetup.29")); //$NON-NLS-1$
             metadataPruningOffRadio.setSelected(true);
             metadataPruningOffRadioActionPerformed(null);
         } else {
@@ -791,7 +791,7 @@ public class ChannelSetup extends JPanel {
 
         if (pruneContentDays == null) {
             contentPruningMetadataRadio.setSelected(true);
-            contentPruningDaysTextField.setText("");
+            contentPruningDaysTextField.setText(Messages.getString("ChannelSetup.30")); //$NON-NLS-1$
             contentPruningMetadataRadioActionPerformed(null);
         } else {
             contentPruningDaysRadio.setSelected(true);
@@ -834,18 +834,18 @@ public class ChannelSetup extends JPanel {
             nonDefaultCount++;
         }
 
-        channelView.setTitleAt(SCRIPTS_TAB_INDEX, nonDefaultCount > 0 ? "Scripts (" + nonDefaultCount + ")" : "Scripts");
+        channelView.setTitleAt(SCRIPTS_TAB_INDEX, nonDefaultCount > 0 ? Messages.getString("ChannelSetup.31") + nonDefaultCount + Messages.getString("ChannelSetup.32") : Messages.getString("ChannelSetup.33")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     private boolean compareScripts(String savedScript, String defualtScript) {
         Context context = JavaScriptSharedUtil.getGlobalContextForValidation();
         try {
-            String decompiledSavedScript = "";
-            String decompiledDefaultScript = "";
+            String decompiledSavedScript = Messages.getString("ChannelSetup.34"); //$NON-NLS-1$
+            String decompiledDefaultScript = Messages.getString("ChannelSetup.35"); //$NON-NLS-1$
 
             try {
-                decompiledSavedScript = context.decompileScript(context.compileString("function doScript() {" + savedScript + "}", PlatformUI.MIRTH_FRAME.mirthClient.getGuid(), 1, null), 1);
-                decompiledDefaultScript = context.decompileScript(context.compileString("function doScript() {" + defualtScript + "}", PlatformUI.MIRTH_FRAME.mirthClient.getGuid(), 1, null), 1);
+                decompiledSavedScript = context.decompileScript(context.compileString(Messages.getString("ChannelSetup.36") + savedScript + Messages.getString("ChannelSetup.37"), PlatformUI.MIRTH_FRAME.mirthClient.getGuid(), 1, null), 1); //$NON-NLS-1$ //$NON-NLS-2$
+                decompiledDefaultScript = context.decompileScript(context.compileString(Messages.getString("ChannelSetup.38") + defualtScript + Messages.getString("ChannelSetup.39"), PlatformUI.MIRTH_FRAME.mirthClient.getGuid(), 1, null), 1); //$NON-NLS-1$ //$NON-NLS-2$
             } catch (Exception e) {
                 //If any script fails to compile for any reason, we can just assume they aren't equal.
                 return false;
@@ -886,7 +886,7 @@ public class ChannelSetup extends JPanel {
         }
 
         if (!invalidPluginPropertiesNames.isEmpty()) {
-            StringBuilder alertMessage = new StringBuilder("The following invalid connector plugin properties were found:\n\n");
+            StringBuilder alertMessage = new StringBuilder(Messages.getString("ChannelSetup.40")); //$NON-NLS-1$
             for (String name : invalidPluginPropertiesNames) {
                 alertMessage.append(name);
                 alertMessage.append('\n');
@@ -912,10 +912,10 @@ public class ChannelSetup extends JPanel {
 
         switch (messageStorageMode) {
             case DEVELOPMENT:
-                storageModeLabel.setText("Development");
-                contentLabel.setText("Content: All");
-                metadataLabel.setText("Metadata: All");
-                durableStatusLabel.setText("On");
+                storageModeLabel.setText(Messages.getString("ChannelSetup.41")); //$NON-NLS-1$
+                contentLabel.setText(Messages.getString("ChannelSetup.42")); //$NON-NLS-1$
+                metadataLabel.setText(Messages.getString("ChannelSetup.43")); //$NON-NLS-1$
+                durableStatusLabel.setText(Messages.getString("ChannelSetup.44")); //$NON-NLS-1$
                 durableStatusLabel.setForeground(new Color(0, 130, 0));
                 messageStorageProgressBar.setValue(20);
                 encryptMessagesCheckBox.setEnabled(true);
@@ -925,10 +925,10 @@ public class ChannelSetup extends JPanel {
                 break;
 
             case PRODUCTION:
-                storageModeLabel.setText("Production");
-                contentLabel.setText("Content: Raw, Encoded, Sent, Response, Maps");
-                metadataLabel.setText("Metadata: All");
-                durableStatusLabel.setText("On");
+                storageModeLabel.setText(Messages.getString("ChannelSetup.45")); //$NON-NLS-1$
+                contentLabel.setText(Messages.getString("ChannelSetup.46")); //$NON-NLS-1$
+                metadataLabel.setText(Messages.getString("ChannelSetup.47")); //$NON-NLS-1$
+                durableStatusLabel.setText(Messages.getString("ChannelSetup.48")); //$NON-NLS-1$
                 durableStatusLabel.setForeground(new Color(0, 130, 0));
                 messageStorageProgressBar.setValue(25);
                 encryptMessagesCheckBox.setEnabled(true);
@@ -938,10 +938,10 @@ public class ChannelSetup extends JPanel {
                 break;
 
             case RAW:
-                storageModeLabel.setText("Raw");
-                contentLabel.setText("Content: Raw");
-                metadataLabel.setText("Metadata: All");
-                durableStatusLabel.setText("Reprocess only");
+                storageModeLabel.setText(Messages.getString("ChannelSetup.49")); //$NON-NLS-1$
+                contentLabel.setText(Messages.getString("ChannelSetup.50")); //$NON-NLS-1$
+                metadataLabel.setText(Messages.getString("ChannelSetup.51")); //$NON-NLS-1$
+                durableStatusLabel.setText(Messages.getString("ChannelSetup.52")); //$NON-NLS-1$
                 durableStatusLabel.setForeground(new Color(255, 102, 0));
                 messageStorageProgressBar.setValue(60);
                 encryptMessagesCheckBox.setEnabled(true);
@@ -951,10 +951,10 @@ public class ChannelSetup extends JPanel {
                 break;
 
             case METADATA:
-                storageModeLabel.setText("Metadata");
-                contentLabel.setText("Content: None");
-                metadataLabel.setText("Metadata: All");
-                durableStatusLabel.setText("Off");
+                storageModeLabel.setText(Messages.getString("ChannelSetup.53")); //$NON-NLS-1$
+                contentLabel.setText(Messages.getString("ChannelSetup.54")); //$NON-NLS-1$
+                metadataLabel.setText(Messages.getString("ChannelSetup.55")); //$NON-NLS-1$
+                durableStatusLabel.setText(Messages.getString("ChannelSetup.56")); //$NON-NLS-1$
                 durableStatusLabel.setForeground(new Color(130, 0, 0));
                 messageStorageProgressBar.setValue(65);
                 encryptMessagesCheckBox.setEnabled(false);
@@ -964,10 +964,10 @@ public class ChannelSetup extends JPanel {
                 break;
 
             case DISABLED:
-                storageModeLabel.setText("Disabled");
-                contentLabel.setText("Content: None");
-                metadataLabel.setText("Metadata: None");
-                durableStatusLabel.setText("Off");
+                storageModeLabel.setText(Messages.getString("ChannelSetup.57")); //$NON-NLS-1$
+                contentLabel.setText(Messages.getString("ChannelSetup.58")); //$NON-NLS-1$
+                metadataLabel.setText(Messages.getString("ChannelSetup.59")); //$NON-NLS-1$
+                durableStatusLabel.setText(Messages.getString("ChannelSetup.60")); //$NON-NLS-1$
                 durableStatusLabel.setForeground(new Color(130, 0, 0));
                 messageStorageProgressBar.setValue(100);
                 encryptMessagesCheckBox.setEnabled(false);
@@ -1005,9 +1005,9 @@ public class ChannelSetup extends JPanel {
         String errorString = getQueueErrorString(messageStorageMode);
 
         if (errorString != null) {
-            queueWarningLabel.setText("<html>Disable " + errorString + " queueing before using this mode</html>");
+            queueWarningLabel.setText(Messages.getString("ChannelSetup.61") + errorString + Messages.getString("ChannelSetup.62")); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
-            queueWarningLabel.setText("");
+            queueWarningLabel.setText(Messages.getString("ChannelSetup.63")); //$NON-NLS-1$
         }
     }
 
@@ -1041,16 +1041,16 @@ public class ChannelSetup extends JPanel {
             case METADATA:
             case DISABLED:
                 if (sourceQueueEnabled) {
-                    stringBuilder.append("source");
+                    stringBuilder.append(Messages.getString("ChannelSetup.64")); //$NON-NLS-1$
 
                     if (destinationQueueEnabled) {
-                        stringBuilder.append(" & ");
+                        stringBuilder.append(Messages.getString("ChannelSetup.65")); //$NON-NLS-1$
                     }
                 }
 
             case RAW:
                 if (destinationQueueEnabled) {
-                    stringBuilder.append("destination");
+                    stringBuilder.append(Messages.getString("ChannelSetup.66")); //$NON-NLS-1$
                 }
 
                 break;
@@ -1109,13 +1109,13 @@ public class ChannelSetup extends JPanel {
             return false;
         }
 
-        if (metadataPruningOnRadio.isSelected() && metadataPruningDaysTextField.getText().equals("")) {
-            parent.alertWarning(parent, "If metadata pruning is enabled, the age of metadata to prune cannot be blank.");
+        if (metadataPruningOnRadio.isSelected() && metadataPruningDaysTextField.getText().equals(Messages.getString("ChannelSetup.67"))) { //$NON-NLS-1$
+            parent.alertWarning(parent, Messages.getString("ChannelSetup.68")); //$NON-NLS-1$
             return false;
         }
 
-        if (contentPruningDaysRadio.isSelected() && contentPruningDaysTextField.getText().equals("")) {
-            parent.alertWarning(parent, "If content pruning is enabled, the age of content to prune cannot be blank.");
+        if (contentPruningDaysRadio.isSelected() && contentPruningDaysTextField.getText().equals(Messages.getString("ChannelSetup.69"))) { //$NON-NLS-1$
+            parent.alertWarning(parent, Messages.getString("ChannelSetup.70")); //$NON-NLS-1$
             return false;
         }
 
@@ -1124,7 +1124,7 @@ public class ChannelSetup extends JPanel {
             Integer contentPruningDays = Integer.parseInt(contentPruningDaysTextField.getText());
 
             if (contentPruningDays > metadataPruningDays) {
-                parent.alertWarning(parent, "The age of content to prune cannot be greater than the age of metadata to prune.");
+                parent.alertWarning(parent, Messages.getString("ChannelSetup.71")); //$NON-NLS-1$
                 return false;
             }
         }
@@ -1144,17 +1144,17 @@ public class ChannelSetup extends JPanel {
             // Do not allow metadata column names to be empty
             String columnName = (String) model.getValueAt(i, model.findColumn(METADATA_NAME_COLUMN_NAME));
             if (StringUtils.isEmpty(columnName)) {
-                parent.alertWarning(parent, "Empty column name detected in custom metadata table. Column names cannot be empty.");
+                parent.alertWarning(parent, Messages.getString("ChannelSetup.72")); //$NON-NLS-1$
                 return false;
             } else {
                 // Do not allow duplicate column names
                 if (columnNames.contains(columnName)) {
-                    parent.alertWarning(parent, "Duplicate column name detected in custom metadata table. Column names must be unique.");
+                    parent.alertWarning(parent, Messages.getString("ChannelSetup.73")); //$NON-NLS-1$
                     return false;
                 }
 
-                if (columnName.equalsIgnoreCase("MESSAGE_ID") || columnName.equalsIgnoreCase("METADATA_ID")) {
-                    parent.alertWarning(parent, columnName + " is a reserved keyword and cannot be used as a column name in the custom metadata table.");
+                if (columnName.equalsIgnoreCase(Messages.getString("ChannelSetup.74")) || columnName.equalsIgnoreCase(Messages.getString("ChannelSetup.75"))) { //$NON-NLS-1$ //$NON-NLS-2$
+                    parent.alertWarning(parent, columnName + Messages.getString("ChannelSetup.76")); //$NON-NLS-1$
                     return false;
                 }
 
@@ -1172,7 +1172,7 @@ public class ChannelSetup extends JPanel {
 
         // Notify the user if an existing column was modified in a way such that it will be deleted on deploy
         if (!currentColumns.isEmpty()) {
-            if (!parent.alertOption(parent, "Renaming, deleting, or changing the type of existing custom metadata columns\nwill delete all existing data " + "for that column. Are you sure you want to do this?")) {
+            if (!parent.alertOption(parent, Messages.getString("ChannelSetup.77") + Messages.getString("ChannelSetup.78"))) { //$NON-NLS-1$ //$NON-NLS-2$
                 return false;
             }
         }
@@ -1195,7 +1195,7 @@ public class ChannelSetup extends JPanel {
         String errorString = getQueueErrorString(messageStorageMode);
 
         if (errorString != null) {
-            parent.alertWarning(parent, StringUtils.capitalize(errorString) + " queueing must be disabled first before using the selected message storage mode.");
+            parent.alertWarning(parent, StringUtils.capitalize(errorString) + Messages.getString("ChannelSetup.79")); //$NON-NLS-1$
             return false;
         }
 
@@ -1399,7 +1399,7 @@ public class ChannelSetup extends JPanel {
 
     public void cloneDestination() {
         if (parent.changesHaveBeenMade()) {
-            if (!parent.alertOption(this.parent, "You must save your channel before cloning.  Would you like to save your channel now?") || !saveChanges()) {
+            if (!parent.alertOption(this.parent, Messages.getString("ChannelSetup.80")) || !saveChanges()) { //$NON-NLS-1$
                 return;
             }
         }
@@ -1445,7 +1445,7 @@ public class ChannelSetup extends JPanel {
             }
         }
         if (enabledCount <= 1) {
-            parent.alertError(this.parent, "You must have at least one destination enabled.");
+            parent.alertError(this.parent, Messages.getString("ChannelSetup.81")); //$NON-NLS-1$
             return;
         }
 
@@ -1466,7 +1466,7 @@ public class ChannelSetup extends JPanel {
         isDeleting = true;
         List<Connector> destinationConnectors = currentChannel.getDestinationConnectors();
         if (destinationConnectors.size() == 1) {
-            JOptionPane.showMessageDialog(parent, "You must have at least one destination.");
+            JOptionPane.showMessageDialog(parent, Messages.getString("ChannelSetup.82")); //$NON-NLS-1$
             return;
         }
 
@@ -1479,7 +1479,7 @@ public class ChannelSetup extends JPanel {
         }
 
         if (!enabledDestination) {
-            JOptionPane.showMessageDialog(parent, "You must have at least one destination enabled.");
+            JOptionPane.showMessageDialog(parent, Messages.getString("ChannelSetup.83")); //$NON-NLS-1$
             return;
         }
 
@@ -1567,7 +1567,7 @@ public class ChannelSetup extends JPanel {
      * @return
      */
     public String checkAllForms(Channel channel) {
-        String errors = "";
+        String errors = Messages.getString("ChannelSetup.84"); //$NON-NLS-1$
         ConnectorSettingsPanel tempConnector = null;
         ConnectorProperties tempProps = null;
 
@@ -1609,7 +1609,7 @@ public class ChannelSetup extends JPanel {
 
         errors += validateScripts(channel);
 
-        if (errors.equals("")) {
+        if (errors.equals(Messages.getString("ChannelSetup.85"))) { //$NON-NLS-1$
             errors = null;
             channelValidationFailed = false;
         } else {
@@ -1620,7 +1620,7 @@ public class ChannelSetup extends JPanel {
     }
 
     private String validateTransformerSteps(Connector connector) {
-        String errors = "";
+        String errors = Messages.getString("ChannelSetup.86"); //$NON-NLS-1$
         Connector currentConnector = transformerPane.getConnector();
         if (connector != currentConnector) {
             transformerPane.setConnector(connector);
@@ -1629,7 +1629,7 @@ public class ChannelSetup extends JPanel {
         for (Step step : connector.getTransformer().getElements()) {
             String validationMessage = this.transformerPane.validateElement(step);
             if (StringUtils.isNotBlank(validationMessage)) {
-                errors += "Error in connector \"" + connector.getName() + "\" at transformer step " + step.getSequenceNumber() + " (\"" + step.getName() + "\"):\n" + validationMessage + "\n\n";
+                errors += Messages.getString("ChannelSetup.87") + connector.getName() + Messages.getString("ChannelSetup.88") + step.getSequenceNumber() + Messages.getString("ChannelSetup.89") + step.getName() + Messages.getString("ChannelSetup.90") + validationMessage + Messages.getString("ChannelSetup.91"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
             }
         }
 
@@ -1637,7 +1637,7 @@ public class ChannelSetup extends JPanel {
             for (Step step : connector.getResponseTransformer().getElements()) {
                 String validationMessage = this.transformerPane.validateElement(step);
                 if (StringUtils.isNotBlank(validationMessage)) {
-                    errors += "Error in connector \"" + connector.getName() + "\" at response transformer step " + step.getSequenceNumber() + " (\"" + step.getName() + "\"):\n" + validationMessage + "\n\n";
+                    errors += Messages.getString("ChannelSetup.92") + connector.getName() + Messages.getString("ChannelSetup.93") + step.getSequenceNumber() + Messages.getString("ChannelSetup.94") + step.getName() + Messages.getString("ChannelSetup.95") + validationMessage + Messages.getString("ChannelSetup.96"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
                 }
             }
         }
@@ -1649,7 +1649,7 @@ public class ChannelSetup extends JPanel {
     }
 
     private String validateFilterRules(Connector connector) {
-        String errors = "";
+        String errors = Messages.getString("ChannelSetup.97"); //$NON-NLS-1$
         Connector currentConnector = filterPane.getConnector();
         if (connector != currentConnector) {
             filterPane.setConnector(connector);
@@ -1658,7 +1658,7 @@ public class ChannelSetup extends JPanel {
         for (Rule rule : connector.getFilter().getElements()) {
             String validationMessage = this.filterPane.validateElement(rule);
             if (StringUtils.isNotBlank(validationMessage)) {
-                errors += "Error in connector \"" + connector.getName() + "\" at filter rule " + rule.getSequenceNumber() + " (\"" + rule.getName() + "\"):\n" + validationMessage + "\n\n";
+                errors += Messages.getString("ChannelSetup.98") + connector.getName() + Messages.getString("ChannelSetup.99") + rule.getSequenceNumber() + Messages.getString("ChannelSetup.100") + rule.getName() + Messages.getString("ChannelSetup.101") + validationMessage + Messages.getString("ChannelSetup.102"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
             }
         }
 
@@ -1669,26 +1669,26 @@ public class ChannelSetup extends JPanel {
     }
 
     private String validateScripts(Channel channel) {
-        String errors = "";
+        String errors = Messages.getString("ChannelSetup.103"); //$NON-NLS-1$
 
         String validationMessage = this.scriptsPanel.validateScript(channel.getDeployScript());
         if (validationMessage != null) {
-            errors += "Error in channel script \"" + ScriptPanel.DEPLOY_SCRIPT + "\":\n" + validationMessage + "\n\n";
+            errors += Messages.getString("ChannelSetup.104") + ScriptPanel.DEPLOY_SCRIPT + Messages.getString("ChannelSetup.105") + validationMessage + Messages.getString("ChannelSetup.106"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         validationMessage = this.scriptsPanel.validateScript(channel.getPreprocessingScript());
         if (validationMessage != null) {
-            errors += "Error in channel script \"" + ScriptPanel.PREPROCESSOR_SCRIPT + "\":\n" + validationMessage + "\n\n";
+            errors += Messages.getString("ChannelSetup.107") + ScriptPanel.PREPROCESSOR_SCRIPT + Messages.getString("ChannelSetup.108") + validationMessage + Messages.getString("ChannelSetup.109"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         validationMessage = this.scriptsPanel.validateScript(channel.getPostprocessingScript());
         if (validationMessage != null) {
-            errors += "Error in channel script \"" + ScriptPanel.POSTPROCESSOR_SCRIPT + "\":\n" + validationMessage + "\n\n";
+            errors += Messages.getString("ChannelSetup.110") + ScriptPanel.POSTPROCESSOR_SCRIPT + Messages.getString("ChannelSetup.111") + validationMessage + Messages.getString("ChannelSetup.112"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         validationMessage = this.scriptsPanel.validateScript(channel.getUndeployScript());
         if (validationMessage != null) {
-            errors += "Error in channel script \"" + ScriptPanel.UNDEPLOY_SCRIPT + "\":\n" + validationMessage + "\n\n";
+            errors += Messages.getString("ChannelSetup.113") + ScriptPanel.UNDEPLOY_SCRIPT + Messages.getString("ChannelSetup.114") + validationMessage + Messages.getString("ChannelSetup.115"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         return errors;
@@ -1700,14 +1700,14 @@ public class ChannelSetup extends JPanel {
             if (validationMessage != null) {
                 parent.alertCustomError(this.parent, validationMessage, CustomErrorDialog.ERROR_VALIDATING_CONNECTOR);
             } else {
-                parent.alertInformation(this.parent, "The connector was successfully validated.");
+                parent.alertInformation(this.parent, Messages.getString("ChannelSetup.116")); //$NON-NLS-1$
             }
         } else {
             String validationMessage = destinationConnectorPanel.doValidate(destinationConnectorPanel.getProperties(), true);
             if (validationMessage != null) {
                 parent.alertWarning(this.parent, validationMessage);
             } else {
-                parent.alertInformation(this.parent, "The connector was successfully validated.");
+                parent.alertInformation(this.parent, Messages.getString("ChannelSetup.117")); //$NON-NLS-1$
             }
         }
     }
@@ -1790,9 +1790,9 @@ public class ChannelSetup extends JPanel {
         // Channel Properties
         channelPropertiesPanel = new JPanel();
         channelPropertiesPanel.setBackground(summaryPanel.getBackground());
-        channelPropertiesPanel.setBorder(BorderFactory.createTitledBorder("Channel Properties"));
+        channelPropertiesPanel.setBorder(BorderFactory.createTitledBorder(Messages.getString("ChannelSetup.118"))); //$NON-NLS-1$
 
-        nameLabel = new JLabel("Name:");
+        nameLabel = new JLabel(Messages.getString("ChannelSetup.119")); //$NON-NLS-1$
 
         nameField = new MirthTextField();
         nameField.setDocument(new MirthFieldConstraints(40, false, true, true));
@@ -1803,20 +1803,20 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        summaryEnabledCheckBox = new MirthCheckBox("Enabled");
+        summaryEnabledCheckBox = new MirthCheckBox(Messages.getString("ChannelSetup.120")); //$NON-NLS-1$
         summaryEnabledCheckBox.setBackground(channelPropertiesPanel.getBackground());
-        summaryEnabledCheckBox.setText("Enabled");
+        summaryEnabledCheckBox.setText(Messages.getString("ChannelSetup.121")); //$NON-NLS-1$
 
-        channelIdField = new JTextField("Id: ");
+        channelIdField = new JTextField(Messages.getString("ChannelSetup.122")); //$NON-NLS-1$
         channelIdField.setEditable(false);
         channelIdField.setBackground(channelPropertiesPanel.getBackground());
         channelIdField.setHorizontalAlignment(JTextField.RIGHT);
-        channelIdField.setText("Id: ");
+        channelIdField.setText(Messages.getString("ChannelSetup.123")); //$NON-NLS-1$
         channelIdField.setBorder(null);
 
-        dataTypesLabel = new JLabel("Data Types:");
+        dataTypesLabel = new JLabel(Messages.getString("ChannelSetup.124")); //$NON-NLS-1$
 
-        dataTypesButton = new JButton("Set Data Types");
+        dataTypesButton = new JButton(Messages.getString("ChannelSetup.125")); //$NON-NLS-1$
         dataTypesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -1824,15 +1824,15 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        clearGlobalChannelMapCheckBox = new MirthCheckBox("Clear global channel map on deploy");
+        clearGlobalChannelMapCheckBox = new MirthCheckBox(Messages.getString("ChannelSetup.126")); //$NON-NLS-1$
         clearGlobalChannelMapCheckBox.setBackground(channelPropertiesPanel.getBackground());
 
-        revisionLabel = new JLabel("Revision: ");
+        revisionLabel = new JLabel(Messages.getString("ChannelSetup.127")); //$NON-NLS-1$
         revisionLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        dependenciesLabel = new JLabel("Dependencies:");
+        dependenciesLabel = new JLabel(Messages.getString("ChannelSetup.128")); //$NON-NLS-1$
 
-        dependenciesButton = new JButton("Set Dependencies");
+        dependenciesButton = new JButton(Messages.getString("ChannelSetup.129")); //$NON-NLS-1$
         dependenciesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -1840,15 +1840,15 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        lastModifiedLabel = new JLabel("Last Modified: ");
+        lastModifiedLabel = new JLabel(Messages.getString("ChannelSetup.130")); //$NON-NLS-1$
         lastModifiedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        initialStateLabel = new JLabel("Initial State:");
+        initialStateLabel = new JLabel(Messages.getString("ChannelSetup.131")); //$NON-NLS-1$
         initialStateComboBox = new MirthComboBox<DeployedState>();
         initialStateComboBox.setModel(new DefaultComboBoxModel<DeployedState>(new DeployedState[] {
                 DeployedState.STARTED, DeployedState.PAUSED, DeployedState.STOPPED }));
 
-        attachmentLabel = new JLabel("Attachment:");
+        attachmentLabel = new JLabel(Messages.getString("ChannelSetup.132")); //$NON-NLS-1$
 
         attachmentComboBox = new MirthComboBox<AttachmentHandlerType>();
         attachmentComboBox.setModel(new DefaultComboBoxModel<AttachmentHandlerType>(AttachmentHandlerType.values()));
@@ -1859,7 +1859,7 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        attachmentPropertiesButton = new JButton("Properties");
+        attachmentPropertiesButton = new JButton(Messages.getString("ChannelSetup.133")); //$NON-NLS-1$
         attachmentPropertiesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -1867,7 +1867,7 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        attachmentStoreCheckBox = new MirthCheckBox("Store Attachments");
+        attachmentStoreCheckBox = new MirthCheckBox(Messages.getString("ChannelSetup.134")); //$NON-NLS-1$
         attachmentStoreCheckBox.setBackground(channelPropertiesPanel.getBackground());
         attachmentStoreCheckBox.addItemListener(new ItemListener() {
             @Override
@@ -1876,10 +1876,10 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        attachmentWarningLabel = new JLabel("Attachments will be extracted but not stored or reattached.");
+        attachmentWarningLabel = new JLabel(Messages.getString("ChannelSetup.135")); //$NON-NLS-1$
         attachmentWarningLabel.setForeground(new Color(255, 0, 0));
 
-        tagsLabel = new JLabel("Tags:");
+        tagsLabel = new JLabel(Messages.getString("ChannelSetup.136")); //$NON-NLS-1$
 
         Set<FilterCompletion> tags = new HashSet<FilterCompletion>();
         for (ChannelTag tag : parent.getCachedChannelTags()) {
@@ -1900,7 +1900,7 @@ public class ChannelSetup extends JPanel {
         // Message Storage
         messageStoragePanel = new JPanel();
         messageStoragePanel.setBackground(summaryPanel.getBackground());
-        messageStoragePanel.setBorder(BorderFactory.createTitledBorder("Message Storage"));
+        messageStoragePanel.setBorder(BorderFactory.createTitledBorder(Messages.getString("ChannelSetup.137"))); //$NON-NLS-1$
         messageStoragePanel.setForeground(new Color(0, 102, 0));
 
         messageStorageSlider = new JSlider();
@@ -1918,24 +1918,24 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        storageModeLabel = new JLabel("Development");
-        storageModeLabel.setFont(new Font("Dialog", 1, 14));
+        storageModeLabel = new JLabel(Messages.getString("ChannelSetup.138")); //$NON-NLS-1$
+        storageModeLabel.setFont(new Font(Messages.getString("ChannelSetup.139"), 1, 14)); //$NON-NLS-1$
 
-        contentLabel = new JLabel("Content: ");
+        contentLabel = new JLabel(Messages.getString("ChannelSetup.140")); //$NON-NLS-1$
 
-        metadataLabel = new JLabel("Metadata:");
+        metadataLabel = new JLabel(Messages.getString("ChannelSetup.141")); //$NON-NLS-1$
 
-        durableLabel = new JLabel("Durable Message Delivery:");
+        durableLabel = new JLabel(Messages.getString("ChannelSetup.142")); //$NON-NLS-1$
 
-        durableStatusLabel = new JLabel("On");
+        durableStatusLabel = new JLabel(Messages.getString("ChannelSetup.143")); //$NON-NLS-1$
         durableStatusLabel.setForeground(new Color(0, 102, 0));
 
-        performanceLabel = new JLabel("Performance:");
+        performanceLabel = new JLabel(Messages.getString("ChannelSetup.144")); //$NON-NLS-1$
 
         messageStorageProgressBar = new JProgressBar();
         messageStorageProgressBar.setValue(10);
 
-        encryptMessagesCheckBox = new MirthCheckBox("Encrypt message content");
+        encryptMessagesCheckBox = new MirthCheckBox(Messages.getString("ChannelSetup.145")); //$NON-NLS-1$
         encryptMessagesCheckBox.setBackground(messageStoragePanel.getBackground());
         encryptMessagesCheckBox.addActionListener(new ActionListener() {
             @Override
@@ -1944,7 +1944,7 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        removeContentCheckBox = new MirthCheckBox("Remove content on completion");
+        removeContentCheckBox = new MirthCheckBox(Messages.getString("ChannelSetup.146")); //$NON-NLS-1$
         removeContentCheckBox.setBackground(messageStoragePanel.getBackground());
         removeContentCheckBox.addActionListener(new ActionListener() {
             @Override
@@ -1953,7 +1953,7 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        removeAttachmentsCheckBox = new MirthCheckBox("Remove attachments on completion");
+        removeAttachmentsCheckBox = new MirthCheckBox(Messages.getString("ChannelSetup.147")); //$NON-NLS-1$
         removeAttachmentsCheckBox.setBackground(messageStoragePanel.getBackground());
         removeAttachmentsCheckBox.addActionListener(new ActionListener() {
             @Override
@@ -1962,23 +1962,23 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        removeOnlyFilteredCheckBox = new MirthCheckBox("Filtered only");
+        removeOnlyFilteredCheckBox = new MirthCheckBox(Messages.getString("ChannelSetup.148")); //$NON-NLS-1$
         removeOnlyFilteredCheckBox.setBackground(messageStoragePanel.getBackground());
 
-        queueWarningLabel = new JLabel("<html>Disable source & destination queueing before using this mode</html>");
-        queueWarningLabel.setFont(new Font("Dialog", 0, 11));
+        queueWarningLabel = new JLabel(Messages.getString("ChannelSetup.149")); //$NON-NLS-1$
+        queueWarningLabel.setFont(new Font(Messages.getString("ChannelSetup.150"), 0, 11)); //$NON-NLS-1$
         queueWarningLabel.setForeground(new Color(255, 0, 0));
         queueWarningLabel.setVerticalAlignment(SwingConstants.TOP);
 
         // Message Pruning
         messagePruningPanel = new JPanel();
         messagePruningPanel.setBackground(summaryPanel.getBackground());
-        messagePruningPanel.setBorder(BorderFactory.createTitledBorder("Message Pruning"));
+        messagePruningPanel.setBorder(BorderFactory.createTitledBorder(Messages.getString("ChannelSetup.151"))); //$NON-NLS-1$
 
-        metadataPruningLabel = new JLabel("Metadata:");
+        metadataPruningLabel = new JLabel(Messages.getString("ChannelSetup.152")); //$NON-NLS-1$
         ButtonGroup metadataPruningButtonGroup = new ButtonGroup();
 
-        metadataPruningOffRadio = new JRadioButton("Store indefinitely");
+        metadataPruningOffRadio = new JRadioButton(Messages.getString("ChannelSetup.153")); //$NON-NLS-1$
         metadataPruningOffRadio.setBackground(messagePruningPanel.getBackground());
         metadataPruningOffRadio.addActionListener(new ActionListener() {
             @Override
@@ -1988,7 +1988,7 @@ public class ChannelSetup extends JPanel {
         });
         metadataPruningButtonGroup.add(metadataPruningOffRadio);
 
-        metadataPruningOnRadio = new JRadioButton("Prune metadata older than");
+        metadataPruningOnRadio = new JRadioButton(Messages.getString("ChannelSetup.154")); //$NON-NLS-1$
         metadataPruningOnRadio.setBackground(messagePruningPanel.getBackground());
         metadataPruningOnRadio.addActionListener(new ActionListener() {
             @Override
@@ -2001,12 +2001,12 @@ public class ChannelSetup extends JPanel {
         metadataPruningDaysTextField = new MirthTextField();
         metadataPruningDaysTextField.setDocument(new MirthFieldConstraints(3, false, false, true));
 
-        metadataDaysLabel = new JLabel("days");
+        metadataDaysLabel = new JLabel(Messages.getString("ChannelSetup.155")); //$NON-NLS-1$
 
-        contentPruningLabel = new JLabel("Content:");
+        contentPruningLabel = new JLabel(Messages.getString("ChannelSetup.156")); //$NON-NLS-1$
         ButtonGroup contentPruningButtonGroup = new ButtonGroup();
 
-        contentPruningMetadataRadio = new JRadioButton("Prune when message metadata is removed");
+        contentPruningMetadataRadio = new JRadioButton(Messages.getString("ChannelSetup.157")); //$NON-NLS-1$
         contentPruningMetadataRadio.setBackground(messagePruningPanel.getBackground());
         contentPruningMetadataRadio.addActionListener(new ActionListener() {
             @Override
@@ -2016,7 +2016,7 @@ public class ChannelSetup extends JPanel {
         });
         contentPruningButtonGroup.add(contentPruningMetadataRadio);
 
-        contentPruningDaysRadio = new JRadioButton("Prune content older than");
+        contentPruningDaysRadio = new JRadioButton(Messages.getString("ChannelSetup.158")); //$NON-NLS-1$
         contentPruningDaysRadio.setBackground(messagePruningPanel.getBackground());
         contentPruningDaysRadio.addActionListener(new ActionListener() {
             @Override
@@ -2029,17 +2029,17 @@ public class ChannelSetup extends JPanel {
         contentPruningDaysTextField = new MirthTextField();
         contentPruningDaysTextField.setDocument(new MirthFieldConstraints(3, false, false, true));
 
-        contentDaysLabel = new JLabel("days");
+        contentDaysLabel = new JLabel(Messages.getString("ChannelSetup.159")); //$NON-NLS-1$
 
-        archiveCheckBox = new MirthCheckBox("Allow message archiving");
+        archiveCheckBox = new MirthCheckBox(Messages.getString("ChannelSetup.160")); //$NON-NLS-1$
         archiveCheckBox.setBackground(messagePruningPanel.getBackground());
 
-        pruningWarningLabel = new JLabel("(incomplete, errored, and queued messages will not be pruned)");
+        pruningWarningLabel = new JLabel(Messages.getString("ChannelSetup.161")); //$NON-NLS-1$
 
         // Custom Metadata
         customMetadataPanel = new JPanel();
         customMetadataPanel.setBackground(summaryPanel.getBackground());
-        customMetadataPanel.setBorder(BorderFactory.createTitledBorder("Custom Metadata"));
+        customMetadataPanel.setBorder(BorderFactory.createTitledBorder(Messages.getString("ChannelSetup.162"))); //$NON-NLS-1$
 
         metaDataTable = new MirthTable();
 
@@ -2073,7 +2073,7 @@ public class ChannelSetup extends JPanel {
         });
         metaDataTable.setModel(model);
 
-        metaDataTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+        metaDataTable.putClientProperty(Messages.getString("ChannelSetup.163"), Boolean.TRUE); //$NON-NLS-1$
         metaDataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         metaDataTable.setDragEnabled(false);
         metaDataTable.setSortable(false);
@@ -2086,7 +2086,7 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+        if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("ChannelSetup.164"), true)) { //$NON-NLS-1$
             metaDataTable.setHighlighters(HighlighterFactory.createAlternateStriping(UIConstants.HIGHLIGHTER_COLOR, UIConstants.BACKGROUND_COLOR));
         }
 
@@ -2094,7 +2094,7 @@ public class ChannelSetup extends JPanel {
 
             public AlphaNumericCellEditor() {
                 super();
-                MirthFieldConstraints constraints = new MirthFieldConstraints("^[a-zA-Z_0-9]*$");
+                MirthFieldConstraints constraints = new MirthFieldConstraints(Messages.getString("ChannelSetup.165")); //$NON-NLS-1$
                 constraints.setLimit(30);
                 getTextField().setDocument(constraints);
             }
@@ -2116,7 +2116,7 @@ public class ChannelSetup extends JPanel {
 
         metaDataScrollPane = new JScrollPane(metaDataTable);
 
-        addMetaDataButton = new JButton("Add");
+        addMetaDataButton = new JButton(Messages.getString("ChannelSetup.166")); //$NON-NLS-1$
         addMetaDataButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -2124,7 +2124,7 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        deleteMetaDataButton = new JButton("Delete");
+        deleteMetaDataButton = new JButton(Messages.getString("ChannelSetup.167")); //$NON-NLS-1$
         deleteMetaDataButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -2132,7 +2132,7 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        revertMetaDataButton = new JButton("Revert");
+        revertMetaDataButton = new JButton(Messages.getString("ChannelSetup.168")); //$NON-NLS-1$
         revertMetaDataButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -2143,7 +2143,7 @@ public class ChannelSetup extends JPanel {
         // Channel Description
         descriptionPanel = new JPanel();
         descriptionPanel.setBackground(summaryPanel.getBackground());
-        descriptionPanel.setBorder(BorderFactory.createTitledBorder("Channel Description"));
+        descriptionPanel.setBorder(BorderFactory.createTitledBorder(Messages.getString("ChannelSetup.169"))); //$NON-NLS-1$
 
         summaryDescriptionText = new MirthTextPane();
 
@@ -2159,7 +2159,7 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        sourceConnectorTypeLabel = new JLabel("Connector Type:");
+        sourceConnectorTypeLabel = new JLabel(Messages.getString("ChannelSetup.170")); //$NON-NLS-1$
 
         sourceConnectorTypeComboBox = new MirthComboBox<String>();
         sourceConnectorTypeComboBox.setMaximumRowCount(20);
@@ -2200,7 +2200,7 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        destinationTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+        destinationTable.putClientProperty(Messages.getString("ChannelSetup.171"), Boolean.TRUE); //$NON-NLS-1$
 
         // Set the custom cell editor for the Destination Name column.
         destinationTable.getColumnModel().getColumn(destinationTable.getColumnModel().getColumnIndex(DESTINATION_COLUMN_NAME)).setCellEditor(new DestinationTableCellEditor());
@@ -2234,7 +2234,7 @@ public class ChannelSetup extends JPanel {
 
         destinationTable.setOpaque(true);
 
-        if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+        if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("ChannelSetup.172"), true)) { //$NON-NLS-1$
             Highlighter highlighter = HighlighterFactory.createAlternateStriping(UIConstants.HIGHLIGHTER_COLOR, UIConstants.BACKGROUND_COLOR);
             destinationTable.setHighlighters(highlighter);
         }
@@ -2314,7 +2314,7 @@ public class ChannelSetup extends JPanel {
         destinationTableScrollPane = new JScrollPane(destinationTable);
         destinationTableScrollPane.setWheelScrollingEnabled(true);
 
-        destinationConnectorTypeLabel = new JLabel("Connector Type:");
+        destinationConnectorTypeLabel = new JLabel(Messages.getString("ChannelSetup.173")); //$NON-NLS-1$
 
         destinationConnectorTypeComboBox = new MirthComboBox<String>();
         destinationConnectorTypeComboBox.setMaximumRowCount(20);
@@ -2325,7 +2325,7 @@ public class ChannelSetup extends JPanel {
             }
         });
 
-        waitForPreviousCheckbox = new MirthCheckBox("Wait for previous destination");
+        waitForPreviousCheckbox = new MirthCheckBox(Messages.getString("ChannelSetup.174")); //$NON-NLS-1$
         waitForPreviousCheckbox.setBackground(destinationsPanel.getBackground());
         waitForPreviousCheckbox.addActionListener(new ActionListener() {
             @Override
@@ -2354,106 +2354,106 @@ public class ChannelSetup extends JPanel {
     }
 
     private void initToolTips() {
-        summaryEnabledCheckBox.setToolTipText("Enable this channel so that it can be deployed.");
-        clearGlobalChannelMapCheckBox.setToolTipText("Clear the global channel map on both single channel deploy and a full redeploy.");
-        attachmentStoreCheckBox.setToolTipText("If checked, attachments will be stored in the database and available for reattachment.");
-        encryptMessagesCheckBox.setToolTipText("<html>Encrypt message content that is stored in the database. Messages that<br>are stored while this option is enabled will still be viewable in the<br>message browser, but the content will not be searchable.</html>");
-        removeContentCheckBox.setToolTipText("<html>Remove message content once the message has completed processing.<br/>Not applicable for messages that are errored or queued.</html>");
-        removeAttachmentsCheckBox.setToolTipText("<html>Remove message attachments once the message has completed processing.<br/>Not applicable for messages that are errored or queued.</html>");
-        removeOnlyFilteredCheckBox.setToolTipText("<html>If checked, only content for filtered connector messages will be removed.</html>");
-        archiveCheckBox.setToolTipText("<html>If checked and the data pruner and archiver are enabled, messages<br />in this channel will be archived before being pruned.</html>");
-        revertMetaDataButton.setToolTipText("<html>Revert the custom metadata settings to the last save.<br>This option allows you to undo your metadata changes without affecting the rest of the channel.</html>");
-        waitForPreviousCheckbox.setToolTipText("<html>Wait for the previous destination to finish before processing the current destination.<br/>Each destination connector for which this is not selected marks the beginning of a destination chain,<br/>such that all chains execute asynchronously, but each destination within a particular chain executes in order.<br/>This option has no effect on the first destination connector, which always marks the beginning of the first chain.</html>");
+        summaryEnabledCheckBox.setToolTipText(Messages.getString("ChannelSetup.175")); //$NON-NLS-1$
+        clearGlobalChannelMapCheckBox.setToolTipText(Messages.getString("ChannelSetup.176")); //$NON-NLS-1$
+        attachmentStoreCheckBox.setToolTipText(Messages.getString("ChannelSetup.177")); //$NON-NLS-1$
+        encryptMessagesCheckBox.setToolTipText(Messages.getString("ChannelSetup.178")); //$NON-NLS-1$
+        removeContentCheckBox.setToolTipText(Messages.getString("ChannelSetup.179")); //$NON-NLS-1$
+        removeAttachmentsCheckBox.setToolTipText(Messages.getString("ChannelSetup.180")); //$NON-NLS-1$
+        removeOnlyFilteredCheckBox.setToolTipText(Messages.getString("ChannelSetup.181")); //$NON-NLS-1$
+        archiveCheckBox.setToolTipText(Messages.getString("ChannelSetup.182")); //$NON-NLS-1$
+        revertMetaDataButton.setToolTipText(Messages.getString("ChannelSetup.183")); //$NON-NLS-1$
+        waitForPreviousCheckbox.setToolTipText(Messages.getString("ChannelSetup.184")); //$NON-NLS-1$
     }
 
     private void initLayout() {
-        setLayout(new MigLayout("insets 0, novisualpadding, hidemode 3, fill"));
+        setLayout(new MigLayout(Messages.getString("ChannelSetup.185"))); //$NON-NLS-1$
 
-        channelPropertiesPanel.setLayout(new MigLayout("insets 0 10 10 10, novisualpadding, hidemode 3, fill, gap 6", "[]12[]12[][grow]"));
-        channelPropertiesPanel.add(nameLabel, "right");
-        channelPropertiesPanel.add(nameField, "w 185!");
+        channelPropertiesPanel.setLayout(new MigLayout(Messages.getString("ChannelSetup.186"), Messages.getString("ChannelSetup.187"))); //$NON-NLS-1$ //$NON-NLS-2$
+        channelPropertiesPanel.add(nameLabel, Messages.getString("ChannelSetup.188")); //$NON-NLS-1$
+        channelPropertiesPanel.add(nameField, Messages.getString("ChannelSetup.189")); //$NON-NLS-1$
         channelPropertiesPanel.add(summaryEnabledCheckBox);
-        channelPropertiesPanel.add(channelIdField, "right");
-        channelPropertiesPanel.add(dataTypesLabel, "newline, right");
-        channelPropertiesPanel.add(dataTypesButton, "w 108!");
+        channelPropertiesPanel.add(channelIdField, Messages.getString("ChannelSetup.190")); //$NON-NLS-1$
+        channelPropertiesPanel.add(dataTypesLabel, Messages.getString("ChannelSetup.191")); //$NON-NLS-1$
+        channelPropertiesPanel.add(dataTypesButton, Messages.getString("ChannelSetup.192")); //$NON-NLS-1$
         channelPropertiesPanel.add(clearGlobalChannelMapCheckBox);
-        channelPropertiesPanel.add(revisionLabel, "right");
-        channelPropertiesPanel.add(dependenciesLabel, "newline, right");
-        channelPropertiesPanel.add(dependenciesButton, "w 108!");
-        channelPropertiesPanel.add(lastModifiedLabel, "skip 1, right");
-        channelPropertiesPanel.add(initialStateLabel, "newline, right");
-        channelPropertiesPanel.add(initialStateComboBox, "w 108!");
-        channelPropertiesPanel.add(attachmentLabel, "newline, right");
-        channelPropertiesPanel.add(attachmentComboBox, "w 108!, split 2");
-        channelPropertiesPanel.add(attachmentPropertiesButton, "gapbefore 6");
-        channelPropertiesPanel.add(attachmentStoreCheckBox, "split 2");
-        channelPropertiesPanel.add(attachmentWarningLabel, "gapbefore 12");
-        channelPropertiesPanel.add(tagsLabel, "newline, right");
-        channelPropertiesPanel.add(tagsField, "sx, growx");
+        channelPropertiesPanel.add(revisionLabel, Messages.getString("ChannelSetup.193")); //$NON-NLS-1$
+        channelPropertiesPanel.add(dependenciesLabel, Messages.getString("ChannelSetup.194")); //$NON-NLS-1$
+        channelPropertiesPanel.add(dependenciesButton, Messages.getString("ChannelSetup.195")); //$NON-NLS-1$
+        channelPropertiesPanel.add(lastModifiedLabel, Messages.getString("ChannelSetup.196")); //$NON-NLS-1$
+        channelPropertiesPanel.add(initialStateLabel, Messages.getString("ChannelSetup.197")); //$NON-NLS-1$
+        channelPropertiesPanel.add(initialStateComboBox, Messages.getString("ChannelSetup.198")); //$NON-NLS-1$
+        channelPropertiesPanel.add(attachmentLabel, Messages.getString("ChannelSetup.199")); //$NON-NLS-1$
+        channelPropertiesPanel.add(attachmentComboBox, Messages.getString("ChannelSetup.200")); //$NON-NLS-1$
+        channelPropertiesPanel.add(attachmentPropertiesButton, Messages.getString("ChannelSetup.201")); //$NON-NLS-1$
+        channelPropertiesPanel.add(attachmentStoreCheckBox, Messages.getString("ChannelSetup.202")); //$NON-NLS-1$
+        channelPropertiesPanel.add(attachmentWarningLabel, Messages.getString("ChannelSetup.203")); //$NON-NLS-1$
+        channelPropertiesPanel.add(tagsLabel, Messages.getString("ChannelSetup.204")); //$NON-NLS-1$
+        channelPropertiesPanel.add(tagsField, Messages.getString("ChannelSetup.205")); //$NON-NLS-1$
 
-        messageStoragePanel.setLayout(new MigLayout("insets 0 10 5 22, novisualpadding, hidemode 3, gap 6", "", "[][][][][][]4[]4[]4[]"));
-        messageStoragePanel.add(messageStorageSlider, "spany, h 167!, top");
+        messageStoragePanel.setLayout(new MigLayout(Messages.getString("ChannelSetup.206"), Messages.getString("ChannelSetup.207"), Messages.getString("ChannelSetup.208"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        messageStoragePanel.add(messageStorageSlider, Messages.getString("ChannelSetup.209")); //$NON-NLS-1$
         messageStoragePanel.add(storageModeLabel);
-        messageStoragePanel.add(contentLabel, "newline");
-        messageStoragePanel.add(metadataLabel, "newline");
-        messageStoragePanel.add(durableLabel, "newline, split 2");
+        messageStoragePanel.add(contentLabel, Messages.getString("ChannelSetup.210")); //$NON-NLS-1$
+        messageStoragePanel.add(metadataLabel, Messages.getString("ChannelSetup.211")); //$NON-NLS-1$
+        messageStoragePanel.add(durableLabel, Messages.getString("ChannelSetup.212")); //$NON-NLS-1$
         messageStoragePanel.add(durableStatusLabel);
-        messageStoragePanel.add(performanceLabel, "newline, sx, split 2");
-        messageStoragePanel.add(messageStorageProgressBar, "growx, gapbefore 12");
-        messageStoragePanel.add(encryptMessagesCheckBox, "newline");
-        messageStoragePanel.add(removeContentCheckBox, "newline, split 2");
+        messageStoragePanel.add(performanceLabel, Messages.getString("ChannelSetup.213")); //$NON-NLS-1$
+        messageStoragePanel.add(messageStorageProgressBar, Messages.getString("ChannelSetup.214")); //$NON-NLS-1$
+        messageStoragePanel.add(encryptMessagesCheckBox, Messages.getString("ChannelSetup.215")); //$NON-NLS-1$
+        messageStoragePanel.add(removeContentCheckBox, Messages.getString("ChannelSetup.216")); //$NON-NLS-1$
         messageStoragePanel.add(removeOnlyFilteredCheckBox);
-        messageStoragePanel.add(removeAttachmentsCheckBox, "newline");
-        messageStoragePanel.add(queueWarningLabel, "newline");
+        messageStoragePanel.add(removeAttachmentsCheckBox, Messages.getString("ChannelSetup.217")); //$NON-NLS-1$
+        messageStoragePanel.add(queueWarningLabel, Messages.getString("ChannelSetup.218")); //$NON-NLS-1$
 
-        messagePruningPanel.setLayout(new MigLayout("insets 0 10 10 10, novisualpadding, hidemode 3, gap 6"));
+        messagePruningPanel.setLayout(new MigLayout(Messages.getString("ChannelSetup.219"))); //$NON-NLS-1$
         messagePruningPanel.add(metadataPruningLabel);
-        messagePruningPanel.add(metadataPruningOffRadio, "newline, gapleft 12");
-        messagePruningPanel.add(metadataPruningOnRadio, "newline, gapleft 12, split 3");
-        messagePruningPanel.add(metadataPruningDaysTextField, "w 30!");
+        messagePruningPanel.add(metadataPruningOffRadio, Messages.getString("ChannelSetup.220")); //$NON-NLS-1$
+        messagePruningPanel.add(metadataPruningOnRadio, Messages.getString("ChannelSetup.221")); //$NON-NLS-1$
+        messagePruningPanel.add(metadataPruningDaysTextField, Messages.getString("ChannelSetup.222")); //$NON-NLS-1$
         messagePruningPanel.add(metadataDaysLabel);
-        messagePruningPanel.add(contentPruningLabel, "newline");
-        messagePruningPanel.add(contentPruningMetadataRadio, "newline, gapleft 12");
-        messagePruningPanel.add(contentPruningDaysRadio, "newline, gapleft 12, split 3");
-        messagePruningPanel.add(contentPruningDaysTextField, "w 30!");
+        messagePruningPanel.add(contentPruningLabel, Messages.getString("ChannelSetup.223")); //$NON-NLS-1$
+        messagePruningPanel.add(contentPruningMetadataRadio, Messages.getString("ChannelSetup.224")); //$NON-NLS-1$
+        messagePruningPanel.add(contentPruningDaysRadio, Messages.getString("ChannelSetup.225")); //$NON-NLS-1$
+        messagePruningPanel.add(contentPruningDaysTextField, Messages.getString("ChannelSetup.226")); //$NON-NLS-1$
         messagePruningPanel.add(contentDaysLabel);
-        messagePruningPanel.add(archiveCheckBox, "newline");
-        messagePruningPanel.add(pruningWarningLabel, "newline");
+        messagePruningPanel.add(archiveCheckBox, Messages.getString("ChannelSetup.227")); //$NON-NLS-1$
+        messagePruningPanel.add(pruningWarningLabel, Messages.getString("ChannelSetup.228")); //$NON-NLS-1$
 
-        customMetadataPanel.setLayout(new MigLayout("insets 0 10 10 10, novisualpadding, hidemode 3, fill, gap 6", "[grow][]"));
-        customMetadataPanel.add(metaDataScrollPane, "sy, grow");
-        customMetadataPanel.add(addMetaDataButton, "top, sg button, flowy, split 2");
-        customMetadataPanel.add(deleteMetaDataButton, "sg button");
-        customMetadataPanel.add(revertMetaDataButton, "newline, bottom, sg button");
+        customMetadataPanel.setLayout(new MigLayout(Messages.getString("ChannelSetup.229"), Messages.getString("ChannelSetup.230"))); //$NON-NLS-1$ //$NON-NLS-2$
+        customMetadataPanel.add(metaDataScrollPane, Messages.getString("ChannelSetup.231")); //$NON-NLS-1$
+        customMetadataPanel.add(addMetaDataButton, Messages.getString("ChannelSetup.232")); //$NON-NLS-1$
+        customMetadataPanel.add(deleteMetaDataButton, Messages.getString("ChannelSetup.233")); //$NON-NLS-1$
+        customMetadataPanel.add(revertMetaDataButton, Messages.getString("ChannelSetup.234")); //$NON-NLS-1$
 
-        descriptionPanel.setLayout(new MigLayout("insets 0 10 10 10, novisualpadding, hidemode 3, fill"));
-        descriptionPanel.add(summaryDescriptionScrollPane, "grow");
+        descriptionPanel.setLayout(new MigLayout(Messages.getString("ChannelSetup.235"))); //$NON-NLS-1$
+        descriptionPanel.add(summaryDescriptionScrollPane, Messages.getString("ChannelSetup.236")); //$NON-NLS-1$
 
-        summaryPanel.setLayout(new MigLayout("insets 12, novisualpadding, hidemode 3, fill", "", "[][][][grow]"));
-        summaryPanel.add(channelPropertiesPanel, "growx, sx");
-        summaryPanel.add(messageStoragePanel, "newline, w 420!, h 210!, split 2");
-        summaryPanel.add(messagePruningPanel, "growx, pushx, h 210!");
-        summaryPanel.add(customMetadataPanel, "newline, growx, sx, h 150!");
-        summaryPanel.add(descriptionPanel, "newline, sx, grow");
+        summaryPanel.setLayout(new MigLayout(Messages.getString("ChannelSetup.237"), Messages.getString("ChannelSetup.238"), Messages.getString("ChannelSetup.239"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        summaryPanel.add(channelPropertiesPanel, Messages.getString("ChannelSetup.240")); //$NON-NLS-1$
+        summaryPanel.add(messageStoragePanel, Messages.getString("ChannelSetup.241")); //$NON-NLS-1$
+        summaryPanel.add(messagePruningPanel, Messages.getString("ChannelSetup.242")); //$NON-NLS-1$
+        summaryPanel.add(customMetadataPanel, Messages.getString("ChannelSetup.243")); //$NON-NLS-1$
+        summaryPanel.add(descriptionPanel, Messages.getString("ChannelSetup.244")); //$NON-NLS-1$
 
-        sourcePanel.setLayout(new MigLayout("insets 12, novisualpadding, hidemode 3, fill, gap 6", "[]12[]", "[][grow]"));
-        sourcePanel.add(sourceConnectorTypeLabel, "split 2");
-        sourcePanel.add(sourceConnectorTypeComboBox, "gapbefore 12");
-        sourcePanel.add(sourceConnectorScrollPane, "newline, sx, grow");
+        sourcePanel.setLayout(new MigLayout(Messages.getString("ChannelSetup.245"), Messages.getString("ChannelSetup.246"), Messages.getString("ChannelSetup.247"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        sourcePanel.add(sourceConnectorTypeLabel, Messages.getString("ChannelSetup.248")); //$NON-NLS-1$
+        sourcePanel.add(sourceConnectorTypeComboBox, Messages.getString("ChannelSetup.249")); //$NON-NLS-1$
+        sourcePanel.add(sourceConnectorScrollPane, Messages.getString("ChannelSetup.250")); //$NON-NLS-1$
 
-        destinationsPanel.setLayout(new MigLayout("insets 12, novisualpadding, hidemode 3, fill, gap 6", "[]12[]", "[][][grow]"));
-        destinationsPanel.add(destinationTableScrollPane, "sx, growx, h 165!");
-        destinationsPanel.add(destinationConnectorTypeLabel, "newline, split 3");
-        destinationsPanel.add(destinationConnectorTypeComboBox, "gapbefore 12");
-        destinationsPanel.add(waitForPreviousCheckbox, "gapbefore 12");
-        destinationsPanel.add(destinationConnectorScrollPane, "newline, grow, pushx");
-        destinationsPanel.add(destinationVariableList, "w 185!, growy");
+        destinationsPanel.setLayout(new MigLayout(Messages.getString("ChannelSetup.251"), Messages.getString("ChannelSetup.252"), Messages.getString("ChannelSetup.253"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        destinationsPanel.add(destinationTableScrollPane, Messages.getString("ChannelSetup.254")); //$NON-NLS-1$
+        destinationsPanel.add(destinationConnectorTypeLabel, Messages.getString("ChannelSetup.255")); //$NON-NLS-1$
+        destinationsPanel.add(destinationConnectorTypeComboBox, Messages.getString("ChannelSetup.256")); //$NON-NLS-1$
+        destinationsPanel.add(waitForPreviousCheckbox, Messages.getString("ChannelSetup.257")); //$NON-NLS-1$
+        destinationsPanel.add(destinationConnectorScrollPane, Messages.getString("ChannelSetup.258")); //$NON-NLS-1$
+        destinationsPanel.add(destinationVariableList, Messages.getString("ChannelSetup.259")); //$NON-NLS-1$
 
-        channelView.addTab("Summary", summaryPanel);
-        channelView.addTab("Source", sourcePanel);
-        channelView.addTab("Destinations", destinationsPanel);
-        channelView.addTab("Scripts", scriptsPanel);
-        add(channelView, "grow, h 600, w 600");
+        channelView.addTab(Messages.getString("ChannelSetup.260"), summaryPanel); //$NON-NLS-1$
+        channelView.addTab(Messages.getString("ChannelSetup.261"), sourcePanel); //$NON-NLS-1$
+        channelView.addTab(Messages.getString("ChannelSetup.262"), destinationsPanel); //$NON-NLS-1$
+        channelView.addTab(Messages.getString("ChannelSetup.263"), scriptsPanel); //$NON-NLS-1$
+        add(channelView, Messages.getString("ChannelSetup.264")); //$NON-NLS-1$
     }
 
     private void scriptsComponentShown(ComponentEvent evt) {
@@ -2515,7 +2515,7 @@ public class ChannelSetup extends JPanel {
             }
 
             if (!PropertyVerifier.compareProps(sourceConnectorPanel.getProperties(), sourceConnectorPanel.getDefaults())) {
-                boolean changeType = parent.alertOption(this.parent, "Are you sure you would like to change this connector type and lose all of the current connector data?");
+                boolean changeType = parent.alertOption(this.parent, Messages.getString("ChannelSetup.265")); //$NON-NLS-1$
                 if (!changeType) {
                     sourceConnectorTypeComboBox.setSelectedItem(sourceConnectorPanel.getProperties().getName());
                     return;
@@ -2524,12 +2524,12 @@ public class ChannelSetup extends JPanel {
         }
 
         if (currentChannel.getSourceConnector().getTransportName().equalsIgnoreCase(DATABASE_READER)) {
-            currentChannel.getSourceConnector().getTransformer().setInboundTemplate("");
+            currentChannel.getSourceConnector().getTransformer().setInboundTemplate(Messages.getString("ChannelSetup.266")); //$NON-NLS-1$
 
             if (parent.channelEditPanel.currentChannel.getSourceConnector().getTransformer().getOutboundDataType() == UIConstants.DATATYPE_XML && parent.channelEditPanel.currentChannel.getSourceConnector().getTransformer().getOutboundTemplate() != null && parent.channelEditPanel.currentChannel.getSourceConnector().getTransformer().getOutboundTemplate().length() == 0) {
                 List<Connector> list = parent.channelEditPanel.currentChannel.getDestinationConnectors();
                 for (Connector c : list) {
-                    c.getTransformer().setInboundTemplate("");
+                    c.getTransformer().setInboundTemplate(Messages.getString("ChannelSetup.267")); //$NON-NLS-1$
                 }
             }
         }
@@ -2541,7 +2541,7 @@ public class ChannelSetup extends JPanel {
         // source connector.
         Connector sourceConnector = currentChannel.getSourceConnector();
         if (sourceConnector != null) {
-            String connectorName = "";
+            String connectorName = Messages.getString("ChannelSetup.268"); //$NON-NLS-1$
 
             if (sourceConnector.getProperties() != null) {
                 connectorName = sourceConnector.getProperties().getName();
@@ -2598,7 +2598,7 @@ public class ChannelSetup extends JPanel {
             // changed from defaults then ask if the user would really like 
             // to change the connector type.
             if (lastModelIndex == destinationTable.getSelectedModelIndex() && !PropertyVerifier.compareProps(destinationConnectorPanel.getProperties(), destinationConnectorPanel.getDefaults())) {
-                boolean changeType = parent.alertOption(this.parent, "Are you sure you would like to change this connector type and lose all of the current connector data?");
+                boolean changeType = parent.alertOption(this.parent, Messages.getString("ChannelSetup.269")); //$NON-NLS-1$
                 if (!changeType) {
                     destinationConnectorTypeComboBox.setSelectedItem(destinationConnectorPanel.getProperties().getName());
                     return;
@@ -2647,7 +2647,7 @@ public class ChannelSetup extends JPanel {
         AttachmentHandlerType lastType = AttachmentHandlerType.fromString(currentChannel.getProperties().getAttachmentProperties().getType());
 
         if (lastType != AttachmentHandlerType.NONE && lastType != type && !lastType.getDefaultProperties().equals(currentChannel.getProperties().getAttachmentProperties())) {
-            boolean changeType = parent.alertOption(this.parent, "Are you sure you would like to change this attachment handler type and lose all of the current handler data?");
+            boolean changeType = parent.alertOption(this.parent, Messages.getString("ChannelSetup.270")); //$NON-NLS-1$
             if (!changeType) {
                 attachmentComboBox.setSelectedItem(lastType);
                 attachmentPropertiesButton.setEnabled((lastType != AttachmentHandlerType.NONE && lastType != AttachmentHandlerType.DICOM));
@@ -2708,14 +2708,14 @@ public class ChannelSetup extends JPanel {
 
     private void summaryNameFieldKeyReleased(KeyEvent evt) {
         currentChannel.setName(nameField.getText());
-        parent.setPanelName("Edit Channel - " + currentChannel.getName());
+        parent.setPanelName(Messages.getString("ChannelSetup.271") + currentChannel.getName()); //$NON-NLS-1$
     }
 
     private void addMetaDataButtonActionPerformed(ActionEvent evt) {
         DefaultTableModel model = ((DefaultTableModel) metaDataTable.getModel());
         int row = model.getRowCount();
 
-        model.addRow(new Object[] { "", MetaDataColumnType.STRING, "" });
+        model.addRow(new Object[] { Messages.getString("ChannelSetup.272"), MetaDataColumnType.STRING, Messages.getString("ChannelSetup.273") }); //$NON-NLS-1$ //$NON-NLS-2$
 
         metaDataTable.setRowSelectionInterval(row, row);
 
@@ -2802,7 +2802,7 @@ public class ChannelSetup extends JPanel {
     }
 
     private void revertMetaDataButtonActionPerformed(ActionEvent evt) {
-        if (parent.alertOption(parent, "Are you sure you want to revert custom metadata settings to the last save?")) {
+        if (parent.alertOption(parent, Messages.getString("ChannelSetup.274"))) { //$NON-NLS-1$
             updateMetaDataTable();
         }
     }
@@ -2846,7 +2846,7 @@ public class ChannelSetup extends JPanel {
             waitForPreviousCheckbox.setEnabled(true);
         }
 
-        String connectorName = "";
+        String connectorName = Messages.getString("ChannelSetup.275"); //$NON-NLS-1$
 
         if (destinationConnector.getProperties() != null) {
             connectorName = destinationConnector.getProperties().getName();
@@ -2951,7 +2951,7 @@ public class ChannelSetup extends JPanel {
         concatenatedRuleVariables.addAll(concatenatedStepVariables);
         destinationVariableList.setVariableListInbound(concatenatedRuleVariables);
         destinationVariableList.populateConnectors(currentChannel.getDestinationConnectors());
-        destinationVariableList.setBorder("Destination Mappings", new Color(0, 0, 0));
+        destinationVariableList.setBorder(Messages.getString("ChannelSetup.276"), new Color(0, 0, 0)); //$NON-NLS-1$
         destinationVariableList.repaint();
     }
 
@@ -3139,7 +3139,7 @@ public class ChannelSetup extends JPanel {
     public void importConnector(Connector connector) {
         String alertMessage = checkInvalidPluginProperties(connector);
         if (StringUtils.isNotBlank(alertMessage)) {
-            if (!parent.alertOption(parent, alertMessage + "\nWhen this channel is saved, those properties will be lost. You can choose to import this\nconnector at a later time after verifying that all necessary extensions are properly loaded.\nAre you sure you wish to continue?")) {
+            if (!parent.alertOption(parent, alertMessage + Messages.getString("ChannelSetup.277"))) { //$NON-NLS-1$
                 return;
             }
         }
@@ -3193,9 +3193,9 @@ public class ChannelSetup extends JPanel {
             makeDestinationTable(false);
         } // If the mode and tab don't match, display an error message and return.
         else {
-            String errorMessage = "You must be on the Source tab to import a Source connector.";
+            String errorMessage = Messages.getString("ChannelSetup.278"); //$NON-NLS-1$
             if (connector.getMode().equals(Mode.DESTINATION)) {
-                errorMessage = "You must be on the Destinations tab to import a Destination connector.";
+                errorMessage = Messages.getString("ChannelSetup.279"); //$NON-NLS-1$
             }
             parent.alertError(parent, errorMessage);
 

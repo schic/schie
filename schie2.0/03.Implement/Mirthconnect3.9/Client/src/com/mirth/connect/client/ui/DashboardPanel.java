@@ -86,15 +86,15 @@ import com.mirth.connect.plugins.DashboardTablePlugin;
 
 public class DashboardPanel extends JPanel {
 
-    private static final String STATUS_COLUMN_NAME = "Status";
-    private static final String NAME_COLUMN_NAME = "Name";
-    private static final String RECEIVED_COLUMN_NAME = "Received";
-    private static final String QUEUED_COLUMN_NAME = "Queued";
-    private static final String SENT_COLUMN_NAME = "Sent";
-    private static final String ERROR_COLUMN_NAME = "Errored";
-    private static final String FILTERED_COLUMN_NAME = "Filtered";
-    private static final String LAST_DEPLOYED_COLUMN_NAME = "Last Deployed";
-    private static final String DEPLOYED_REVISION_DELTA_COLUMN_NAME = "Rev \u0394";
+    private static final String STATUS_COLUMN_NAME = Messages.getString("DashboardPanel.0"); //$NON-NLS-1$
+    private static final String NAME_COLUMN_NAME = Messages.getString("DashboardPanel.1"); //$NON-NLS-1$
+    private static final String RECEIVED_COLUMN_NAME = Messages.getString("DashboardPanel.2"); //$NON-NLS-1$
+    private static final String QUEUED_COLUMN_NAME = Messages.getString("DashboardPanel.3"); //$NON-NLS-1$
+    private static final String SENT_COLUMN_NAME = Messages.getString("DashboardPanel.4"); //$NON-NLS-1$
+    private static final String ERROR_COLUMN_NAME = Messages.getString("DashboardPanel.5"); //$NON-NLS-1$
+    private static final String FILTERED_COLUMN_NAME = Messages.getString("DashboardPanel.6"); //$NON-NLS-1$
+    private static final String LAST_DEPLOYED_COLUMN_NAME = Messages.getString("DashboardPanel.7"); //$NON-NLS-1$
+    private static final String DEPLOYED_REVISION_DELTA_COLUMN_NAME = Messages.getString("DashboardPanel.8"); //$NON-NLS-1$
     private static final String[] defaultColumns = new String[] { STATUS_COLUMN_NAME,
             NAME_COLUMN_NAME, DEPLOYED_REVISION_DELTA_COLUMN_NAME, LAST_DEPLOYED_COLUMN_NAME,
             RECEIVED_COLUMN_NAME, FILTERED_COLUMN_NAME, QUEUED_COLUMN_NAME, SENT_COLUMN_NAME,
@@ -149,7 +149,7 @@ public class DashboardPanel extends JPanel {
 
         DashboardTreeTableModel model = (DashboardTreeTableModel) dashboardTable.getTreeTableModel();
 
-        if (canViewChannelGroups && userPreferences.getBoolean("channelGroupViewEnabled", true)) {
+        if (canViewChannelGroups && userPreferences.getBoolean(Messages.getString("DashboardPanel.9"), true)) { //$NON-NLS-1$
             tableModeGroupsButton.setSelected(true);
             tableModeGroupsButton.setContentFilled(true);
             tableModeChannelsButton.setContentFilled(false);
@@ -165,7 +165,7 @@ public class DashboardPanel extends JPanel {
             tableModeGroupsButton.setEnabled(false);
         }
 
-        updateTagButtons(userPreferences.getBoolean("showTags", true), userPreferences.getBoolean("tagTextMode", false), false);
+        updateTagButtons(userPreferences.getBoolean(Messages.getString("DashboardPanel.10"), true), userPreferences.getBoolean(Messages.getString("DashboardPanel.11"), false), false); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public void loadTabPlugins() {
@@ -178,7 +178,7 @@ public class DashboardPanel extends JPanel {
 
             splitPane.setBottomComponent(tabPane);
             splitPane.setDividerSize(6);
-            splitPane.setDividerLocation(3 * userPreferences.getInt("height", UIConstants.MIRTH_HEIGHT) / 5);
+            splitPane.setDividerLocation(3 * userPreferences.getInt(Messages.getString("DashboardPanel.12"), UIConstants.MIRTH_HEIGHT) / 5); //$NON-NLS-1$
             splitPane.setResizeWeight(0.5);
         }
     }
@@ -205,11 +205,11 @@ public class DashboardPanel extends JPanel {
     }
 
     private void loadTablePlugins() {
-        pluginContainerPanel.setLayout(new MigLayout("fillx, insets 0 0 0 0", "[grow,fill]", "[grow,fill]"));
+        pluginContainerPanel.setLayout(new MigLayout(Messages.getString("DashboardPanel.13"), Messages.getString("DashboardPanel.14"), Messages.getString("DashboardPanel.15"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         for (DashboardTablePlugin plugin : LoadedExtensions.getInstance().getDashboardTablePlugins().values()) {
             for (JComponent component : plugin.getToolbarComponents(dashboardTable)) {
-                pluginContainerPanel.add(component, "grow");
+                pluginContainerPanel.add(component, Messages.getString("DashboardPanel.16")); //$NON-NLS-1$
             }
         }
 
@@ -223,7 +223,7 @@ public class DashboardPanel extends JPanel {
     public void loadPanelPlugin(final DashboardPanelPlugin plugin) {
         final List<DashboardStatus> selectedStatuses = getSelectedStatuses();
 
-        QueuingSwingWorkerTask<Void, Void> task = new QueuingSwingWorkerTask<Void, Void>(plugin.getPluginPointName(), "Updating " + plugin.getPluginPointName() + " dashboard plugin...") {
+        QueuingSwingWorkerTask<Void, Void> task = new QueuingSwingWorkerTask<Void, Void>(plugin.getPluginPointName(), Messages.getString("DashboardPanel.17") + plugin.getPluginPointName() + Messages.getString("DashboardPanel.18")) { //$NON-NLS-1$ //$NON-NLS-2$
             @Override
             public Void doInBackground() {
                 try {
@@ -256,7 +256,7 @@ public class DashboardPanel extends JPanel {
     }
 
     public void switchPanel() {
-        boolean groupViewEnabled = canViewChannelGroups && userPreferences.getBoolean("channelGroupViewEnabled", true);
+        boolean groupViewEnabled = canViewChannelGroups && userPreferences.getBoolean(Messages.getString("DashboardPanel.19"), true); //$NON-NLS-1$
         switchTableMode(groupViewEnabled);
 
         if (groupViewEnabled) {
@@ -269,7 +269,7 @@ public class DashboardPanel extends JPanel {
             tableModeGroupsButton.setContentFilled(false);
         }
 
-        updateTagButtons(userPreferences.getBoolean("showTags", true), userPreferences.getBoolean("tagTextMode", false), false);
+        updateTagButtons(userPreferences.getBoolean(Messages.getString("DashboardPanel.20"), true), userPreferences.getBoolean(Messages.getString("DashboardPanel.21"), false), false); //$NON-NLS-1$ //$NON-NLS-2$
 
         updateTags(new HashSet<String>(parent.channelPanel.getCachedChannelIdsAndNames().values()), true);
         tagField.setUserPreferenceTags();
@@ -285,8 +285,8 @@ public class DashboardPanel extends JPanel {
         tagIconModeSelected = showTags && !textMode;
 
         if (updatePreferences) {
-            userPreferences.putBoolean("showTags", showTags);
-            userPreferences.putBoolean("tagTextMode", textMode);
+            userPreferences.putBoolean(Messages.getString("DashboardPanel.22"), showTags); //$NON-NLS-1$
+            userPreferences.putBoolean(Messages.getString("DashboardPanel.23"), textMode); //$NON-NLS-1$
         }
     }
 
@@ -325,7 +325,7 @@ public class DashboardPanel extends JPanel {
         defaultVisibleColumns.addAll(columns);
 
         if (dashboardTable == null) {
-            dashboardTable = new MirthTreeTable("dashboardPanel", defaultVisibleColumns);
+            dashboardTable = new MirthTreeTable(Messages.getString("DashboardPanel.24"), defaultVisibleColumns); //$NON-NLS-1$
         }
 
         dashboardTable.setColumnFactory(new DashboardTableColumnFactory());
@@ -338,7 +338,7 @@ public class DashboardPanel extends JPanel {
         dashboardTable.setOpaque(true);
         dashboardTable.setRowSelectionAllowed(true);
         dashboardTable.setSortable(true);
-        dashboardTable.putClientProperty("JTree.lineStyle", "Horizontal");
+        dashboardTable.putClientProperty(Messages.getString("DashboardPanel.25"), Messages.getString("DashboardPanel.26")); //$NON-NLS-1$ //$NON-NLS-2$
         dashboardTable.setAutoCreateColumnsFromModel(false);
         dashboardTable.setShowGrid(true, true);
         dashboardTable.restoreColumnPreferences();
@@ -667,33 +667,33 @@ public class DashboardPanel extends JPanel {
                 if (totalGroupCount == visibleGroupCount) {
                     builder.append(totalGroupCount);
                 } else {
-                    builder.append(visibleGroupCount).append(" of ").append(totalGroupCount);
+                    builder.append(visibleGroupCount).append(Messages.getString("DashboardPanel.27")).append(totalGroupCount); //$NON-NLS-1$
                 }
 
-                builder.append(" Group");
+                builder.append(Messages.getString("DashboardPanel.28")); //$NON-NLS-1$
                 if (totalGroupCount != 1) {
                     builder.append('s');
                 }
 
                 if (totalGroupCount != visibleGroupCount) {
-                    builder.append(" (").append(totalGroupCount - visibleGroupCount).append(" filtered)");
+                    builder.append(Messages.getString("DashboardPanel.29")).append(totalGroupCount - visibleGroupCount).append(Messages.getString("DashboardPanel.30")); //$NON-NLS-1$ //$NON-NLS-2$
                 }
-                builder.append(", ");
+                builder.append(Messages.getString("DashboardPanel.31")); //$NON-NLS-1$
             }
 
             if (totalChannelCount == visibleChannelCount) {
                 builder.append(totalChannelCount);
             } else {
-                builder.append(visibleChannelCount).append(" of ").append(totalChannelCount);
+                builder.append(visibleChannelCount).append(Messages.getString("DashboardPanel.32")).append(totalChannelCount); //$NON-NLS-1$
             }
 
-            builder.append(" Deployed Channel");
+            builder.append(Messages.getString("DashboardPanel.33")); //$NON-NLS-1$
             if (totalChannelCount != 1) {
                 builder.append('s');
             }
 
             if (totalChannelCount != visibleChannelCount) {
-                builder.append(" (").append(totalChannelCount - visibleChannelCount).append(" filtered)");
+                builder.append(Messages.getString("DashboardPanel.34")).append(totalChannelCount - visibleChannelCount).append(Messages.getString("DashboardPanel.35")); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             List<String> activeFilters = new ArrayList<String>();
@@ -701,20 +701,20 @@ public class DashboardPanel extends JPanel {
                 activeFilters.add(filter.toDisplayString());
             }
 
-            builder.append(" (");
+            builder.append(Messages.getString("DashboardPanel.36")); //$NON-NLS-1$
             for (Iterator<String> it = activeFilters.iterator(); it.hasNext();) {
                 builder.append(it.next());
                 if (it.hasNext()) {
-                    builder.append(", ");
+                    builder.append(Messages.getString("DashboardPanel.37")); //$NON-NLS-1$
                 }
             }
             builder.append(')');
 
             tagsLabel.setText(builder.toString());
         } else if (model.isGroupModeEnabled()) {
-            tagsLabel.setText(totalGroupCount + " Groups, " + totalChannelCount + " Deployed Channels");
+            tagsLabel.setText(totalGroupCount + Messages.getString("DashboardPanel.38") + totalChannelCount + Messages.getString("DashboardPanel.39")); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
-            tagsLabel.setText(totalChannelCount + " Deployed Channels");
+            tagsLabel.setText(totalChannelCount + Messages.getString("DashboardPanel.40")); //$NON-NLS-1$
         }
     }
 
@@ -729,7 +729,7 @@ public class DashboardPanel extends JPanel {
         dashboardTable.setHighlighters();
 
         // Add the highlighters. Always add the error highlighter.
-        if (userPreferences.getBoolean("highlightRows", true)) {
+        if (userPreferences.getBoolean(Messages.getString("DashboardPanel.41"), true)) { //$NON-NLS-1$
             Highlighter highlighter = HighlighterFactory.createAlternateStriping(UIConstants.HIGHLIGHTER_COLOR, UIConstants.BACKGROUND_COLOR);
             dashboardTable.addHighlighter(highlighter);
         }
@@ -966,7 +966,7 @@ public class DashboardPanel extends JPanel {
             tags.add(new TagFilterCompletion(tag));
         }
 
-        tagField = new MirthTagField("Dashboard", false, tags);
+        tagField = new MirthTagField(Messages.getString("DashboardPanel.42"), false, tags); //$NON-NLS-1$
         tagField.addUpdateSearchListener(new SearchFilterListener() {
             @Override
             public void doSearch(String filterString) {
@@ -993,9 +993,9 @@ public class DashboardPanel extends JPanel {
 
         ButtonGroup showStatsButtonGroup = new ButtonGroup();
 
-        showCurrentStatsButton = new JRadioButton("Current Statistics");
+        showCurrentStatsButton = new JRadioButton(Messages.getString("DashboardPanel.43")); //$NON-NLS-1$
         showCurrentStatsButton.setSelected(true);
-        showCurrentStatsButton.setToolTipText("Show the statistics accumulated since the last time the statistics were reset");
+        showCurrentStatsButton.setToolTipText(Messages.getString("DashboardPanel.44")); //$NON-NLS-1$
         showCurrentStatsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 showCurrentStatsButtonActionPerformed();
@@ -1003,8 +1003,8 @@ public class DashboardPanel extends JPanel {
         });
         showStatsButtonGroup.add(showCurrentStatsButton);
 
-        showLifetimeStatsButton = new JRadioButton("Lifetime Statistics");
-        showLifetimeStatsButton.setToolTipText("Show the statistics accumulated over the entire lifetime of the channel");
+        showLifetimeStatsButton = new JRadioButton(Messages.getString("DashboardPanel.45")); //$NON-NLS-1$
+        showLifetimeStatsButton.setToolTipText(Messages.getString("DashboardPanel.46")); //$NON-NLS-1$
         showLifetimeStatsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 showLifetimeStatsButtonActionPerformed();
@@ -1017,7 +1017,7 @@ public class DashboardPanel extends JPanel {
         controlSeparator = new JSeparator(SwingConstants.VERTICAL);
 
         tagModeTextButton = new IconToggleButton(UIConstants.ICON_TEXT);
-        tagModeTextButton.setToolTipText("Display tags as names.");
+        tagModeTextButton.setToolTipText(Messages.getString("DashboardPanel.47")); //$NON-NLS-1$
         tagModeTextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -1027,7 +1027,7 @@ public class DashboardPanel extends JPanel {
         });
 
         tagModeIconButton = new IconToggleButton(UIConstants.ICON_TAG);
-        tagModeIconButton.setToolTipText("Display tags as icons.");
+        tagModeIconButton.setToolTipText(Messages.getString("DashboardPanel.48")); //$NON-NLS-1$
         tagModeIconButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -1039,7 +1039,7 @@ public class DashboardPanel extends JPanel {
         ButtonGroup tableModeButtonGroup = new ButtonGroup();
 
         tableModeGroupsButton = new IconToggleButton(UIConstants.ICON_GROUP);
-        tableModeGroupsButton.setToolTipText("Groups");
+        tableModeGroupsButton.setToolTipText(Messages.getString("DashboardPanel.49")); //$NON-NLS-1$
         tableModeGroupsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -1049,7 +1049,7 @@ public class DashboardPanel extends JPanel {
         tableModeButtonGroup.add(tableModeGroupsButton);
 
         tableModeChannelsButton = new IconToggleButton(UIConstants.ICON_CHANNEL);
-        tableModeChannelsButton.setToolTipText("Channels");
+        tableModeChannelsButton.setToolTipText(Messages.getString("DashboardPanel.50")); //$NON-NLS-1$
         tableModeChannelsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -1065,30 +1065,30 @@ public class DashboardPanel extends JPanel {
     }
 
     private void initLayout() {
-        setLayout(new MigLayout("insets 0, novisualpadding, hidemode 3, fill, gap 0"));
+        setLayout(new MigLayout(Messages.getString("DashboardPanel.51"))); //$NON-NLS-1$
 
-        topPanel.setLayout(new MigLayout("insets 0, novisualpadding, hidemode 3, fill, gap 0"));
-        topPanel.add(dashboardTableScrollPane, "grow, push");
+        topPanel.setLayout(new MigLayout(Messages.getString("DashboardPanel.52"))); //$NON-NLS-1$
+        topPanel.add(dashboardTableScrollPane, Messages.getString("DashboardPanel.53")); //$NON-NLS-1$
 
-        controlPanel.setLayout(new MigLayout("insets 0 12 0 12, novisualpadding, hidemode 3, fill, gap 12"));
-        controlPanel.add(new JLabel("Filter:"), "split 3");
-        controlPanel.add(tagField, "gapbottom 3, w 195:500:500");
-        controlPanel.add(tagsLabel, "gapleft 8, w 100:500:500");
-        controlPanel.add(showCurrentStatsButton, "right, push, split 2");
+        controlPanel.setLayout(new MigLayout(Messages.getString("DashboardPanel.54"))); //$NON-NLS-1$
+        controlPanel.add(new JLabel(Messages.getString("DashboardPanel.55")), Messages.getString("DashboardPanel.56")); //$NON-NLS-1$ //$NON-NLS-2$
+        controlPanel.add(tagField, Messages.getString("DashboardPanel.57")); //$NON-NLS-1$
+        controlPanel.add(tagsLabel, Messages.getString("DashboardPanel.58")); //$NON-NLS-1$
+        controlPanel.add(showCurrentStatsButton, Messages.getString("DashboardPanel.59")); //$NON-NLS-1$
         controlPanel.add(showLifetimeStatsButton);
 
-        pluginContainerPanel.setLayout(new MigLayout("insets 0, novisualpadding, hidemode 3"));
+        pluginContainerPanel.setLayout(new MigLayout(Messages.getString("DashboardPanel.60"))); //$NON-NLS-1$
         controlPanel.add(pluginContainerPanel);
 
-        controlPanel.add(controlSeparator, "right, split 6, h 18!, gapbefore 0, gapafter 12");
-        controlPanel.add(tagModeTextButton, "gapafter 0");
+        controlPanel.add(controlSeparator, Messages.getString("DashboardPanel.61")); //$NON-NLS-1$
+        controlPanel.add(tagModeTextButton, Messages.getString("DashboardPanel.62")); //$NON-NLS-1$
         controlPanel.add(tagModeIconButton);
-        controlPanel.add(new JSeparator(SwingConstants.VERTICAL), "right, h 18!, gapbefore 12, gapafter 12");
-        controlPanel.add(tableModeGroupsButton, "gapafter 0");
+        controlPanel.add(new JSeparator(SwingConstants.VERTICAL), Messages.getString("DashboardPanel.63")); //$NON-NLS-1$
+        controlPanel.add(tableModeGroupsButton, Messages.getString("DashboardPanel.64")); //$NON-NLS-1$
         controlPanel.add(tableModeChannelsButton);
-        topPanel.add(controlPanel, "newline, growx");
+        topPanel.add(controlPanel, Messages.getString("DashboardPanel.65")); //$NON-NLS-1$
 
-        add(splitPane, "grow, push, h :300");
+        add(splitPane, Messages.getString("DashboardPanel.66")); //$NON-NLS-1$
     }
 
     private void showCurrentStatsButtonActionPerformed() {
@@ -1126,7 +1126,7 @@ public class DashboardPanel extends JPanel {
 
         DashboardTreeTableModel model = (DashboardTreeTableModel) dashboardTable.getTreeTableModel();
         if (model.isGroupModeEnabled() != groupModeEnabled) {
-            userPreferences.putBoolean("channelGroupViewEnabled", groupModeEnabled);
+            userPreferences.putBoolean(Messages.getString("DashboardPanel.67"), groupModeEnabled); //$NON-NLS-1$
 
             if (groupModeEnabled) {
                 tableModeChannelsButton.setContentFilled(false);

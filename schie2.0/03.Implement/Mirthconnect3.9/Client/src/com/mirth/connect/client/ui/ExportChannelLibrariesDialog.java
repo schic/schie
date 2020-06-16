@@ -41,7 +41,7 @@ public class ExportChannelLibrariesDialog extends MirthDialog {
         initLayout();
         setMaximumSize(new Dimension(800, 600));
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setTitle("Select an Option");
+        setTitle(Messages.getString("ExportChannelLibrariesDialog.0")); //$NON-NLS-1$
         pack();
         setLocationRelativeTo(PlatformUI.MIRTH_FRAME);
         yesButton.requestFocus();
@@ -53,62 +53,62 @@ public class ExportChannelLibrariesDialog extends MirthDialog {
     }
 
     private void initComponents(Channel channel) {
-        label1 = new JLabel("   The following code template libraries are linked to this channel:");
-        label1.setIcon(UIManager.getIcon("OptionPane.questionIcon"));
+        label1 = new JLabel(Messages.getString("ExportChannelLibrariesDialog.1")); //$NON-NLS-1$
+        label1.setIcon(UIManager.getIcon(Messages.getString("ExportChannelLibrariesDialog.2"))); //$NON-NLS-1$
 
         librariesTextPane = new JTextPane();
-        librariesTextPane.setContentType("text/html");
+        librariesTextPane.setContentType(Messages.getString("ExportChannelLibrariesDialog.3")); //$NON-NLS-1$
         HTMLEditorKit editorKit = new HTMLEditorKit();
         StyleSheet styleSheet = editorKit.getStyleSheet();
-        styleSheet.addRule(".export-channel-libraries-dialog {font-family:\"Tahoma\";font-size:11;text-align:top}");
+        styleSheet.addRule(Messages.getString("ExportChannelLibrariesDialog.4")); //$NON-NLS-1$
         librariesTextPane.setEditorKit(editorKit);
         librariesTextPane.setEditable(false);
         librariesTextPane.setBackground(getBackground());
         librariesTextPane.setBorder(null);
 
-        StringBuilder librariesText = new StringBuilder("<html><ul class=\"export-channel-libraries-dialog\">");
+        StringBuilder librariesText = new StringBuilder(Messages.getString("ExportChannelLibrariesDialog.5")); //$NON-NLS-1$
         for (CodeTemplateLibrary library : PlatformUI.MIRTH_FRAME.codeTemplatePanel.getCachedCodeTemplateLibraries().values()) {
             if (library.getEnabledChannelIds().contains(channel.getId()) || (library.isIncludeNewChannels() && !library.getDisabledChannelIds().contains(channel.getId()))) {
-                librariesText.append("<li>").append(StringEscapeUtils.escapeHtml4(library.getName())).append("</li>");
+                librariesText.append(Messages.getString("ExportChannelLibrariesDialog.6")).append(StringEscapeUtils.escapeHtml4(library.getName())).append(Messages.getString("ExportChannelLibrariesDialog.7")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
-        librariesText.append("</ul></html>");
+        librariesText.append(Messages.getString("ExportChannelLibrariesDialog.8")); //$NON-NLS-1$
         librariesTextPane.setText(librariesText.toString());
         librariesTextPane.setCaretPosition(0);
 
         librariesScrollPane = new JScrollPane(librariesTextPane);
 
-        label2 = new JLabel("Do you wish to include these libraries in the channel export?");
+        label2 = new JLabel(Messages.getString("ExportChannelLibrariesDialog.9")); //$NON-NLS-1$
 
-        alwaysChooseCheckBox = new JCheckBox("Always choose this option by default in the future (may be changed in the Administrator settings)");
+        alwaysChooseCheckBox = new JCheckBox(Messages.getString("ExportChannelLibrariesDialog.10")); //$NON-NLS-1$
 
-        yesButton = new JButton("Yes");
+        yesButton = new JButton(Messages.getString("ExportChannelLibrariesDialog.11")); //$NON-NLS-1$
         yesButton.setMnemonic('Y');
         yesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 result = JOptionPane.YES_OPTION;
                 if (alwaysChooseCheckBox.isSelected()) {
-                    Preferences.userNodeForPackage(Mirth.class).putBoolean("exportChannelCodeTemplateLibraries", true);
+                    Preferences.userNodeForPackage(Mirth.class).putBoolean(Messages.getString("ExportChannelLibrariesDialog.12"), true); //$NON-NLS-1$
                 }
                 dispose();
             }
         });
 
-        noButton = new JButton("No");
+        noButton = new JButton(Messages.getString("ExportChannelLibrariesDialog.13")); //$NON-NLS-1$
         noButton.setMnemonic('N');
         noButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 result = JOptionPane.NO_OPTION;
                 if (alwaysChooseCheckBox.isSelected()) {
-                    Preferences.userNodeForPackage(Mirth.class).putBoolean("exportChannelCodeTemplateLibraries", false);
+                    Preferences.userNodeForPackage(Mirth.class).putBoolean(Messages.getString("ExportChannelLibrariesDialog.14"), false); //$NON-NLS-1$
                 }
                 dispose();
             }
         });
 
-        cancelButton = new JButton("Cancel");
+        cancelButton = new JButton(Messages.getString("ExportChannelLibrariesDialog.15")); //$NON-NLS-1$
         cancelButton.setMnemonic('C');
         cancelButton.addActionListener(new ActionListener() {
             @Override
@@ -120,14 +120,14 @@ public class ExportChannelLibrariesDialog extends MirthDialog {
     }
 
     private void initLayout() {
-        setLayout(new MigLayout("insets 12, novisualpadding, hidemode 3, fill, gap 10"));
+        setLayout(new MigLayout(Messages.getString("ExportChannelLibrariesDialog.16"))); //$NON-NLS-1$
         add(label1);
-        add(librariesScrollPane, "newline, grow, push");
-        add(label2, "newline");
-        add(alwaysChooseCheckBox, "newline");
-        add(yesButton, "newline, center, split 3, w 75!, h 24!");
-        add(noButton, "gapbefore 6, w 75!, h 24!");
-        add(cancelButton, "gapbefore 6, w 75!, h 24!");
+        add(librariesScrollPane, Messages.getString("ExportChannelLibrariesDialog.17")); //$NON-NLS-1$
+        add(label2, Messages.getString("ExportChannelLibrariesDialog.18")); //$NON-NLS-1$
+        add(alwaysChooseCheckBox, Messages.getString("ExportChannelLibrariesDialog.19")); //$NON-NLS-1$
+        add(yesButton, Messages.getString("ExportChannelLibrariesDialog.20")); //$NON-NLS-1$
+        add(noButton, Messages.getString("ExportChannelLibrariesDialog.21")); //$NON-NLS-1$
+        add(cancelButton, Messages.getString("ExportChannelLibrariesDialog.22")); //$NON-NLS-1$
     }
 
     private JLabel label1;

@@ -62,7 +62,7 @@ public class DataTypesDialog extends MirthDialog {
     public static int SELECTION_COLUMN = 0;
     private static int SELECTION_COLUMN_WIDTH = 20;
     private Frame parent;
-    private final String[] columnNames = { "", "Connector", "Inbound", "Outbound" };
+    private final String[] columnNames = { Messages.getString("DataTypesDialog.0"), Messages.getString("DataTypesDialog.1"), Messages.getString("DataTypesDialog.2"), Messages.getString("DataTypesDialog.3") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     private enum EditMode {
         SINGLE, BULK
@@ -430,7 +430,7 @@ public class DataTypesDialog extends MirthDialog {
     public void makeTreeTable(MirthTreeTable table, JScrollPane scrollPane) {
         int dataTypeColumnWidth = 100;
 
-        table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+        table.putClientProperty(Messages.getString("DataTypesDialog.4"), Boolean.TRUE); //$NON-NLS-1$
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         String[] dataTypes = new String[parent.dataTypeToDisplayName.values().size()];
@@ -525,7 +525,7 @@ public class DataTypesDialog extends MirthDialog {
         table.getColumnExt(OUTBOUND_COLUMN).setMinWidth(dataTypeColumnWidth);
         table.getColumnExt(OUTBOUND_COLUMN).setResizable(false);
 
-        if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+        if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("DataTypesDialog.5"), true)) { //$NON-NLS-1$
             Highlighter highlighter = HighlighterFactory.createAlternateStriping(UIConstants.HIGHLIGHTER_COLOR, UIConstants.BACKGROUND_COLOR);
             table.setHighlighters(highlighter);
         }
@@ -592,7 +592,7 @@ public class DataTypesDialog extends MirthDialog {
                     label.setBackground(table.getBackground());
                 }
 
-                label.setText(" " + value.toString());
+                label.setText(Messages.getString("DataTypesDialog.6") + value.toString()); //$NON-NLS-1$
 
                 return label;
             }
@@ -714,7 +714,7 @@ public class DataTypesDialog extends MirthDialog {
 
         tableData = new Object[1][columnNames.length];
         tableData[0][SELECTION_COLUMN] = false;
-        tableData[0][CONNECTOR_COLUMN] = "Source Connector";
+        tableData[0][CONNECTOR_COLUMN] = Messages.getString("DataTypesDialog.7"); //$NON-NLS-1$
         tableData[0][INBOUND_COLUMN] = parent.dataTypeToDisplayName.get(sourceConnector.getTransformer().getInboundDataType());
         tableData[0][OUTBOUND_COLUMN] = parent.dataTypeToDisplayName.get(sourceConnector.getTransformer().getOutboundDataType());
 
@@ -734,7 +734,7 @@ public class DataTypesDialog extends MirthDialog {
             transformer = destinationConnector.getResponseTransformer();
             transformerContainer.put(containerIndex + 1, new TransformerContainer(transformer, TransformerType.RESPONSE, transformer.getInboundDataType(), transformer.getOutboundDataType(), transformer.getInboundProperties().clone(), transformer.getOutboundProperties().clone()));
             tableData[1][SELECTION_COLUMN] = false;
-            tableData[1][CONNECTOR_COLUMN] = "Response";
+            tableData[1][CONNECTOR_COLUMN] = Messages.getString("DataTypesDialog.8"); //$NON-NLS-1$
             tableData[1][INBOUND_COLUMN] = parent.dataTypeToDisplayName.get(destinationConnector.getResponseTransformer().getInboundDataType());
             tableData[1][OUTBOUND_COLUMN] = parent.dataTypeToDisplayName.get(destinationConnector.getResponseTransformer().getOutboundDataType());
 
@@ -869,7 +869,7 @@ public class DataTypesDialog extends MirthDialog {
                         // Set the data type's display name
                         inboundDataTypeDisplayName = parent.dataTypeToDisplayName.get(inboundDataType);
                     } else if (!inboundDataType.equals(container.getTransformer().getInboundDataType())) {
-                        inboundPropertiesPanel.getDataTypeComboBox().getModel().setSelectedItem("<Different Data Types>");
+                        inboundPropertiesPanel.getDataTypeComboBox().getModel().setSelectedItem(Messages.getString("DataTypesDialog.9")); //$NON-NLS-1$
                         inboundDataTypeDisplayName = null;
                         inboundPropertiesList = null;
                     }
@@ -884,7 +884,7 @@ public class DataTypesDialog extends MirthDialog {
                         // Set the data type's display name
                         outboundDataTypeDisplayName = parent.dataTypeToDisplayName.get(outboundDataType);
                     } else if (!outboundDataType.equals(container.getTransformer().getOutboundDataType())) {
-                        outboundPropertiesPanel.getDataTypeComboBox().getModel().setSelectedItem("<Different Data Types>");
+                        outboundPropertiesPanel.getDataTypeComboBox().getModel().setSelectedItem(Messages.getString("DataTypesDialog.10")); //$NON-NLS-1$
                         outboundDataTypeDisplayName = null;
                         outboundPropertiesList = null;
                     }
@@ -1029,12 +1029,12 @@ public class DataTypesDialog extends MirthDialog {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Set Data Types");
+        setTitle(Messages.getString("DataTypesDialog.11")); //$NON-NLS-1$
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        okButton.setText("OK");
+        okButton.setText(Messages.getString("DataTypesDialog.12")); //$NON-NLS-1$
         okButton.setMargin(new java.awt.Insets(0, 2, 0, 2));
         okButton.setMaximumSize(new java.awt.Dimension(48, 21));
         okButton.setMinimumSize(new java.awt.Dimension(48, 21));
@@ -1045,7 +1045,7 @@ public class DataTypesDialog extends MirthDialog {
             }
         });
 
-        closeButton.setText("Cancel");
+        closeButton.setText(Messages.getString("DataTypesDialog.13")); //$NON-NLS-1$
         closeButton.setMargin(new java.awt.Insets(0, 2, 0, 2));
         closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1061,7 +1061,7 @@ public class DataTypesDialog extends MirthDialog {
         singleEditButton.setBackground(new java.awt.Color(255, 255, 255));
         editingGroup.add(singleEditButton);
         singleEditButton.setSelected(true);
-        singleEditButton.setText("Single Edit");
+        singleEditButton.setText(Messages.getString("DataTypesDialog.14")); //$NON-NLS-1$
         singleEditButton.setFocusable(false);
         singleEditButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1071,7 +1071,7 @@ public class DataTypesDialog extends MirthDialog {
 
         bulkEditButton.setBackground(new java.awt.Color(255, 255, 255));
         editingGroup.add(bulkEditButton);
-        bulkEditButton.setText("Bulk Edit");
+        bulkEditButton.setText(Messages.getString("DataTypesDialog.15")); //$NON-NLS-1$
         bulkEditButton.setFocusable(false);
         bulkEditButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1083,7 +1083,7 @@ public class DataTypesDialog extends MirthDialog {
         connectorTreeTablePane.setViewportView(connectorTreeTable);
 
         allCheckBox.setBackground(new java.awt.Color(255, 255, 255));
-        allCheckBox.setText("All");
+        allCheckBox.setText(Messages.getString("DataTypesDialog.16")); //$NON-NLS-1$
         allCheckBox.setFocusable(false);
         allCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1092,7 +1092,7 @@ public class DataTypesDialog extends MirthDialog {
         });
 
         destinationsCheckBox.setBackground(new java.awt.Color(255, 255, 255));
-        destinationsCheckBox.setText("Destinations");
+        destinationsCheckBox.setText(Messages.getString("DataTypesDialog.17")); //$NON-NLS-1$
         destinationsCheckBox.setFocusable(false);
         destinationsCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1101,7 +1101,7 @@ public class DataTypesDialog extends MirthDialog {
         });
 
         responsesCheckBox.setBackground(new java.awt.Color(255, 255, 255));
-        responsesCheckBox.setText("Responses");
+        responsesCheckBox.setText(Messages.getString("DataTypesDialog.18")); //$NON-NLS-1$
         responsesCheckBox.setFocusable(false);
         responsesCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1110,7 +1110,7 @@ public class DataTypesDialog extends MirthDialog {
         });
 
         expandLabel.setForeground(java.awt.Color.blue);
-        expandLabel.setText("<html><u>Expand All</u></html>");
+        expandLabel.setText(Messages.getString("DataTypesDialog.19")); //$NON-NLS-1$
         expandLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         expandLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -1119,7 +1119,7 @@ public class DataTypesDialog extends MirthDialog {
         });
 
         collapseLabel.setForeground(java.awt.Color.blue);
-        collapseLabel.setText("<html><u>Collapse All</u></html>");
+        collapseLabel.setText(Messages.getString("DataTypesDialog.20")); //$NON-NLS-1$
         collapseLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         collapseLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -1127,7 +1127,7 @@ public class DataTypesDialog extends MirthDialog {
             }
         });
 
-        jLabel1.setText("|");
+        jLabel1.setText(Messages.getString("DataTypesDialog.21")); //$NON-NLS-1$
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

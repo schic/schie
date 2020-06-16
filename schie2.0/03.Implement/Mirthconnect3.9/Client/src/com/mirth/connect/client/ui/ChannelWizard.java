@@ -24,7 +24,7 @@ import com.mirth.connect.model.Channel;
 public class ChannelWizard extends MirthDialog {
 
     private Frame parent;
-    private final String DEFAULT_COMBOBOX_VALUE = "Select Channel Wizard";
+    private final String DEFAULT_COMBOBOX_VALUE = Messages.getString("ChannelWizard.0"); //$NON-NLS-1$
 
     /** Creates new form ChannelWizard */
     public ChannelWizard() {
@@ -54,7 +54,7 @@ public class ChannelWizard extends MirthDialog {
 
         wizardComboBoxActionPerformed(null);
 
-        jLabel2.setText("New Channel");
+        jLabel2.setText(Messages.getString("ChannelWizard.1")); //$NON-NLS-1$
         jLabel2.setForeground(UIConstants.HEADER_TITLE_TEXT_COLOR);
         setModal(true);
         pack();
@@ -98,28 +98,28 @@ public class ChannelWizard extends MirthDialog {
         skipWizardButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("New Channel");
+        setTitle(Messages.getString("ChannelWizard.2")); //$NON-NLS-1$
 
         channelOverview.setBackground(new java.awt.Color(255, 255, 255));
-        channelOverview.setName(""); // NOI18N
+        channelOverview.setName(Messages.getString("ChannelWizard.3")); // NOI18N //$NON-NLS-1$
 
-        runWizardButton.setText("Run Wizard");
+        runWizardButton.setText(Messages.getString("ChannelWizard.4")); //$NON-NLS-1$
         runWizardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 runWizardButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setText("Cancel");
+        cancelButton.setText(Messages.getString("ChannelWizard.5")); //$NON-NLS-1$
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setFont(new java.awt.Font(Messages.getString("ChannelWizard.6"), 1, 18)); // NOI18N //$NON-NLS-1$
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("New Channel");
+        jLabel2.setText(Messages.getString("ChannelWizard.7")); //$NON-NLS-1$
 
         javax.swing.GroupLayout mirthHeadingPanel1Layout = new javax.swing.GroupLayout(mirthHeadingPanel1);
         mirthHeadingPanel1.setLayout(mirthHeadingPanel1Layout);
@@ -138,10 +138,10 @@ public class ChannelWizard extends MirthDialog {
                 .addContainerGap())
         );
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
-        jLabel1.setText("Select a channel wizard...");
+        jLabel1.setFont(new java.awt.Font(Messages.getString("ChannelWizard.8"), 1, 11)); //$NON-NLS-1$
+        jLabel1.setText(Messages.getString("ChannelWizard.9")); //$NON-NLS-1$
 
-        wizardLabel.setText("Wizard:");
+        wizardLabel.setText(Messages.getString("ChannelWizard.10")); //$NON-NLS-1$
 
         wizardComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -149,12 +149,12 @@ public class ChannelWizard extends MirthDialog {
             }
         });
 
-        descriptionLabel.setText("Description:");
+        descriptionLabel.setText(Messages.getString("ChannelWizard.11")); //$NON-NLS-1$
 
         descriptionTextPane.setEditable(false);
         descriptionScrollPane.setViewportView(descriptionTextPane);
 
-        skipWizardButton.setText("Skip Wizard");
+        skipWizardButton.setText(Messages.getString("ChannelWizard.12")); //$NON-NLS-1$
         skipWizardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 skipWizardButtonActionPerformed(evt);
@@ -247,7 +247,7 @@ public class ChannelWizard extends MirthDialog {
 
         if (wizard.equals(DEFAULT_COMBOBOX_VALUE)) {
             runWizardButton.setEnabled(false);
-            descriptionTextPane.setText("Select a channel wizard or press \"Skip Wizard\" to continue...");
+            descriptionTextPane.setText(Messages.getString("ChannelWizard.13")); //$NON-NLS-1$
         } else {
             runWizardButton.setEnabled(true);
             descriptionTextPane.setText(parent.getPluginMetaData().get(wizardComboBox.getSelectedItem()).getDescription());
@@ -263,7 +263,7 @@ public class ChannelWizard extends MirthDialog {
     {//GEN-HEADEREND:event_runWizardButtonActionPerformed
 
         final String wizard = (String) wizardComboBox.getSelectedItem();
-        final String workingId = parent.startWorking("Running " + wizard + " wizard...");
+        final String workingId = parent.startWorking(Messages.getString("ChannelWizard.14") + wizard + Messages.getString("ChannelWizard.15")); //$NON-NLS-1$ //$NON-NLS-2$
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 

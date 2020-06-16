@@ -58,12 +58,12 @@ public class DashboardTableColumnFactory extends ColumnFactory {
                 column.setMaxWidth(UIConstants.MIN_WIDTH + 10);
                 column.setMinWidth(UIConstants.MIN_WIDTH);
                 column.setPreferredWidth(UIConstants.MIN_WIDTH);
-                column.setToolTipText("<html><body>The status of the deployed channel. Possible values are deploying, undeploying,<br>started, starting, pausing, paused, stopping, and stopped.</body></html>");
+                column.setToolTipText(Messages.getString("DashboardTableColumnFactory.0")); //$NON-NLS-1$
                 break;
 
             case 1:
                 column.setMinWidth(150);
-                column.setToolTipText("<html><body>The name of the deployed channel or connector.</body></html>");
+                column.setToolTipText(Messages.getString("DashboardTableColumnFactory.1")); //$NON-NLS-1$
                 break;
 
             case 2:
@@ -71,14 +71,14 @@ public class DashboardTableColumnFactory extends ColumnFactory {
                 column.setComparator(new NumberCellComparator());
                 column.setMaxWidth(50);
                 column.setMinWidth(50);
-                column.setToolTipText("<html><body>The number of times this channel was saved since it was deployed.<br>Rev \u0394 = Channel Revision - Deployed Revision<br>This value will be highlighted if it is greater than 0,<br/><b>or</b> if any code templates linked to this channel have changed.</body></html>");
+                column.setToolTipText(Messages.getString("DashboardTableColumnFactory.2")); //$NON-NLS-1$
                 break;
 
             case 3:
                 column.setCellRenderer(new DateCellRenderer());
                 column.setMaxWidth(95);
                 column.setMinWidth(95);
-                column.setToolTipText("<html><body>The time this channel was last deployed.<br>This value will be highlighted if it is within the last two minutes.</body></html>");
+                column.setToolTipText(Messages.getString("DashboardTableColumnFactory.3")); //$NON-NLS-1$
                 break;
 
             case 4:
@@ -86,7 +86,7 @@ public class DashboardTableColumnFactory extends ColumnFactory {
                 column.setComparator(new NumberCellComparator());
                 column.setMaxWidth(UIConstants.MIN_WIDTH);
                 column.setMinWidth(UIConstants.MIN_WIDTH);
-                column.setToolTipText("<html><body>The number of messages received and accepted by this channel's source connector.</body></html>");
+                column.setToolTipText(Messages.getString("DashboardTableColumnFactory.4")); //$NON-NLS-1$
                 break;
 
             case 5:
@@ -94,7 +94,7 @@ public class DashboardTableColumnFactory extends ColumnFactory {
                 column.setComparator(new NumberCellComparator());
                 column.setMaxWidth(UIConstants.MIN_WIDTH);
                 column.setMinWidth(UIConstants.MIN_WIDTH);
-                column.setToolTipText("<html><body>The number of messages filtered out by this channel's source connector or any destination connector.</body></html>");
+                column.setToolTipText(Messages.getString("DashboardTableColumnFactory.5")); //$NON-NLS-1$
                 break;
 
             case 6:
@@ -102,7 +102,7 @@ public class DashboardTableColumnFactory extends ColumnFactory {
                 column.setComparator(new NumberCellComparator());
                 column.setMaxWidth(UIConstants.MIN_WIDTH);
                 column.setMinWidth(UIConstants.MIN_WIDTH);
-                column.setToolTipText("<html><body>The number of messages currently queued by all destination connectors in this channel.</body></html>");
+                column.setToolTipText(Messages.getString("DashboardTableColumnFactory.6")); //$NON-NLS-1$
                 break;
 
             case 7:
@@ -110,7 +110,7 @@ public class DashboardTableColumnFactory extends ColumnFactory {
                 column.setComparator(new NumberCellComparator());
                 column.setMaxWidth(UIConstants.MIN_WIDTH);
                 column.setMinWidth(UIConstants.MIN_WIDTH);
-                column.setToolTipText("<html><body>The numer of messages that have been sent by all of the destination connectors in this channel.</body></html>");
+                column.setToolTipText(Messages.getString("DashboardTableColumnFactory.7")); //$NON-NLS-1$
                 break;
 
             case 8:
@@ -118,7 +118,7 @@ public class DashboardTableColumnFactory extends ColumnFactory {
                 column.setComparator(new NumberCellComparator());
                 column.setMaxWidth(UIConstants.MIN_WIDTH);
                 column.setMinWidth(UIConstants.MIN_WIDTH);
-                column.setToolTipText("<html><body>The number of messages that errored in this channel.<br>This value will be highlighted if it is greater than 0.</body></html>");
+                column.setToolTipText(Messages.getString("DashboardTableColumnFactory.8")); //$NON-NLS-1$
                 break;
 
             default:
