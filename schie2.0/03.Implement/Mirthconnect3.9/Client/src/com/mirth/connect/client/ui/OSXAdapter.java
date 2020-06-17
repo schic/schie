@@ -74,21 +74,21 @@ public class OSXAdapter implements InvocationHandler {
                 InvocationHandler invocationHandler = new InvocationHandler() {
                     @Override
                     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                        if (method.getName().equals("handleQuitRequestWith")) {
+                        if (method.getName().equals(Messages.getString("OSXAdapter.0"))) { //$NON-NLS-1$
                             boolean quit = (boolean) quitHandler.invoke(target);
                             Object quitResponse = args[1];
-                            quitResponse.getClass().getMethod(quit ? "performQuit" : "cancelQuit").invoke(quitResponse);
+                            quitResponse.getClass().getMethod(quit ? Messages.getString("OSXAdapter.1") : Messages.getString("OSXAdapter.2")).invoke(quitResponse); //$NON-NLS-1$ //$NON-NLS-2$
                         }
                         return null;
                     }
                 };
 
-                setHandler(invocationHandler, "java.awt.desktop.QuitHandler", "setQuitHandler");
+                setHandler(invocationHandler, Messages.getString("OSXAdapter.3"), Messages.getString("OSXAdapter.4")); //$NON-NLS-1$ //$NON-NLS-2$
             } else {
-                setHandler(new OSXAdapter("handleQuit", target, quitHandler));
+                setHandler(new OSXAdapter(Messages.getString("OSXAdapter.5"), target, quitHandler)); //$NON-NLS-1$
             }
         } catch (Exception ex) {
-            System.err.println("OSXAdapter could not set quit handler");
+            System.err.println(Messages.getString("OSXAdapter.6")); //$NON-NLS-1$
             ex.printStackTrace();
         }
     }
@@ -101,21 +101,21 @@ public class OSXAdapter implements InvocationHandler {
         try {
             if (isJava9OrGreater()) {
                 if (enableAboutMenu) {
-                    setHandler(new OSXAdapter("handleAbout", target, aboutHandler), "java.awt.desktop.AboutHandler", "setAboutHandler");
+                    setHandler(new OSXAdapter(Messages.getString("OSXAdapter.7"), target, aboutHandler), Messages.getString("OSXAdapter.8"), Messages.getString("OSXAdapter.9")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 }
             } else {
                 if (enableAboutMenu) {
-                    setHandler(new OSXAdapter("handleAbout", target, aboutHandler));
+                    setHandler(new OSXAdapter(Messages.getString("OSXAdapter.10"), target, aboutHandler)); //$NON-NLS-1$
                 }
                 // If we're setting a handler, enable the About menu item by calling
                 // com.apple.eawt.Application reflectively
-                Method enableAboutMethod = macOSXApplication.getClass().getDeclaredMethod("setEnabledAboutMenu", new Class[] {
+                Method enableAboutMethod = macOSXApplication.getClass().getDeclaredMethod(Messages.getString("OSXAdapter.11"), new Class[] { //$NON-NLS-1$
                         boolean.class });
                 enableAboutMethod.invoke(macOSXApplication, new Object[] {
                         Boolean.valueOf(enableAboutMenu) });
             }
         } catch (Exception ex) {
-            System.err.println("OSXAdapter could not access the About Menu");
+            System.err.println(Messages.getString("OSXAdapter.12")); //$NON-NLS-1$
             ex.printStackTrace();
         }
     }
@@ -127,21 +127,21 @@ public class OSXAdapter implements InvocationHandler {
         try {
             if (isJava9OrGreater()) {
                 if (enablePrefsMenu) {
-                    setHandler(new OSXAdapter("handlePreferences", target, prefsHandler), "java.awt.desktop.PreferencesHandler", "setPreferencesHandler");
+                    setHandler(new OSXAdapter(Messages.getString("OSXAdapter.13"), target, prefsHandler), Messages.getString("OSXAdapter.14"), Messages.getString("OSXAdapter.15")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 }
             } else {
                 if (enablePrefsMenu) {
-                    setHandler(new OSXAdapter("handlePreferences", target, prefsHandler));
+                    setHandler(new OSXAdapter(Messages.getString("OSXAdapter.16"), target, prefsHandler)); //$NON-NLS-1$
                 }
                 // If we're setting a handler, enable the Preferences menu item by calling
                 // com.apple.eawt.Application reflectively
-                Method enablePrefsMethod = macOSXApplication.getClass().getDeclaredMethod("setEnabledPreferencesMenu", new Class[] {
+                Method enablePrefsMethod = macOSXApplication.getClass().getDeclaredMethod(Messages.getString("OSXAdapter.17"), new Class[] { //$NON-NLS-1$
                         boolean.class });
                 enablePrefsMethod.invoke(macOSXApplication, new Object[] {
                         Boolean.valueOf(enablePrefsMenu) });
             }
         } catch (Exception ex) {
-            System.err.println("OSXAdapter could not set preferences handler");
+            System.err.println(Messages.getString("OSXAdapter.18")); //$NON-NLS-1$
             ex.printStackTrace();
         }
     }
@@ -156,25 +156,25 @@ public class OSXAdapter implements InvocationHandler {
                     @Override
                     @SuppressWarnings("unchecked")
                     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                        if (method.getName().equals("openFiles")) {
+                        if (method.getName().equals(Messages.getString("OSXAdapter.19"))) { //$NON-NLS-1$
                             Object event = args[0];
-                            List<File> files = (List<File>) event.getClass().getMethod("getFiles").invoke(event);
-                            String searchTerm = (String) event.getClass().getMethod("getSearchTerm").invoke(event);
+                            List<File> files = (List<File>) event.getClass().getMethod(Messages.getString("OSXAdapter.20")).invoke(event); //$NON-NLS-1$
+                            String searchTerm = (String) event.getClass().getMethod(Messages.getString("OSXAdapter.21")).invoke(event); //$NON-NLS-1$
                             fileHandler.invoke(target, files, searchTerm);
                         }
                         return null;
                     }
                 };
 
-                setHandler(invocationHandler, "java.awt.desktop.OpenFilesHandler", "setOpenFileHandler");
+                setHandler(invocationHandler, Messages.getString("OSXAdapter.22"), Messages.getString("OSXAdapter.23")); //$NON-NLS-1$ //$NON-NLS-2$
             } else {
-                setHandler(new OSXAdapter("handleOpenFile", target, fileHandler) {
+                setHandler(new OSXAdapter(Messages.getString("OSXAdapter.24"), target, fileHandler) { //$NON-NLS-1$
                     // Override OSXAdapter.callTarget to send information on the
                     // file to be opened
                     public boolean callTarget(Object appleEvent) {
                         if (appleEvent != null) {
                             try {
-                                Method getFilenameMethod = appleEvent.getClass().getDeclaredMethod("getFilename", (Class[]) null);
+                                Method getFilenameMethod = appleEvent.getClass().getDeclaredMethod(Messages.getString("OSXAdapter.25"), (Class[]) null); //$NON-NLS-1$
                                 String filename = (String) getFilenameMethod.invoke(appleEvent, (Object[]) null);
                                 this.targetMethod.invoke(this.targetObject, new Object[] {
                                         filename });
@@ -187,7 +187,7 @@ public class OSXAdapter implements InvocationHandler {
                 });
             }
         } catch (Exception ex) {
-            System.err.println("OSXAdapter could not set open files handler");
+            System.err.println(Messages.getString("OSXAdapter.26")); //$NON-NLS-1$
             ex.printStackTrace();
         }
     }
@@ -196,17 +196,17 @@ public class OSXAdapter implements InvocationHandler {
     public static void setHandler(OSXAdapter adapter) {
         try {
             Object application = getApplication();
-            Class applicationListenerClass = Class.forName("com.apple.eawt.ApplicationListener");
-            Method addListenerMethod = application.getClass().getDeclaredMethod("addApplicationListener", new Class[] {
+            Class applicationListenerClass = Class.forName(Messages.getString("OSXAdapter.27")); //$NON-NLS-1$
+            Method addListenerMethod = application.getClass().getDeclaredMethod(Messages.getString("OSXAdapter.28"), new Class[] { //$NON-NLS-1$
                     applicationListenerClass });
             // Create a proxy object around this handler that can be reflectively added as an Apple ApplicationListener
             Object osxAdapterProxy = Proxy.newProxyInstance(OSXAdapter.class.getClassLoader(), new Class[] {
                     applicationListenerClass }, adapter);
             addListenerMethod.invoke(application, new Object[] { osxAdapterProxy });
         } catch (ClassNotFoundException cnfe) {
-            System.err.println("This version of Mac OS X does not support the Apple EAWT.  ApplicationEvent handling has been disabled (" + cnfe + ")");
+            System.err.println(Messages.getString("OSXAdapter.29") + cnfe + Messages.getString("OSXAdapter.30")); //$NON-NLS-1$ //$NON-NLS-2$
         } catch (Exception ex) { // Likely a NoSuchMethodException or an IllegalAccessException loading/invoking eawt.Application methods
-            System.err.println("Mac OS X Adapter could not talk to EAWT:");
+            System.err.println(Messages.getString("OSXAdapter.31")); //$NON-NLS-1$
             ex.printStackTrace();
         }
     }
@@ -252,12 +252,12 @@ public class OSXAdapter implements InvocationHandler {
     protected void setApplicationEventHandled(Object event, boolean handled) {
         if (event != null && !isJava9OrGreater()) {
             try {
-                Method setHandledMethod = event.getClass().getDeclaredMethod("setHandled", new Class[] {
+                Method setHandledMethod = event.getClass().getDeclaredMethod(Messages.getString("OSXAdapter.32"), new Class[] { //$NON-NLS-1$
                         boolean.class });
                 // If the target method returns a boolean, use that as a hint
                 setHandledMethod.invoke(event, new Object[] { Boolean.valueOf(handled) });
             } catch (Exception ex) {
-                System.err.println("OSXAdapter was unable to handle an ApplicationEvent: " + event);
+                System.err.println(Messages.getString("OSXAdapter.33") + event); //$NON-NLS-1$
                 ex.printStackTrace();
             }
         }
@@ -266,10 +266,10 @@ public class OSXAdapter implements InvocationHandler {
     @SuppressWarnings("unchecked")
     protected static Object getApplication() throws Exception {
         if (macOSXApplication == null) {
-            Class applicationClass = Class.forName("com.apple.eawt.Application");
+            Class applicationClass = Class.forName(Messages.getString("OSXAdapter.34")); //$NON-NLS-1$
 
             if (isJava9OrGreater()) {
-                macOSXApplication = applicationClass.getMethod("getApplication").invoke(null);
+                macOSXApplication = applicationClass.getMethod(Messages.getString("OSXAdapter.35")).invoke(null); //$NON-NLS-1$
             } else {
                 macOSXApplication = applicationClass.getConstructor((Class[]) null).newInstance((Object[]) null);
             }
@@ -287,7 +287,7 @@ public class OSXAdapter implements InvocationHandler {
     }
 
     protected static boolean isJava9OrGreater() {
-        String version = System.getProperty("java.version");
+        String version = System.getProperty(Messages.getString("OSXAdapter.36")); //$NON-NLS-1$
 
         int index = version.indexOf('-');
         if (index > 0) {

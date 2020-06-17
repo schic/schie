@@ -169,7 +169,7 @@ public class LoadedExtensions {
                     }
                 }
             } catch (Exception e) {
-                PlatformUI.MIRTH_FRAME.alertThrowable(PlatformUI.MIRTH_FRAME, e, "Could not load code template plugin: " + metaData.getTemplateClassName());
+                PlatformUI.MIRTH_FRAME.alertThrowable(PlatformUI.MIRTH_FRAME, e, Messages.getString("LoadedExtensions.0") + metaData.getTemplateClassName()); //$NON-NLS-1$
             }
         }
 
@@ -197,7 +197,7 @@ public class LoadedExtensions {
                         }
                     }
                 } catch (Exception e) {
-                    PlatformUI.MIRTH_FRAME.alertThrowable(PlatformUI.MIRTH_FRAME, e, "Could not load plugin class: " + clazzName);
+                    PlatformUI.MIRTH_FRAME.alertThrowable(PlatformUI.MIRTH_FRAME, e, Messages.getString("LoadedExtensions.1") + clazzName); //$NON-NLS-1$
                 }
             }
         }
@@ -221,7 +221,7 @@ public class LoadedExtensions {
                     }
                 }
             } catch (Exception e) {
-                PlatformUI.MIRTH_FRAME.alertThrowable(PlatformUI.MIRTH_FRAME, e, "Could not load connector class: " + metaData.getClientClassName());
+                PlatformUI.MIRTH_FRAME.alertThrowable(PlatformUI.MIRTH_FRAME, e, Messages.getString("LoadedExtensions.2") + metaData.getClientClassName()); //$NON-NLS-1$
             }
         }
 
@@ -234,8 +234,8 @@ public class LoadedExtensions {
             try {
                 clientPlugin.start();
             } catch (Exception e) {
-                logger.error("Could not start plugin: " + clientPlugin.getPluginName());
-                PlatformUI.MIRTH_FRAME.alertThrowable(PlatformUI.MIRTH_FRAME, e, "Could not start plugin: " + clientPlugin.getPluginName());
+                logger.error(Messages.getString("LoadedExtensions.3") + clientPlugin.getPluginName()); //$NON-NLS-1$
+                PlatformUI.MIRTH_FRAME.alertThrowable(PlatformUI.MIRTH_FRAME, e, Messages.getString("LoadedExtensions.4") + clientPlugin.getPluginName()); //$NON-NLS-1$
             }
         }
     }

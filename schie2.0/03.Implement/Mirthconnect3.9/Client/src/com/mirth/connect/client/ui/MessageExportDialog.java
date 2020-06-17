@@ -50,7 +50,7 @@ public class MessageExportDialog extends MirthDialog {
         super(PlatformUI.MIRTH_FRAME);
         parent = PlatformUI.MIRTH_FRAME;
 
-        setTitle("Export Results");
+        setTitle(Messages.getString("MessageExportDialog.0")); //$NON-NLS-1$
         setPreferredSize(new Dimension(800, 300));
         setLocationRelativeTo(null);
         setModal(true);
@@ -82,7 +82,7 @@ public class MessageExportDialog extends MirthDialog {
         messageExportPanel.setExportLocal(true);
         messageExportPanel.setBackground(UIConstants.BACKGROUND_COLOR);
 
-        exportButton = new JButton("Export");
+        exportButton = new JButton(Messages.getString("MessageExportDialog.1")); //$NON-NLS-1$
         exportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -90,7 +90,7 @@ public class MessageExportDialog extends MirthDialog {
             }
         });
 
-        cancelButton = new JButton("Cancel");
+        cancelButton = new JButton(Messages.getString("MessageExportDialog.2")); //$NON-NLS-1$
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -100,12 +100,12 @@ public class MessageExportDialog extends MirthDialog {
     }
 
     private void initLayout() {
-        setLayout(new MigLayout("insets 12, wrap", "[]", "[fill][]"));
+        setLayout(new MigLayout(Messages.getString("MessageExportDialog.3"), Messages.getString("MessageExportDialog.4"), Messages.getString("MessageExportDialog.5"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-        add(messageExportPanel, "grow,push");
-        add(new JSeparator(), "grow, gaptop 4, span");
-        add(exportButton, "split 2, gaptop 4, alignx right, width 60");
-        add(cancelButton, "width 60");
+        add(messageExportPanel, Messages.getString("MessageExportDialog.6")); //$NON-NLS-1$
+        add(new JSeparator(), Messages.getString("MessageExportDialog.7")); //$NON-NLS-1$
+        add(exportButton, Messages.getString("MessageExportDialog.8")); //$NON-NLS-1$
+        add(cancelButton, Messages.getString("MessageExportDialog.9")); //$NON-NLS-1$
     }
 
     private void export() {
@@ -119,7 +119,7 @@ public class MessageExportDialog extends MirthDialog {
         MessageWriterOptions writerOptions = messageExportPanel.getMessageWriterOptions();
 
         if (StringUtils.isBlank(writerOptions.getRootFolder())) {
-            parent.alertError(parent, "Please enter a valid root path to store exported files.");
+            parent.alertError(parent, Messages.getString("MessageExportDialog.10")); //$NON-NLS-1$
             setVisible(true);
             return;
         }
@@ -162,7 +162,7 @@ public class MessageExportDialog extends MirthDialog {
 
             setVisible(false);
             setCursor(Cursor.getDefaultCursor());
-            parent.alertInformation(parent, exportCount + " message" + ((exportCount == 1) ? " has" : "s have") + " been successfully exported to: " + writerOptions.getRootFolder());
+            parent.alertInformation(parent, exportCount + Messages.getString("MessageExportDialog.11") + ((exportCount == 1) ? Messages.getString("MessageExportDialog.12") : Messages.getString("MessageExportDialog.13")) + Messages.getString("MessageExportDialog.14") + writerOptions.getRootFolder()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         } catch (Exception e) {
             setCursor(Cursor.getDefaultCursor());
             Throwable cause = (e.getCause() == null) ? e : e.getCause();

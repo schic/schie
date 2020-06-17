@@ -73,7 +73,7 @@ public class ReprocessMessagesDialog extends MirthDialog {
             setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
         }
 
-        setTitle("Reprocessing Options");
+        setTitle(Messages.getString("ReprocessMessagesDialog.0")); //$NON-NLS-1$
 
         makeIncludedDestinationsTable(destinationsConnectors, selectedMetaDataId);
         okButton.requestFocus();
@@ -92,27 +92,27 @@ public class ReprocessMessagesDialog extends MirthDialog {
         }
 
         includedDestinationsTable = new ItemSelectionTable();
-        includedDestinationsTable.setModel(new ItemSelectionTableModel<Integer, String>(destinationsConnectors, selectedMetaDataIds, "Destination", "Included"));
+        includedDestinationsTable.setModel(new ItemSelectionTableModel<Integer, String>(destinationsConnectors, selectedMetaDataIds, Messages.getString("ReprocessMessagesDialog.1"), Messages.getString("ReprocessMessagesDialog.2"))); //$NON-NLS-1$ //$NON-NLS-2$
         includedDestinationsPane.setViewportView(includedDestinationsTable);
     }
 
     private void initComponents() {
-        warningPane = new JEditorPane("text/html", "");
+        warningPane = new JEditorPane(Messages.getString("ReprocessMessagesDialog.3"), Messages.getString("ReprocessMessagesDialog.4")); //$NON-NLS-1$ //$NON-NLS-2$
         warningPane.setBorder(BorderFactory.createEmptyBorder());
         warningPane.setBackground(getBackground());
         warningPane.setEditable(false);
         HTMLEditorKit editorKit = new HTMLEditorKit();
         StyleSheet styleSheet = editorKit.getStyleSheet();
-        styleSheet.addRule(".reprocess-dialog {font-family:\"Tahoma\";font-size:11;text-align:center}");
+        styleSheet.addRule(Messages.getString("ReprocessMessagesDialog.5")); //$NON-NLS-1$
         warningPane.setEditorKit(editorKit);
-        warningPane.setText("<html><span class=\"reprocess-dialog\" style=\"color:#FF0000\"><b>Warning:</b></span> <span class=\"reprocess-dialog\">This will reprocess <b>all</b> results for the current search criteria, including those not listed on the current page. To see how many messages will be reprocessed, close this dialog and click the Count button in the upper-right.</span></html>");
+        warningPane.setText(Messages.getString("ReprocessMessagesDialog.6")); //$NON-NLS-1$
 
         overwriteCheckBox = new JCheckBox();
-        overwriteCheckBox.setText("Overwrite existing messages and update statistics");
+        overwriteCheckBox.setText(Messages.getString("ReprocessMessagesDialog.7")); //$NON-NLS-1$
 
-        reprocessLabel = new JLabel("Reprocess through the following destinations:");
+        reprocessLabel = new JLabel(Messages.getString("ReprocessMessagesDialog.8")); //$NON-NLS-1$
 
-        selectAllLabel = new JLabel("<html><u>Select All</u></html>");
+        selectAllLabel = new JLabel(Messages.getString("ReprocessMessagesDialog.9")); //$NON-NLS-1$
         selectAllLabel.setForeground(Color.BLUE);
         selectAllLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -122,9 +122,9 @@ public class ReprocessMessagesDialog extends MirthDialog {
             }
         });
 
-        selectSeparatorLabel = new JLabel("|");
+        selectSeparatorLabel = new JLabel(Messages.getString("ReprocessMessagesDialog.10")); //$NON-NLS-1$
 
-        deselectAllLabel = new JLabel("<html><u>Deselect All</u></html>");
+        deselectAllLabel = new JLabel(Messages.getString("ReprocessMessagesDialog.11")); //$NON-NLS-1$
         deselectAllLabel.setForeground(Color.BLUE);
         deselectAllLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -138,13 +138,13 @@ public class ReprocessMessagesDialog extends MirthDialog {
         includedDestinationsPane = new JScrollPane(includedDestinationsTable);
 
         okButton = new JButton();
-        okButton.setText("OK");
+        okButton.setText(Messages.getString("ReprocessMessagesDialog.12")); //$NON-NLS-1$
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (showWarning && Preferences.userNodeForPackage(Mirth.class).getBoolean("showReprocessRemoveMessagesWarning", true)) {
-                    String result = DisplayUtil.showInputDialog(ReprocessMessagesDialog.this, "<html>This will reprocess all messages that match the current search criteria.<br/>To see how many messages will be reprocessed, close this dialog and<br/>click the Count button in the upper-right.<br><font size='1'><br></font>Type REPROCESSALL and click the OK button to continue.</html>", "Reprocess Results", JOptionPane.WARNING_MESSAGE);
-                    if (!StringUtils.equals(result, "REPROCESSALL")) {
-                        parent.alertWarning(ReprocessMessagesDialog.this, "You must type REPROCESSALL to reprocess results.");
+                if (showWarning && Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("ReprocessMessagesDialog.13"), true)) { //$NON-NLS-1$
+                    String result = DisplayUtil.showInputDialog(ReprocessMessagesDialog.this, Messages.getString("ReprocessMessagesDialog.14"), Messages.getString("ReprocessMessagesDialog.15"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+                    if (!StringUtils.equals(result, Messages.getString("ReprocessMessagesDialog.16"))) { //$NON-NLS-1$
+                        parent.alertWarning(ReprocessMessagesDialog.this, Messages.getString("ReprocessMessagesDialog.17")); //$NON-NLS-1$
                         return;
                     }
                 }
@@ -162,7 +162,7 @@ public class ReprocessMessagesDialog extends MirthDialog {
         });
 
         cancelButton = new JButton();
-        cancelButton.setText("Cancel");
+        cancelButton.setText(Messages.getString("ReprocessMessagesDialog.18")); //$NON-NLS-1$
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 ReprocessMessagesDialog.this.dispose();
@@ -172,22 +172,22 @@ public class ReprocessMessagesDialog extends MirthDialog {
 
     private void initLayout() {
         Container contentPane = getContentPane();
-        contentPane.setLayout(new MigLayout("insets 12, fill", "[grow]"));
+        contentPane.setLayout(new MigLayout(Messages.getString("ReprocessMessagesDialog.19"), Messages.getString("ReprocessMessagesDialog.20"))); //$NON-NLS-1$ //$NON-NLS-2$
         contentPane.setPreferredSize(new Dimension(425, 330));
 
         if (showWarning) {
-            contentPane.add(warningPane, "growx, sx, wrap");
-            contentPane.add(new JSeparator(), "growx, gapbottom 6, sx, wrap");
+            contentPane.add(warningPane, Messages.getString("ReprocessMessagesDialog.21")); //$NON-NLS-1$
+            contentPane.add(new JSeparator(), Messages.getString("ReprocessMessagesDialog.22")); //$NON-NLS-1$
         }
-        contentPane.add(overwriteCheckBox, "wrap, sx");
-        contentPane.add(reprocessLabel, "left");
-        contentPane.add(selectAllLabel, "right, split 3");
+        contentPane.add(overwriteCheckBox, Messages.getString("ReprocessMessagesDialog.23")); //$NON-NLS-1$
+        contentPane.add(reprocessLabel, Messages.getString("ReprocessMessagesDialog.24")); //$NON-NLS-1$
+        contentPane.add(selectAllLabel, Messages.getString("ReprocessMessagesDialog.25")); //$NON-NLS-1$
         contentPane.add(selectSeparatorLabel);
-        contentPane.add(deselectAllLabel, "wrap");
-        contentPane.add(includedDestinationsPane, "growx, wrap, gapbottom 6, sx");
-        contentPane.add(new JSeparator(), "growx, gapbottom 6, span");
-        contentPane.add(okButton, "alignx right, width 48, split, span");
-        contentPane.add(cancelButton, "alignx right, width 48");
+        contentPane.add(deselectAllLabel, Messages.getString("ReprocessMessagesDialog.26")); //$NON-NLS-1$
+        contentPane.add(includedDestinationsPane, Messages.getString("ReprocessMessagesDialog.27")); //$NON-NLS-1$
+        contentPane.add(new JSeparator(), Messages.getString("ReprocessMessagesDialog.28")); //$NON-NLS-1$
+        contentPane.add(okButton, Messages.getString("ReprocessMessagesDialog.29")); //$NON-NLS-1$
+        contentPane.add(cancelButton, Messages.getString("ReprocessMessagesDialog.30")); //$NON-NLS-1$
 
         pack();
     }

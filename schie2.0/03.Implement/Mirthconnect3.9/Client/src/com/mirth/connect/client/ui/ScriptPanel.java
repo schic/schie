@@ -33,10 +33,10 @@ import com.mirth.connect.util.JavaScriptSharedUtil;
 
 public class ScriptPanel extends JPanel {
 
-    public static final String DEPLOY_SCRIPT = "Deploy";
-    public static final String UNDEPLOY_SCRIPT = "Undeploy";
-    public static final String PREPROCESSOR_SCRIPT = "Preprocessor";
-    public static final String POSTPROCESSOR_SCRIPT = "Postprocessor";
+    public static final String DEPLOY_SCRIPT = Messages.getString("ScriptPanel.0"); //$NON-NLS-1$
+    public static final String UNDEPLOY_SCRIPT = Messages.getString("ScriptPanel.1"); //$NON-NLS-1$
+    public static final String PREPROCESSOR_SCRIPT = Messages.getString("ScriptPanel.2"); //$NON-NLS-1$
+    public static final String POSTPROCESSOR_SCRIPT = Messages.getString("ScriptPanel.3"); //$NON-NLS-1$
 
     private static final String[] SCRIPT_TYPES = new String[] { DEPLOY_SCRIPT, UNDEPLOY_SCRIPT,
             PREPROCESSOR_SCRIPT, POSTPROCESSOR_SCRIPT };
@@ -74,12 +74,12 @@ public class ScriptPanel extends JPanel {
         StringBuilder sb = new StringBuilder();
         Context context = JavaScriptSharedUtil.getGlobalContextForValidation();
         try {
-            context.compileString("function rhinoWrapper() {" + getScriptTextArea().getText() + "\n}", PlatformUI.MIRTH_FRAME.mirthClient.getGuid(), 1, null);
-            sb.append("JavaScript was successfully validated.");
+            context.compileString(Messages.getString("ScriptPanel.4") + getScriptTextArea().getText() + Messages.getString("ScriptPanel.5"), PlatformUI.MIRTH_FRAME.mirthClient.getGuid(), 1, null); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append(Messages.getString("ScriptPanel.6")); //$NON-NLS-1$
         } catch (EvaluatorException e) {
-            sb.append("Error on line " + e.lineNumber() + ": " + e.getMessage() + " of the current script.");
+            sb.append(Messages.getString("ScriptPanel.7") + e.lineNumber() + Messages.getString("ScriptPanel.8") + e.getMessage() + Messages.getString("ScriptPanel.9")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         } catch (Exception e) {
-            sb.append("Unknown error occurred during validation.");
+            sb.append(Messages.getString("ScriptPanel.10")); //$NON-NLS-1$
         } finally {
             Context.exit();
         }
@@ -91,11 +91,11 @@ public class ScriptPanel extends JPanel {
         String error = null;
         Context context = JavaScriptSharedUtil.getGlobalContextForValidation();
         try {
-            context.compileString("function rhinoWrapper() {" + script + "\n}", UUID.randomUUID().toString(), 1, null);
+            context.compileString(Messages.getString("ScriptPanel.11") + script + Messages.getString("ScriptPanel.12"), UUID.randomUUID().toString(), 1, null); //$NON-NLS-1$ //$NON-NLS-2$
         } catch (EvaluatorException e) {
-            error = "Error on line " + e.lineNumber() + ": " + e.getMessage() + ".";
+            error = Messages.getString("ScriptPanel.13") + e.lineNumber() + Messages.getString("ScriptPanel.14") + e.getMessage() + Messages.getString("ScriptPanel.15"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         } catch (Exception e) {
-            error = "Unknown error occurred during validation.";
+            error = Messages.getString("ScriptPanel.16"); //$NON-NLS-1$
         } finally {
             Context.exit();
         }
@@ -106,7 +106,7 @@ public class ScriptPanel extends JPanel {
     private void initComponents(boolean global) {
         setBackground(UIConstants.BACKGROUND_COLOR);
 
-        scriptLabel = new JLabel("Script:");
+        scriptLabel = new JLabel(Messages.getString("ScriptPanel.17")); //$NON-NLS-1$
 
         scriptComboBox = new JComboBox<String>(new DefaultComboBoxModel<String>(SCRIPT_TYPES));
         scriptComboBox.addActionListener(new ActionListener() {
@@ -132,16 +132,16 @@ public class ScriptPanel extends JPanel {
     }
 
     private void initLayout() {
-        setLayout(new MigLayout("insets 12, novisualpadding, hidemode 3, fill, gapx 8"));
-        add(scriptLabel, "split 2, gapafter 13");
+        setLayout(new MigLayout(Messages.getString("ScriptPanel.18"))); //$NON-NLS-1$
+        add(scriptLabel, Messages.getString("ScriptPanel.19")); //$NON-NLS-1$
         add(scriptComboBox);
 
         for (FunctionList functionList : functionListMap.values()) {
-            add(functionList, "grow, w 200!, sy");
+            add(functionList, Messages.getString("ScriptPanel.20")); //$NON-NLS-1$
         }
 
         for (MirthRTextScrollPane scriptTextArea : scriptTextAreaMap.values()) {
-            add(scriptTextArea, "newline, grow, push, w :400, h :300");
+            add(scriptTextArea, Messages.getString("ScriptPanel.21")); //$NON-NLS-1$
         }
     }
 

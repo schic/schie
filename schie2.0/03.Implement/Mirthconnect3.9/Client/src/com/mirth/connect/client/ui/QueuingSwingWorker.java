@@ -56,7 +56,7 @@ public class QueuingSwingWorker<T, V> extends SwingWorker<T, V> {
 
         // Whenever we read or update the worker state, we first synchronize on the WorkerInfo specific to the given key. 
         synchronized (workerInfo) {
-            logger.debug("Locked: key=" + task.getKey() + ", queue=" + queue + ", workerState=" + workerInfo.workerState);
+            logger.debug(Messages.getString("QueuingSwingWorker.0") + task.getKey() + Messages.getString("QueuingSwingWorker.1") + queue + Messages.getString("QueuingSwingWorker.2") + workerInfo.workerState); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             // If a different worker is already executing this task, do not create a SwingWorker
             if (workerInfo.workerState != WorkerState.IDLE) {
@@ -72,7 +72,7 @@ public class QueuingSwingWorker<T, V> extends SwingWorker<T, V> {
 
             // If no other worker is currently executing this task, we're safe to execute it now
             workerInfo.workerState = WorkerState.WORKING;
-            logger.debug("Unlocking: key=" + task.getKey() + ", queue=" + queue + ", workerState=" + workerInfo.workerState);
+            logger.debug(Messages.getString("QueuingSwingWorker.3") + task.getKey() + Messages.getString("QueuingSwingWorker.4") + queue + Messages.getString("QueuingSwingWorker.5") + workerInfo.workerState); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         workingId = PlatformUI.MIRTH_FRAME.startWorking(task.getDisplayText());
@@ -80,7 +80,7 @@ public class QueuingSwingWorker<T, V> extends SwingWorker<T, V> {
     }
 
     protected final void publishDelegate(V... chunks) {
-        logger.debug("Delegate publish running: key=" + task.getKey());
+        logger.debug(Messages.getString("QueuingSwingWorker.6") + task.getKey()); //$NON-NLS-1$
         publish(chunks);
     }
 
@@ -92,17 +92,17 @@ public class QueuingSwingWorker<T, V> extends SwingWorker<T, V> {
     }
 
     protected T doInBackground() throws Exception {
-        logger.debug("Delegate doInBackground running: key=" + task.getKey());
+        logger.debug(Messages.getString("QueuingSwingWorker.7") + task.getKey()); //$NON-NLS-1$
         return task.doInBackground();
     }
 
     protected void process(List<V> chunks) {
-        logger.debug("Delegate process running: key=" + task.getKey());
+        logger.debug(Messages.getString("QueuingSwingWorker.8") + task.getKey()); //$NON-NLS-1$
         task.process(chunks);
     }
 
     protected void done() {
-        logger.debug("Delegate done running: key=" + task.getKey());
+        logger.debug(Messages.getString("QueuingSwingWorker.9") + task.getKey()); //$NON-NLS-1$
         task.done();
 
         PlatformUI.MIRTH_FRAME.stopWorking(workingId);
@@ -117,7 +117,7 @@ public class QueuingSwingWorker<T, V> extends SwingWorker<T, V> {
 
         // Again here, synchronize before doing anything with the worker count
         synchronized (workerInfo) {
-            logger.debug("Delegate done, locked: key=" + task.getKey() + ", workerState=" + workerInfo.workerState);
+            logger.debug(Messages.getString("QueuingSwingWorker.10") + task.getKey() + Messages.getString("QueuingSwingWorker.11") + workerInfo.workerState); //$NON-NLS-1$ //$NON-NLS-2$
 
             // Detect if a task was previously queued up
             if (workerInfo.workerState == WorkerState.QUEUED) {
@@ -126,7 +126,7 @@ public class QueuingSwingWorker<T, V> extends SwingWorker<T, V> {
 
             // Reset the worker state since this one is now done
             workerInfo.workerState = WorkerState.IDLE;
-            logger.debug("Delegate done, unlocking: key=" + task.getKey() + ", workerState=" + workerInfo.workerState);
+            logger.debug(Messages.getString("QueuingSwingWorker.12") + task.getKey() + Messages.getString("QueuingSwingWorker.13") + workerInfo.workerState); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         /*
@@ -136,7 +136,7 @@ public class QueuingSwingWorker<T, V> extends SwingWorker<T, V> {
          * up another one.
          */
         if (queued) {
-            logger.debug("Delegate done, creating new worker: key=" + task.getKey());
+            logger.debug(Messages.getString("QueuingSwingWorker.14") + task.getKey()); //$NON-NLS-1$
             new QueuingSwingWorker<T, V>(task, false).executeDelegate();
         }
     }

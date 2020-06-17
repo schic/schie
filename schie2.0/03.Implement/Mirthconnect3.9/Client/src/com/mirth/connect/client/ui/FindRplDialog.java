@@ -207,43 +207,43 @@ public class FindRplDialog extends MirthDialog {
         textField_replaceWith = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Find Replace");
+        setTitle(Messages.getString("FindRplDialog.0")); //$NON-NLS-1$
 
-        jLabel1.setText("Find text:");
+        jLabel1.setText(Messages.getString("FindRplDialog.1")); //$NON-NLS-1$
 
-        jLabel2.setText("Replace with:");
+        jLabel2.setText(Messages.getString("FindRplDialog.2")); //$NON-NLS-1$
 
-        button_find.setText("Find");
+        button_find.setText(Messages.getString("FindRplDialog.3")); //$NON-NLS-1$
         button_find.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 button_findActionPerformed(evt);
             }
         });
 
-        button_replace.setText("Replace");
+        button_replace.setText(Messages.getString("FindRplDialog.4")); //$NON-NLS-1$
         button_replace.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 button_replaceActionPerformed(evt);
             }
         });
 
-        button_replaceAll.setText("Replace All");
+        button_replaceAll.setText(Messages.getString("FindRplDialog.5")); //$NON-NLS-1$
         button_replaceAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 button_replaceAllActionPerformed(evt);
             }
         });
 
-        button_close.setText("Close");
+        button_close.setText(Messages.getString("FindRplDialog.6")); //$NON-NLS-1$
         button_close.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 button_closeActionPerformed(evt);
             }
         });
 
-        checkBox_regularExpression.setText("Regular Expression");
+        checkBox_regularExpression.setText(Messages.getString("FindRplDialog.7")); //$NON-NLS-1$
 
-        checkBox_matchCase.setText("Match Case");
+        checkBox_matchCase.setText(Messages.getString("FindRplDialog.8")); //$NON-NLS-1$
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

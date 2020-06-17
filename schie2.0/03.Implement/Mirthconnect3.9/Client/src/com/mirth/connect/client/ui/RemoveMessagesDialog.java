@@ -63,15 +63,15 @@ public class RemoveMessagesDialog extends MirthDialog {
         noButton = new com.mirth.connect.client.ui.components.MirthButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Remove All Messages");
+        setTitle(Messages.getString("RemoveMessagesDialog.0")); //$NON-NLS-1$
 
-        messageLabel.setText("Are you sure you want to remove all messages (including QUEUED) for the selected stopped channel(s)?");
+        messageLabel.setText(Messages.getString("RemoveMessagesDialog.1")); //$NON-NLS-1$
 
-        clearStatsCheckBox.setText("Clear statistics for affected channel(s)");
+        clearStatsCheckBox.setText(Messages.getString("RemoveMessagesDialog.2")); //$NON-NLS-1$
 
-        includeRunningChannels.setText("Include selected channels that are not stopped (channels will be temporarily stopped while messages are being removed) ");
+        includeRunningChannels.setText(Messages.getString("RemoveMessagesDialog.3")); //$NON-NLS-1$
 
-        yesButton.setText("Yes");
+        yesButton.setText(Messages.getString("RemoveMessagesDialog.4")); //$NON-NLS-1$
         yesButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         yesButton.setMaximumSize(new java.awt.Dimension(75, 22));
         yesButton.setMinimumSize(new java.awt.Dimension(75, 22));
@@ -84,7 +84,7 @@ public class RemoveMessagesDialog extends MirthDialog {
         });
         buttonPanel.add(yesButton);
 
-        noButton.setText("No");
+        noButton.setText(Messages.getString("RemoveMessagesDialog.5")); //$NON-NLS-1$
         noButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         noButton.setMaximumSize(new java.awt.Dimension(75, 22));
         noButton.setMinimumSize(new java.awt.Dimension(75, 22));
@@ -137,15 +137,15 @@ public class RemoveMessagesDialog extends MirthDialog {
     }//GEN-LAST:event_noButtonActionPerformed
 
     private void yesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yesButtonActionPerformed
-        if (Preferences.userNodeForPackage(Mirth.class).getBoolean("showReprocessRemoveMessagesWarning", true)) {
-            String result = DisplayUtil.showInputDialog(this, "<html>This will remove <b>all</b> messages for the selected channel(s).<br><font size='1'><br></font>Type REMOVEALL and click the OK button to continue.</html>", "Remove All Messages", JOptionPane.WARNING_MESSAGE);
-            if (!StringUtils.equals(result, "REMOVEALL")) {
-                parent.alertWarning(this, "You must type REMOVEALL to remove all messages.");
+        if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("RemoveMessagesDialog.6"), true)) { //$NON-NLS-1$
+            String result = DisplayUtil.showInputDialog(this, Messages.getString("RemoveMessagesDialog.7"), Messages.getString("RemoveMessagesDialog.8"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+            if (!StringUtils.equals(result, Messages.getString("RemoveMessagesDialog.9"))) { //$NON-NLS-1$
+                parent.alertWarning(this, Messages.getString("RemoveMessagesDialog.10")); //$NON-NLS-1$
                 return;
             }
         }
         
-        final String workingId = parent.startWorking("Removing messages...");
+        final String workingId = parent.startWorking(Messages.getString("RemoveMessagesDialog.11")); //$NON-NLS-1$
         
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             public Void doInBackground() {

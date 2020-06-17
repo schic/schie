@@ -51,8 +51,8 @@ import com.mirth.connect.util.ConfigurationProperty;
 
 public class SettingsPanelMap extends AbstractSettingsPanel {
 
-    public static final String TAB_NAME = "Configuration Map";
-    private static final String SHOW_VALUES_KEY = "showConfigMapValues";
+    public static final String TAB_NAME = Messages.getString("SettingsPanelMap.0"); //$NON-NLS-1$
+    private static final String SHOW_VALUES_KEY = Messages.getString("SettingsPanelMap.1"); //$NON-NLS-1$
     private static Preferences userPreferences = Preferences.userNodeForPackage(Mirth.class);
 
     public SettingsPanelMap(String tabName) {
@@ -60,8 +60,8 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
 
         initComponents();
 
-        addTask(TaskConstants.SETTINGS_CONFIGURATION_MAP_IMPORT, "Import Map", "Import a properties file into the configuration map. This will remove and replace any existing map values.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/report_disk.png")));
-        addTask(TaskConstants.SETTINGS_CONFIGURATION_MAP_EXPORT, "Export Map", "Export the configuration map to a properties file.", "", new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/report_go.png")));
+        addTask(TaskConstants.SETTINGS_CONFIGURATION_MAP_IMPORT, Messages.getString("SettingsPanelMap.2"), Messages.getString("SettingsPanelMap.3"), Messages.getString("SettingsPanelMap.4"), new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("SettingsPanelMap.5")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        addTask(TaskConstants.SETTINGS_CONFIGURATION_MAP_EXPORT, Messages.getString("SettingsPanelMap.6"), Messages.getString("SettingsPanelMap.7"), Messages.getString("SettingsPanelMap.8"), new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("SettingsPanelMap.9")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
         setVisibleTasks(2, 3, true);
     }
@@ -78,7 +78,7 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
         boolean showConfigMapValues = userPreferences.getBoolean(SHOW_VALUES_KEY, false);
         showValuesCheckbox.setSelected(showConfigMapValues);
 
-        final String workingId = getFrame().startWorking("Loading " + getTabName() + " settings...");
+        final String workingId = getFrame().startWorking(Messages.getString("SettingsPanelMap.10") + getTabName() + Messages.getString("SettingsPanelMap.11")); //$NON-NLS-1$ //$NON-NLS-2$
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 
@@ -117,7 +117,7 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
             return false;
         }
 
-        final String workingId = getFrame().startWorking("Saving " + getTabName() + " settings...");
+        final String workingId = getFrame().startWorking(Messages.getString("SettingsPanelMap.12") + getTabName() + Messages.getString("SettingsPanelMap.13")); //$NON-NLS-1$ //$NON-NLS-2$
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 
@@ -156,7 +156,7 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
                 configurationMap.put(key, new ConfigurationProperty(value, comment));
             } else {
                 if (StringUtils.isNotBlank(value) || StringUtils.isNotBlank(comment)) {
-                    getFrame().alertWarning(this, "Blank keys are not allowed.");
+                    getFrame().alertWarning(this, Messages.getString("SettingsPanelMap.14")); //$NON-NLS-1$
                     return null;
                 }
             }
@@ -170,7 +170,7 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
             this.configurationMapTable.getCellEditor().stopCellEditing();
         }
 
-        File file = getFrame().browseForFile("PROPERTIES");
+        File file = getFrame().browseForFile(Messages.getString("SettingsPanelMap.15")); //$NON-NLS-1$
 
         if (file != null) {
             try {
@@ -193,7 +193,7 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
                 updateConfigurationTable(configurationMap, showValuesCheckbox.isSelected(), true);
                 setSaveEnabled(true);
             } catch (Exception e) {
-                getFrame().alertThrowable(getFrame(), e, "Error importing configuration map");
+                getFrame().alertThrowable(getFrame(), e, Messages.getString("SettingsPanelMap.16")); //$NON-NLS-1$
             }
         }
     }
@@ -205,7 +205,7 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
         }
 
         if (isSaveEnabled()) {
-            int option = JOptionPane.showConfirmDialog(this, "Would you like to save the settings first?");
+            int option = JOptionPane.showConfirmDialog(this, Messages.getString("SettingsPanelMap.17")); //$NON-NLS-1$
 
             if (option == JOptionPane.YES_OPTION) {
                 if (!doSave()) {
@@ -216,7 +216,7 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
             }
         }
 
-        final String workingId = getFrame().startWorking("Exporting " + getTabName() + " settings...");
+        final String workingId = getFrame().startWorking(Messages.getString("SettingsPanelMap.18") + getTabName() + Messages.getString("SettingsPanelMap.19")); //$NON-NLS-1$ //$NON-NLS-2$
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 
@@ -224,7 +224,7 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
 
             public Void doInBackground() {
                 try {
-                    File file = getFrame().createFileForExport(null, "PROPERTIES");
+                    File file = getFrame().createFileForExport(null, Messages.getString("SettingsPanelMap.20")); //$NON-NLS-1$
                     if (file != null) {
                         PropertiesConfiguration properties = new PropertiesConfiguration();
                         properties.setDelimiterParsingDisabled(true);
@@ -289,9 +289,9 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
 
     private void updateCellRenderer(boolean show) {
         if (show) {
-            configurationMapTable.getColumnExt("Value").setCellRenderer(new DefaultTableCellRenderer());
+            configurationMapTable.getColumnExt(Messages.getString("SettingsPanelMap.21")).setCellRenderer(new DefaultTableCellRenderer()); //$NON-NLS-1$
         } else {
-            configurationMapTable.getColumnExt("Value").setCellRenderer(new MirthPasswordTableCellRenderer());
+            configurationMapTable.getColumnExt(Messages.getString("SettingsPanelMap.22")).setCellRenderer(new MirthPasswordTableCellRenderer()); //$NON-NLS-1$
         }
     }
 
@@ -304,11 +304,11 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
     private void initComponents() {
         setBackground(Color.WHITE);
         setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        setLayout(new MigLayout("insets 12, fill"));
+        setLayout(new MigLayout(Messages.getString("SettingsPanelMap.23"))); //$NON-NLS-1$
 
-        showValuesLabel = new JLabel("Show values");
+        showValuesLabel = new JLabel(Messages.getString("SettingsPanelMap.24")); //$NON-NLS-1$
         showValuesCheckbox = new JCheckBox();
-        String tooltip = "If enabled, values in the table will be shown.";
+        String tooltip = Messages.getString("SettingsPanelMap.25"); //$NON-NLS-1$
         showValuesCheckbox.setToolTipText(tooltip);
         showValuesCheckbox.setBackground(Color.WHITE);
         showValuesCheckbox.addActionListener(new ActionListener() {
@@ -319,12 +319,12 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
         });
 
         configurationMapTable = new MirthTable();
-        configurationMapTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+        configurationMapTable.putClientProperty(Messages.getString("SettingsPanelMap.26"), Boolean.TRUE); //$NON-NLS-1$
         configurationMapTable.getTableHeader().setReorderingAllowed(false);
         configurationMapTable.setSortable(false);
         configurationMapTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         configurationMapTable.setModel(new RefreshTableModel(new String[][] {}, new String[] {
-                "Key", "Value", "Comment" }));
+                Messages.getString("SettingsPanelMap.27"), Messages.getString("SettingsPanelMap.28"), Messages.getString("SettingsPanelMap.29") })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         TableCellEditor cellEditor = new TextFieldCellEditor() {
 
             @Override
@@ -334,8 +334,8 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
             }
 
         };
-        configurationMapTable.getColumnExt("Key").setCellEditor(cellEditor);
-        configurationMapTable.getColumnExt("Comment").setCellEditor(cellEditor);
+        configurationMapTable.getColumnExt(Messages.getString("SettingsPanelMap.30")).setCellEditor(cellEditor); //$NON-NLS-1$
+        configurationMapTable.getColumnExt(Messages.getString("SettingsPanelMap.31")).setCellEditor(cellEditor); //$NON-NLS-1$
         configurationMapTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent evt) {
                 int selectedRow;
@@ -348,22 +348,22 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
             }
         });
 
-        configurationMapTable.getColumnExt("Value").setCellEditor(new MirthDialogTableCellEditor(configurationMapTable));
+        configurationMapTable.getColumnExt(Messages.getString("SettingsPanelMap.32")).setCellEditor(new MirthDialogTableCellEditor(configurationMapTable)); //$NON-NLS-1$
 
-        if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+        if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("SettingsPanelMap.33"), true)) { //$NON-NLS-1$
             configurationMapTable.setHighlighters(HighlighterFactory.createAlternateStriping(UIConstants.HIGHLIGHTER_COLOR, UIConstants.BACKGROUND_COLOR));
         }
 
         configurationMapScrollPane = new JScrollPane();
         configurationMapScrollPane.setViewportView(configurationMapTable);
 
-        addButton = new MirthButton("Add");
+        addButton = new MirthButton(Messages.getString("SettingsPanelMap.34")); //$NON-NLS-1$
         addButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((RefreshTableModel) configurationMapTable.getModel()).addRow(new String[] { "",
-                        "" });
+                ((RefreshTableModel) configurationMapTable.getModel()).addRow(new String[] { Messages.getString("SettingsPanelMap.35"), //$NON-NLS-1$
+                        Messages.getString("SettingsPanelMap.36") }); //$NON-NLS-1$
 
                 if (configurationMapTable.getRowCount() == 1) {
                     configurationMapTable.setRowSelectionInterval(0, 0);
@@ -373,7 +373,7 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
             }
 
         });
-        removeButton = new MirthButton("Remove");
+        removeButton = new MirthButton(Messages.getString("SettingsPanelMap.37")); //$NON-NLS-1$
         removeButton.addActionListener(new ActionListener() {
 
             @Override
@@ -404,24 +404,24 @@ public class SettingsPanelMap extends AbstractSettingsPanel {
 
         configurationMapPanel = new JPanel();
         configurationMapPanel.setBackground(Color.WHITE);
-        configurationMapPanel.setLayout(new MigLayout("fill, insets 0", "[grow]", "[][grow]"));
-        configurationMapPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(204, 204, 204)), "Configuration Map", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        configurationMapPanel.setLayout(new MigLayout(Messages.getString("SettingsPanelMap.38"), Messages.getString("SettingsPanelMap.39"), Messages.getString("SettingsPanelMap.40"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        configurationMapPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(204, 204, 204)), Messages.getString("SettingsPanelMap.41"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font(Messages.getString("SettingsPanelMap.42"), 1, 11))); // NOI18N //$NON-NLS-1$ //$NON-NLS-2$
 
         JPanel showValuesPanel = new JPanel();
         showValuesPanel.setBackground(Color.WHITE);
         showValuesPanel.add(showValuesCheckbox);
         showValuesPanel.add(showValuesLabel);
-        configurationMapPanel.add(showValuesPanel, "wrap");
+        configurationMapPanel.add(showValuesPanel, Messages.getString("SettingsPanelMap.43")); //$NON-NLS-1$
 
         JPanel configurationMapSubPanel = new JPanel();
         configurationMapSubPanel.setBackground(Color.WHITE);
-        configurationMapSubPanel.setLayout(new MigLayout("fill, flowy, insets 0", "[grow][]", "[grow]"));
-        configurationMapSubPanel.add(configurationMapScrollPane, "grow, wrap");
-        configurationMapSubPanel.add(addButton, "growx, aligny top, split");
-        configurationMapSubPanel.add(removeButton, "growx, aligny top");
-        configurationMapPanel.add(configurationMapSubPanel, "grow, aligny top");
+        configurationMapSubPanel.setLayout(new MigLayout(Messages.getString("SettingsPanelMap.44"), Messages.getString("SettingsPanelMap.45"), Messages.getString("SettingsPanelMap.46"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        configurationMapSubPanel.add(configurationMapScrollPane, Messages.getString("SettingsPanelMap.47")); //$NON-NLS-1$
+        configurationMapSubPanel.add(addButton, Messages.getString("SettingsPanelMap.48")); //$NON-NLS-1$
+        configurationMapSubPanel.add(removeButton, Messages.getString("SettingsPanelMap.49")); //$NON-NLS-1$
+        configurationMapPanel.add(configurationMapSubPanel, Messages.getString("SettingsPanelMap.50")); //$NON-NLS-1$
 
-        add(configurationMapPanel, "grow, height 100px:100%:100%, wrap");
+        add(configurationMapPanel, Messages.getString("SettingsPanelMap.51")); //$NON-NLS-1$
     }
 
     private JLabel showValuesLabel;

@@ -101,7 +101,7 @@ public class LibraryResourcesPanel extends JPanel implements ListSelectionListen
     }
 
     public void initialize() {
-        final String workingId = PlatformUI.MIRTH_FRAME.startWorking("Loading library resources...");
+        final String workingId = PlatformUI.MIRTH_FRAME.startWorking(Messages.getString("LibraryResourcesPanel.0")); //$NON-NLS-1$
 
         SwingWorker<List<LibraryProperties>, Void> worker = new SwingWorker<List<LibraryProperties>, Void>() {
 
@@ -150,7 +150,7 @@ public class LibraryResourcesPanel extends JPanel implements ListSelectionListen
                     if (t instanceof ExecutionException) {
                         t = t.getCause();
                     }
-                    PlatformUI.MIRTH_FRAME.alertThrowable(PlatformUI.MIRTH_FRAME, t, "Error loading library resources: " + t.toString());
+                    PlatformUI.MIRTH_FRAME.alertThrowable(PlatformUI.MIRTH_FRAME, t, Messages.getString("LibraryResourcesPanel.1") + t.toString()); //$NON-NLS-1$
                 } finally {
                     PlatformUI.MIRTH_FRAME.stopWorking(workingId);
                 }
@@ -167,34 +167,34 @@ public class LibraryResourcesPanel extends JPanel implements ListSelectionListen
     private void initComponents(Channel channel) {
         setBackground(UIConstants.BACKGROUND_COLOR);
 
-        AbstractMutableTreeTableNode channelNode = new DefaultMutableTreeTableNode(new ConnectorEntry("Channel", -1, null));
+        AbstractMutableTreeTableNode channelNode = new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.2"), -1, null)); //$NON-NLS-1$
 
-        AbstractMutableTreeTableNode channelScriptsNode = new DefaultMutableTreeTableNode(new ConnectorEntry("Channel Scripts", null, null));
-        channelScriptsNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry("Deploy Script", null, null, false)));
-        channelScriptsNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry("Undeploy Script", null, null, false)));
-        channelScriptsNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry("Preprocessor Script", null, null, false)));
-        channelScriptsNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry("Postprocessor Script", null, null, false)));
-        channelScriptsNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry("Attachment Script", null, null, false)));
-        channelScriptsNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry("Batch Script", null, null, false)));
+        AbstractMutableTreeTableNode channelScriptsNode = new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.3"), null, null)); //$NON-NLS-1$
+        channelScriptsNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.4"), null, null, false))); //$NON-NLS-1$
+        channelScriptsNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.5"), null, null, false))); //$NON-NLS-1$
+        channelScriptsNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.6"), null, null, false))); //$NON-NLS-1$
+        channelScriptsNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.7"), null, null, false))); //$NON-NLS-1$
+        channelScriptsNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.8"), null, null, false))); //$NON-NLS-1$
+        channelScriptsNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.9"), null, null, false))); //$NON-NLS-1$
         channelNode.add(channelScriptsNode);
 
-        AbstractMutableTreeTableNode sourceConnectorNode = new DefaultMutableTreeTableNode(new ConnectorEntry("Source Connector", 0, channel.getSourceConnector().getTransportName()));
-        sourceConnectorNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry("Receiver", channel.getSourceConnector().getMetaDataId(), channel.getSourceConnector().getTransportName(), false)));
-        sourceConnectorNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry("Filter / Transformer Script", channel.getSourceConnector().getMetaDataId(), channel.getSourceConnector().getTransportName(), false)));
+        AbstractMutableTreeTableNode sourceConnectorNode = new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.10"), 0, channel.getSourceConnector().getTransportName())); //$NON-NLS-1$
+        sourceConnectorNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.11"), channel.getSourceConnector().getMetaDataId(), channel.getSourceConnector().getTransportName(), false))); //$NON-NLS-1$
+        sourceConnectorNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.12"), channel.getSourceConnector().getMetaDataId(), channel.getSourceConnector().getTransportName(), false))); //$NON-NLS-1$
         channelNode.add(sourceConnectorNode);
 
         for (Connector destinationConnector : channel.getDestinationConnectors()) {
             AbstractMutableTreeTableNode destinationConnectorNode = new DefaultMutableTreeTableNode(new ConnectorEntry(destinationConnector.getName(), destinationConnector.getMetaDataId(), destinationConnector.getTransportName()));
-            destinationConnectorNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry("Filter / Transformer Script", destinationConnector.getMetaDataId(), destinationConnector.getTransportName(), false)));
-            destinationConnectorNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry("Dispatcher", destinationConnector.getMetaDataId(), destinationConnector.getTransportName(), false)));
-            destinationConnectorNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry("Response Transformer Script", destinationConnector.getMetaDataId(), destinationConnector.getTransportName(), false)));
+            destinationConnectorNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.13"), destinationConnector.getMetaDataId(), destinationConnector.getTransportName(), false))); //$NON-NLS-1$
+            destinationConnectorNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.14"), destinationConnector.getMetaDataId(), destinationConnector.getTransportName(), false))); //$NON-NLS-1$
+            destinationConnectorNode.add(new DefaultMutableTreeTableNode(new ConnectorEntry(Messages.getString("LibraryResourcesPanel.15"), destinationConnector.getMetaDataId(), destinationConnector.getTransportName(), false))); //$NON-NLS-1$
             channelNode.add(destinationConnectorNode);
         }
 
         treeTable = new MirthTreeTable();
 
         DefaultTreeTableModel model = new SortableTreeTableModel(channelNode);
-        model.setColumnIdentifiers(Arrays.asList(new String[] { "Library Context" }));
+        model.setColumnIdentifiers(Arrays.asList(new String[] { Messages.getString("LibraryResourcesPanel.16") })); //$NON-NLS-1$
         treeTable.setTreeTableModel(model);
 
         treeTable.setRootVisible(true);
@@ -209,14 +209,14 @@ public class LibraryResourcesPanel extends JPanel implements ListSelectionListen
         treeTable.setSortable(false);
         treeTable.addTreeSelectionListener(this);
         treeTable.getSelectionModel().addListSelectionListener(this);
-        treeTable.putClientProperty("JTree.lineStyle", "Horizontal");
+        treeTable.putClientProperty(Messages.getString("LibraryResourcesPanel.17"), Messages.getString("LibraryResourcesPanel.18")); //$NON-NLS-1$ //$NON-NLS-2$
         treeTable.setShowGrid(true, true);
 
-        if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+        if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("LibraryResourcesPanel.19"), true)) { //$NON-NLS-1$
             treeTable.setHighlighters(HighlighterFactory.createAlternateStriping(UIConstants.HIGHLIGHTER_COLOR, UIConstants.BACKGROUND_COLOR));
         }
 
-        final String toolTipText = "<html>Select which context(s) to include library resources in.<br/>Libraries can be included everywhere (the Channel node),<br/>on channel-level scripts (the Channel Scripts node), and<br/>on specific source or destination connectors.</html>";
+        final String toolTipText = Messages.getString("LibraryResourcesPanel.20"); //$NON-NLS-1$
 
         treeTable.setTreeCellRenderer(new DefaultTreeCellRenderer() {
             @Override
@@ -236,7 +236,7 @@ public class LibraryResourcesPanel extends JPanel implements ListSelectionListen
         treeTableScrollPane = new JScrollPane(treeTable);
 
         resourceTable = new MirthTable();
-        resourceTable.setModel(new RefreshTableModel(new Object[] { "", "Name", "Type" }, 0) {
+        resourceTable.setModel(new RefreshTableModel(new Object[] { Messages.getString("LibraryResourcesPanel.21"), Messages.getString("LibraryResourcesPanel.22"), Messages.getString("LibraryResourcesPanel.23") }, 0) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             @Override
             public boolean isCellEditable(int row, int column) {
                 return column == SELECTED_COLUMN;
@@ -251,7 +251,7 @@ public class LibraryResourcesPanel extends JPanel implements ListSelectionListen
         resourceTable.setEditable(true);
         resourceTable.setSortable(false);
 
-        if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+        if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("LibraryResourcesPanel.24"), true)) { //$NON-NLS-1$
             resourceTable.setHighlighters(HighlighterFactory.createAlternateStriping(UIConstants.HIGHLIGHTER_COLOR, UIConstants.BACKGROUND_COLOR));
         }
 
@@ -267,9 +267,9 @@ public class LibraryResourcesPanel extends JPanel implements ListSelectionListen
     }
 
     private void initLayout() {
-        setLayout(new MigLayout("insets 0, novisualpadding, hidemode 3, fill"));
-        add(treeTableScrollPane, "grow, h 60%");
-        add(resourceTableScrollPane, "newline, grow, h 40%");
+        setLayout(new MigLayout(Messages.getString("LibraryResourcesPanel.25"))); //$NON-NLS-1$
+        add(treeTableScrollPane, Messages.getString("LibraryResourcesPanel.26")); //$NON-NLS-1$
+        add(resourceTableScrollPane, Messages.getString("LibraryResourcesPanel.27")); //$NON-NLS-1$
     }
 
     @Override
@@ -333,7 +333,7 @@ public class LibraryResourcesPanel extends JPanel implements ListSelectionListen
 
         @Override
         public String toString() {
-            return name + (enabled && transportName != null ? " (" + transportName + ")" : "");
+            return name + (enabled && transportName != null ? Messages.getString("LibraryResourcesPanel.28") + transportName + Messages.getString("LibraryResourcesPanel.29") : Messages.getString("LibraryResourcesPanel.30")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
     }
 
@@ -341,14 +341,14 @@ public class LibraryResourcesPanel extends JPanel implements ListSelectionListen
         private MirthTriStateCheckBox checkBox;
 
         public CheckBoxRenderer() {
-            super(new MigLayout("insets 0, novisualpadding, hidemode 3, fill"));
+            super(new MigLayout(Messages.getString("LibraryResourcesPanel.31"))); //$NON-NLS-1$
             checkBox = new MirthTriStateCheckBox();
-            add(checkBox, "center");
+            add(checkBox, Messages.getString("LibraryResourcesPanel.32")); //$NON-NLS-1$
         }
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+            if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("LibraryResourcesPanel.33"), true)) { //$NON-NLS-1$
                 setBackground(row % 2 == 0 ? UIConstants.HIGHLIGHTER_COLOR : UIConstants.BACKGROUND_COLOR);
                 checkBox.setBackground(getBackground());
             }
@@ -376,10 +376,10 @@ public class LibraryResourcesPanel extends JPanel implements ListSelectionListen
         private MirthTriStateCheckBox checkBox;
 
         public CheckBoxEditor() {
-            panel = new JPanel(new MigLayout("insets 0, novisualpadding, hidemode 3, fill"));
+            panel = new JPanel(new MigLayout(Messages.getString("LibraryResourcesPanel.34"))); //$NON-NLS-1$
             checkBox = new MirthTriStateCheckBox();
             checkBox.addActionListener(this);
-            panel.add(checkBox, "center");
+            panel.add(checkBox, Messages.getString("LibraryResourcesPanel.35")); //$NON-NLS-1$
         }
 
         @Override
@@ -405,7 +405,7 @@ public class LibraryResourcesPanel extends JPanel implements ListSelectionListen
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+            if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("LibraryResourcesPanel.36"), true)) { //$NON-NLS-1$
                 panel.setBackground(row % 2 == 0 ? UIConstants.HIGHLIGHTER_COLOR : UIConstants.BACKGROUND_COLOR);
                 checkBox.setBackground(panel.getBackground());
             }

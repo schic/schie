@@ -92,21 +92,21 @@ public class FirstLoginDialog extends javax.swing.JDialog implements UserDialogI
         registerCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Welcome to Mirth Connect");
+        setTitle(Messages.getString("FirstLoginDialog.0")); //$NON-NLS-1$
 
         channelOverview.setBackground(new java.awt.Color(255, 255, 255));
-        channelOverview.setName(""); // NOI18N
+        channelOverview.setName(Messages.getString("FirstLoginDialog.1")); // NOI18N //$NON-NLS-1$
 
-        finishButton.setText("Finish");
+        finishButton.setText(Messages.getString("FirstLoginDialog.2")); //$NON-NLS-1$
         finishButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 finishButtonActionPerformed(evt);
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setFont(new java.awt.Font(Messages.getString("FirstLoginDialog.3"), 1, 18)); // NOI18N //$NON-NLS-1$
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Welcome to Mirth Connect");
+        jLabel2.setText(Messages.getString("FirstLoginDialog.4")); //$NON-NLS-1$
 
         javax.swing.GroupLayout mirthHeadingPanel1Layout = new javax.swing.GroupLayout(mirthHeadingPanel1);
         mirthHeadingPanel1.setLayout(mirthHeadingPanel1Layout);
@@ -127,7 +127,7 @@ public class FirstLoginDialog extends javax.swing.JDialog implements UserDialogI
 
         jTextPane1.setEditable(false);
         jTextPane1.setBackground(new java.awt.Color(250, 250, 210));
-        jTextPane1.setText("You may now customize your Mirth Connect user account information. You also have the option of changing your account password.");
+        jTextPane1.setText(Messages.getString("FirstLoginDialog.5")); //$NON-NLS-1$
         jTextPane1.setAutoscrolls(false);
         jTextPane1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jTextPane1.setEnabled(false);
@@ -135,8 +135,8 @@ public class FirstLoginDialog extends javax.swing.JDialog implements UserDialogI
 
         registerCheckBox.setBackground(new java.awt.Color(255, 255, 255));
         registerCheckBox.setSelected(true);
-        registerCheckBox.setText("Register user with NextGen Healthcare");
-        registerCheckBox.setToolTipText("<html>Register your user information with NextGen Healthcare to help us<br>improve the product and provide better service.</html>");
+        registerCheckBox.setText(Messages.getString("FirstLoginDialog.6")); //$NON-NLS-1$
+        registerCheckBox.setToolTipText(Messages.getString("FirstLoginDialog.7")); //$NON-NLS-1$
         registerCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registerCheckBoxActionPerformed(evt);
@@ -220,7 +220,7 @@ public class FirstLoginDialog extends javax.swing.JDialog implements UserDialogI
 
             try {
                 User currentUser = parent.getCurrentUser(parent);
-                parent.mirthClient.setUserPreference(currentUser.getId(), "firstlogin", "false");
+                parent.mirthClient.setUserPreference(currentUser.getId(), Messages.getString("FirstLoginDialog.8"), Messages.getString("FirstLoginDialog.9")); //$NON-NLS-1$ //$NON-NLS-2$
             } catch (ClientException e) {
                 parent.alertThrowable(this, e);
             }

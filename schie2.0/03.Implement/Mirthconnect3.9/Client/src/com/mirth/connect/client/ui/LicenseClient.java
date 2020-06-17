@@ -70,19 +70,19 @@ public class LicenseClient {
                 ZonedDateTime graceEnd = expiration.plus(Duration.ofMillis(gracePeriod));
 
                 if (now.isAfter(expiration) || now.isAfter(warningStart)) {
-                    StringBuilder builder = new StringBuilder("<html>Your NextGen Connect license for the extensions<br/>[").append(StringUtils.join(licenseInfo.getExtensions(), ", ")).append("]<br/>");
+                    StringBuilder builder = new StringBuilder(Messages.getString("LicenseClient.0")).append(StringUtils.join(licenseInfo.getExtensions(), Messages.getString("LicenseClient.1"))).append(Messages.getString("LicenseClient.2")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     Temporal endDate;
 
                     if (now.isAfter(expiration)) {
                         endDate = graceEnd;
-                        builder.append(" has expired and you are now in a grace period.<br/>Extension functionality will cease in ");
+                        builder.append(Messages.getString("LicenseClient.3")); //$NON-NLS-1$
                     } else {
                         endDate = expiration;
-                        builder.append(" will expire in ");
+                        builder.append(Messages.getString("LicenseClient.4")); //$NON-NLS-1$
                     }
 
                     int days = (int) Math.ceil((double) Duration.between(now, endDate).getSeconds() / 60 / 60 / 24);
-                    builder.append(days).append(" day").append(days == 1 ? "" : "s").append(".<br/>Please contact your account manager or connectsales@nextgen.com to renew your commercial license.</html>");
+                    builder.append(days).append(Messages.getString("LicenseClient.5")).append(days == 1 ? Messages.getString("LicenseClient.6") : Messages.getString("LicenseClient.7")).append(Messages.getString("LicenseClient.8")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                     final String message = builder.toString();
 
                     SwingUtilities.invokeLater(() -> {

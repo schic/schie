@@ -44,24 +44,24 @@ import com.mirth.connect.model.DatabaseTask.Status;
 
 public class SettingsPanelDatabaseTasks extends AbstractSettingsPanel implements ListSelectionListener {
 
-    public static final String TAB_NAME = "Database Tasks";
+    public static final String TAB_NAME = Messages.getString("SettingsPanelDatabaseTasks.0"); //$NON-NLS-1$
 
     private JXTable taskTable;
     private JXTable channelsTable;
 
     public SettingsPanelDatabaseTasks(String tabName) {
         super(tabName);
-        setLayout(new MigLayout("insets 12, novisualpadding, hidemode 3, fill"));
+        setLayout(new MigLayout(Messages.getString("SettingsPanelDatabaseTasks.1"))); //$NON-NLS-1$
         setBackground(UIConstants.BACKGROUND_COLOR);
         initComponents();
-        addTask(TaskConstants.SETTINGS_RUN_DATABASE_TASK, "Run Task", "Execute the selected database task.", "", new ImageIcon(Frame.class.getResource("images/control_play_blue.png")));
-        addTask(TaskConstants.SETTINGS_CANCEL_DATABASE_TASK, "Cancel Task", "Cancel the selected database task.", "", new ImageIcon(Frame.class.getResource("images/stop.png")));
+        addTask(TaskConstants.SETTINGS_RUN_DATABASE_TASK, Messages.getString("SettingsPanelDatabaseTasks.2"), Messages.getString("SettingsPanelDatabaseTasks.3"), Messages.getString("SettingsPanelDatabaseTasks.4"), new ImageIcon(Frame.class.getResource(Messages.getString("SettingsPanelDatabaseTasks.5")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        addTask(TaskConstants.SETTINGS_CANCEL_DATABASE_TASK, Messages.getString("SettingsPanelDatabaseTasks.6"), Messages.getString("SettingsPanelDatabaseTasks.7"), Messages.getString("SettingsPanelDatabaseTasks.8"), new ImageIcon(Frame.class.getResource(Messages.getString("SettingsPanelDatabaseTasks.9")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         setVisibleTasks(2, 3, false);
     }
 
     @Override
     public void doRefresh() {
-        final String workingId = getFrame().startWorking("Loading database tasks...");
+        final String workingId = getFrame().startWorking(Messages.getString("SettingsPanelDatabaseTasks.10")); //$NON-NLS-1$
         final int selectedRow = taskTable.getSelectedRow();
 
         SwingWorker<Map<String, DatabaseTask>, Void> worker = new SwingWorker<Map<String, DatabaseTask>, Void>() {
@@ -100,7 +100,7 @@ public class SettingsPanelDatabaseTasks extends AbstractSettingsPanel implements
                     if (t instanceof ExecutionException) {
                         t = t.getCause();
                     }
-                    getFrame().alertThrowable(getFrame(), t, "Error loading database tasks: " + t.toString());
+                    getFrame().alertThrowable(getFrame(), t, Messages.getString("SettingsPanelDatabaseTasks.11") + t.toString()); //$NON-NLS-1$
                 } finally {
                     getFrame().stopWorking(workingId);
                 }
@@ -122,7 +122,7 @@ public class SettingsPanelDatabaseTasks extends AbstractSettingsPanel implements
             return;
         }
 
-        final String workingId = getFrame().startWorking("Running database task...");
+        final String workingId = getFrame().startWorking(Messages.getString("SettingsPanelDatabaseTasks.12")); //$NON-NLS-1$
         final String taskId = databaseTask.getId();
 
         SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
@@ -143,7 +143,7 @@ public class SettingsPanelDatabaseTasks extends AbstractSettingsPanel implements
                     if (t instanceof ExecutionException) {
                         t = t.getCause();
                     }
-                    getFrame().alertThrowable(getFrame(), t, "Error running database task: " + t.getMessage());
+                    getFrame().alertThrowable(getFrame(), t, Messages.getString("SettingsPanelDatabaseTasks.13") + t.getMessage()); //$NON-NLS-1$
                 } finally {
                     getFrame().stopWorking(workingId);
                     doRefresh();
@@ -159,15 +159,15 @@ public class SettingsPanelDatabaseTasks extends AbstractSettingsPanel implements
         DatabaseTask databaseTask = (DatabaseTask) taskTable.getValueAt(taskTable.getSelectedRow(), 1);
 
         if (databaseTask.getStatus() != Status.RUNNING) {
-            getFrame().alertError(getFrame(), "Task \"" + databaseTask.getName() + "\" is not currently running.");
+            getFrame().alertError(getFrame(), Messages.getString("SettingsPanelDatabaseTasks.14") + databaseTask.getName() + Messages.getString("SettingsPanelDatabaseTasks.15")); //$NON-NLS-1$ //$NON-NLS-2$
             return;
         }
 
-        if (!getFrame().alertOption(getFrame(), "Are you sure you want to cancel the selected database task?")) {
+        if (!getFrame().alertOption(getFrame(), Messages.getString("SettingsPanelDatabaseTasks.16"))) { //$NON-NLS-1$
             return;
         }
 
-        final String workingId = getFrame().startWorking("Cancelling database task...");
+        final String workingId = getFrame().startWorking(Messages.getString("SettingsPanelDatabaseTasks.17")); //$NON-NLS-1$
         final String taskId = databaseTask.getId();
 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
@@ -186,7 +186,7 @@ public class SettingsPanelDatabaseTasks extends AbstractSettingsPanel implements
                     if (t instanceof ExecutionException) {
                         t = t.getCause();
                     }
-                    getFrame().alertThrowable(getFrame(), t, "Error cancelling database task: " + t.getMessage());
+                    getFrame().alertThrowable(getFrame(), t, Messages.getString("SettingsPanelDatabaseTasks.18") + t.getMessage()); //$NON-NLS-1$
                 } finally {
                     getFrame().stopWorking(workingId);
                     doRefresh();
@@ -198,14 +198,14 @@ public class SettingsPanelDatabaseTasks extends AbstractSettingsPanel implements
     }
 
     private void initComponents() {
-        JPanel containerPanel = new JPanel(new MigLayout("insets 0, novisualpadding, hidemode 3, fill"));
+        JPanel containerPanel = new JPanel(new MigLayout(Messages.getString("SettingsPanelDatabaseTasks.19"))); //$NON-NLS-1$
         containerPanel.setBackground(getBackground());
-        containerPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(204, 204, 204)), "Database Tasks", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Tahoma", 1, 11)));
-        containerPanel.add(new JLabel("Cleanup or optimization tasks for the internal database. If no tasks are present, no action is necessary."), "top, wrap");
+        containerPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(204, 204, 204)), Messages.getString("SettingsPanelDatabaseTasks.20"), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font(Messages.getString("SettingsPanelDatabaseTasks.21"), 1, 11))); //$NON-NLS-1$ //$NON-NLS-2$
+        containerPanel.add(new JLabel(Messages.getString("SettingsPanelDatabaseTasks.22")), Messages.getString("SettingsPanelDatabaseTasks.23")); //$NON-NLS-1$ //$NON-NLS-2$
 
         taskTable = new MirthTable();
-        taskTable.setModel(new RefreshTableModel(new Object[] { "Status", "Name", "Description",
-                "Start Time" }, 0));
+        taskTable.setModel(new RefreshTableModel(new Object[] { Messages.getString("SettingsPanelDatabaseTasks.24"), Messages.getString("SettingsPanelDatabaseTasks.25"), Messages.getString("SettingsPanelDatabaseTasks.26"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                Messages.getString("SettingsPanelDatabaseTasks.27") }, 0)); //$NON-NLS-1$
         taskTable.setDragEnabled(false);
         taskTable.setRowSelectionAllowed(true);
         taskTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -215,7 +215,7 @@ public class SettingsPanelDatabaseTasks extends AbstractSettingsPanel implements
         taskTable.getTableHeader().setReorderingAllowed(false);
         taskTable.setEditable(false);
 
-        if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+        if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("SettingsPanelDatabaseTasks.28"), true)) { //$NON-NLS-1$
             taskTable.setHighlighters(HighlighterFactory.createAlternateStriping(UIConstants.HIGHLIGHTER_COLOR, UIConstants.BACKGROUND_COLOR));
         }
 
@@ -255,16 +255,16 @@ public class SettingsPanelDatabaseTasks extends AbstractSettingsPanel implements
         taskTable.getSelectionModel().addListSelectionListener(this);
 
         JScrollPane taskTableScrollPane = new JScrollPane(taskTable);
-        containerPanel.add(taskTableScrollPane, "grow, push");
+        containerPanel.add(taskTableScrollPane, Messages.getString("SettingsPanelDatabaseTasks.29")); //$NON-NLS-1$
 
-        add(containerPanel, "grow, h 60%");
+        add(containerPanel, Messages.getString("SettingsPanelDatabaseTasks.30")); //$NON-NLS-1$
 
-        JPanel channelsPanel = new JPanel(new MigLayout("insets 0, novisualpadding, hidemode 3, fill"));
+        JPanel channelsPanel = new JPanel(new MigLayout(Messages.getString("SettingsPanelDatabaseTasks.31"))); //$NON-NLS-1$
         channelsPanel.setBackground(getBackground());
-        channelsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(204, 204, 204)), "Affected Channels", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Tahoma", 1, 11)));
+        channelsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(204, 204, 204)), Messages.getString("SettingsPanelDatabaseTasks.32"), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font(Messages.getString("SettingsPanelDatabaseTasks.33"), 1, 11))); //$NON-NLS-1$ //$NON-NLS-2$
 
         channelsTable = new MirthTable();
-        channelsTable.setModel(new RefreshTableModel(new Object[] { "Name", "Id" }, 0));
+        channelsTable.setModel(new RefreshTableModel(new Object[] { Messages.getString("SettingsPanelDatabaseTasks.34"), Messages.getString("SettingsPanelDatabaseTasks.35") }, 0)); //$NON-NLS-1$ //$NON-NLS-2$
         channelsTable.setDragEnabled(false);
         channelsTable.setRowSelectionAllowed(false);
         channelsTable.setRowHeight(UIConstants.ROW_HEIGHT);
@@ -273,13 +273,13 @@ public class SettingsPanelDatabaseTasks extends AbstractSettingsPanel implements
         channelsTable.getTableHeader().setReorderingAllowed(false);
         channelsTable.setEditable(false);
 
-        if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+        if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("SettingsPanelDatabaseTasks.36"), true)) { //$NON-NLS-1$
             channelsTable.setHighlighters(HighlighterFactory.createAlternateStriping(UIConstants.HIGHLIGHTER_COLOR, UIConstants.BACKGROUND_COLOR));
         }
 
-        channelsPanel.add(new JScrollPane(channelsTable), "grow");
+        channelsPanel.add(new JScrollPane(channelsTable), Messages.getString("SettingsPanelDatabaseTasks.37")); //$NON-NLS-1$
 
-        add(channelsPanel, "newline, grow, h 40%");
+        add(channelsPanel, Messages.getString("SettingsPanelDatabaseTasks.38")); //$NON-NLS-1$
     }
 
     @Override
