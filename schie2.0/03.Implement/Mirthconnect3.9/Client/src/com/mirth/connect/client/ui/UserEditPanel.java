@@ -24,7 +24,7 @@ public class UserEditPanel extends javax.swing.JPanel {
     private User user;
     private UserDialogInterface dialog;
     private Frame parent;
-    private final String DEFAULT_OPTION = "--Select an option--";
+    private final String DEFAULT_OPTION = Messages.getString("UserEditPanel.0"); //$NON-NLS-1$
 
     public UserEditPanel() {
         this.parent = PlatformUI.MIRTH_FRAME;
@@ -43,22 +43,22 @@ public class UserEditPanel extends javax.swing.JPanel {
         industry.getModel().setSelectedItem(DEFAULT_OPTION);
 
         List<String> industries = new ArrayList<String>();
-        industries.add("ACO");
-        industries.add("CHC/FQHC");
-        industries.add("Clinic");
-        industries.add("HIE");
-        industries.add("HIT Consulting");
-        industries.add("HIT Software");
-        industries.add("Hospital");
-        industries.add("Lab");
-        industries.add("Network");
-        industries.add("Other");
-        industries.add("Payer");
-        industries.add("Physicians Group");
-        industries.add("Private Practice");
-        industries.add("Public Health Agency");
-        industries.add("Radiology Center");
-        industries.add("University");
+        industries.add(Messages.getString("UserEditPanel.1")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.2")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.3")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.4")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.5")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.6")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.7")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.8")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.9")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.10")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.11")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.12")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.13")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.14")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.15")); //$NON-NLS-1$
+        industries.add(Messages.getString("UserEditPanel.16")); //$NON-NLS-1$
 
         for (String item : industries) {
             industry.addItem(item);
@@ -73,8 +73,8 @@ public class UserEditPanel extends javax.swing.JPanel {
         this.user = user;
 
         username.setText(user.getUsername());
-        password.setText("");
-        confirmPassword.setText("");
+        password.setText(Messages.getString("UserEditPanel.17")); //$NON-NLS-1$
+        confirmPassword.setText(Messages.getString("UserEditPanel.18")); //$NON-NLS-1$
         firstName.setText(user.getFirstName());
         lastName.setText(user.getLastName());
         organization.setText(user.getOrganization());
@@ -134,20 +134,20 @@ public class UserEditPanel extends javax.swing.JPanel {
 
     public String validateUser() {
         if (!checkIfAbleToFinish()) {
-            return "Please fill in all required information.";
+            return Messages.getString("UserEditPanel.19"); //$NON-NLS-1$
         }
 
         // If it's a new user or the username was changed, make sure the username isn't already used.
         if (user.getId() == null || !user.getUsername().equals(username.getText())) {
             for (int i = 0; i < parent.users.size(); i++) {
                 if (parent.users.get(i).getUsername().equals(username.getText())) {
-                    return "This username already exists. Please choose another one.";
+                    return Messages.getString("UserEditPanel.20"); //$NON-NLS-1$
                 }
             }
         }
 
         if (!String.valueOf(password.getPassword()).equals(String.valueOf(confirmPassword.getPassword()))) {
-            return "Passwords must be the same.";
+            return Messages.getString("UserEditPanel.21"); //$NON-NLS-1$
         }
 
         try {
@@ -156,7 +156,7 @@ public class UserEditPanel extends javax.swing.JPanel {
                 new InternetAddress(emailAddress).validate();
             }
         } catch (Exception e) {
-            return "The email address is invalid: " + e.getMessage();
+            return Messages.getString("UserEditPanel.22") + e.getMessage(); //$NON-NLS-1$
         }
 
         return null;
@@ -214,9 +214,9 @@ public class UserEditPanel extends javax.swing.JPanel {
             }
         });
 
-        firstNameLabel.setText("First Name:");
+        firstNameLabel.setText(Messages.getString("UserEditPanel.23")); //$NON-NLS-1$
 
-        lastNameLabel.setText("Last Name:");
+        lastNameLabel.setText(Messages.getString("UserEditPanel.24")); //$NON-NLS-1$
 
         lastName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -230,9 +230,9 @@ public class UserEditPanel extends javax.swing.JPanel {
             }
         });
 
-        organizationLabel.setText("Organization:");
+        organizationLabel.setText(Messages.getString("UserEditPanel.25")); //$NON-NLS-1$
 
-        emailLabel.setText("Email:");
+        emailLabel.setText(Messages.getString("UserEditPanel.26")); //$NON-NLS-1$
 
         email.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -246,16 +246,16 @@ public class UserEditPanel extends javax.swing.JPanel {
             }
         });
 
-        phoneLabel.setText("Phone:");
+        phoneLabel.setText(Messages.getString("UserEditPanel.27")); //$NON-NLS-1$
 
         usernameAsteriskLabel.setForeground(new java.awt.Color(255, 0, 0));
-        usernameAsteriskLabel.setText("*");
+        usernameAsteriskLabel.setText(Messages.getString("UserEditPanel.28")); //$NON-NLS-1$
 
         passwordAsteriskLabel.setForeground(new java.awt.Color(255, 0, 0));
-        passwordAsteriskLabel.setText("*");
+        passwordAsteriskLabel.setText(Messages.getString("UserEditPanel.29")); //$NON-NLS-1$
 
         organizationAsteriskLabel.setForeground(new java.awt.Color(255, 0, 0));
-        organizationAsteriskLabel.setText("*");
+        organizationAsteriskLabel.setText(Messages.getString("UserEditPanel.30")); //$NON-NLS-1$
 
         username.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -263,17 +263,17 @@ public class UserEditPanel extends javax.swing.JPanel {
             }
         });
 
-        usernameLabel.setText("Username:");
+        usernameLabel.setText(Messages.getString("UserEditPanel.31")); //$NON-NLS-1$
 
         description.setColumns(20);
-        description.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        description.setFont(new java.awt.Font(Messages.getString("UserEditPanel.32"), 0, 11)); // NOI18N //$NON-NLS-1$
         description.setLineWrap(true);
         description.setRows(4);
         description.setWrapStyleWord(true);
         description.setAutoscrolls(false);
         jScrollPane1.setViewportView(description);
 
-        descriptionLabel.setText("Description:");
+        descriptionLabel.setText(Messages.getString("UserEditPanel.33")); //$NON-NLS-1$
 
         password.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -281,9 +281,9 @@ public class UserEditPanel extends javax.swing.JPanel {
             }
         });
 
-        passwordLabel.setText("New Password:");
+        passwordLabel.setText(Messages.getString("UserEditPanel.34")); //$NON-NLS-1$
 
-        confirmPasswordLabel.setText("Confirm New Password:");
+        confirmPasswordLabel.setText(Messages.getString("UserEditPanel.35")); //$NON-NLS-1$
 
         confirmPassword.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -292,28 +292,28 @@ public class UserEditPanel extends javax.swing.JPanel {
         });
 
         confirmPasswordAsteriskLabel.setForeground(new java.awt.Color(255, 0, 0));
-        confirmPasswordAsteriskLabel.setText("*");
+        confirmPasswordAsteriskLabel.setText(Messages.getString("UserEditPanel.36")); //$NON-NLS-1$
 
         emailAsteriskLabel.setForeground(new java.awt.Color(255, 0, 0));
-        emailAsteriskLabel.setText("*");
+        emailAsteriskLabel.setText(Messages.getString("UserEditPanel.37")); //$NON-NLS-1$
 
         firstNameAsteriskLabel.setForeground(new java.awt.Color(255, 0, 0));
-        firstNameAsteriskLabel.setText("*");
+        firstNameAsteriskLabel.setText(Messages.getString("UserEditPanel.38")); //$NON-NLS-1$
 
         lastNameAsteriskLabel.setForeground(new java.awt.Color(255, 0, 0));
-        lastNameAsteriskLabel.setText("*");
+        lastNameAsteriskLabel.setText(Messages.getString("UserEditPanel.39")); //$NON-NLS-1$
 
-        industry.setToolTipText("");
+        industry.setToolTipText(Messages.getString("UserEditPanel.40")); //$NON-NLS-1$
         industry.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 industryActionPerformed(evt);
             }
         });
 
-        industryLabel.setText("Industry:");
+        industryLabel.setText(Messages.getString("UserEditPanel.41")); //$NON-NLS-1$
 
         industryAsteriskLabel.setForeground(new java.awt.Color(255, 0, 0));
-        industryAsteriskLabel.setText("*");
+        industryAsteriskLabel.setText(Messages.getString("UserEditPanel.42")); //$NON-NLS-1$
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

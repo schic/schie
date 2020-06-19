@@ -77,7 +77,8 @@
 		</javac>
 
 		<copy todir="${classes}" file="${src}/log4j.properties" />
-
+		<copy todir="${classes}" file="${src}/messages_zh_CN.properties" />
+		
 		<!-- copy the image files so they will be included in jar -->
 		<copy todir="${classes}/com/mirth/connect/client/ui/images">
 			<fileset dir="${src}/com/mirth/connect/client/ui/images" />

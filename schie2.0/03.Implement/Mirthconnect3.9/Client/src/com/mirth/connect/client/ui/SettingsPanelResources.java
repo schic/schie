@@ -63,7 +63,7 @@ import com.mirth.connect.plugins.ResourceClientPlugin;
 
 public class SettingsPanelResources extends AbstractSettingsPanel implements ListSelectionListener {
 
-    public static final String TAB_NAME = "Resources";
+    public static final String TAB_NAME = Messages.getString("SettingsPanelResources.0"); //$NON-NLS-1$
 
     private static final int PROPERTIES_COLUMN = 0;
     private static final int NAME_COLUMN = 1;
@@ -88,9 +88,9 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
         super(tabName);
         initComponents();
 
-        addResourceTaskIndex = addTask(TaskConstants.SETTINGS_ADD_RESOURCE, "Add Resource", "Add new resource.", "", new ImageIcon(Frame.class.getResource("images/add.png")));
-        removeResourceTaskIndex = addTask(TaskConstants.SETTINGS_REMOVE_RESOURCE, "Remove Resource", "Remove selected resource.", "", new ImageIcon(Frame.class.getResource("images/delete.png")));
-        reloadResourceTaskIndex = addTask(TaskConstants.SETTINGS_RELOAD_RESOURCE, "Reload Resource", "Reloads the selected resource on the server.", "", new ImageIcon(Frame.class.getResource("images/arrow_rotate_clockwise.png")));
+        addResourceTaskIndex = addTask(TaskConstants.SETTINGS_ADD_RESOURCE, Messages.getString("SettingsPanelResources.1"), Messages.getString("SettingsPanelResources.2"), Messages.getString("SettingsPanelResources.3"), new ImageIcon(Frame.class.getResource(Messages.getString("SettingsPanelResources.4")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        removeResourceTaskIndex = addTask(TaskConstants.SETTINGS_REMOVE_RESOURCE, Messages.getString("SettingsPanelResources.5"), Messages.getString("SettingsPanelResources.6"), Messages.getString("SettingsPanelResources.7"), new ImageIcon(Frame.class.getResource(Messages.getString("SettingsPanelResources.8")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        reloadResourceTaskIndex = addTask(TaskConstants.SETTINGS_RELOAD_RESOURCE, Messages.getString("SettingsPanelResources.9"), Messages.getString("SettingsPanelResources.10"), Messages.getString("SettingsPanelResources.11"), new ImageIcon(Frame.class.getResource(Messages.getString("SettingsPanelResources.12")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
         setVisibleTasks(addResourceTaskIndex, reloadResourceTaskIndex, false);
         setVisibleTasks(addResourceTaskIndex, addResourceTaskIndex, true);
@@ -107,7 +107,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
             return;
         }
 
-        final String workingId = getFrame().startWorking("Loading resources...");
+        final String workingId = getFrame().startWorking(Messages.getString("SettingsPanelResources.13")); //$NON-NLS-1$
         final int selectedRow = resourceTable.getSelectedRow();
 
         SwingWorker<List<ResourceProperties>, Void> worker = new SwingWorker<List<ResourceProperties>, Void>() {
@@ -125,7 +125,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
                     if (t instanceof ExecutionException) {
                         t = t.getCause();
                     }
-                    getFrame().alertThrowable(getFrame(), t, "Error loading resources: " + t.toString());
+                    getFrame().alertThrowable(getFrame(), t, Messages.getString("SettingsPanelResources.14") + t.toString()); //$NON-NLS-1$
                 } finally {
                     getFrame().stopWorking(workingId);
                 }
@@ -139,7 +139,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
         try {
             updateResourcesTable(getFrame().mirthClient.getResources(), resourceTable.getSelectedRow(), false);
         } catch (Throwable t) {
-            getFrame().alertThrowable(getFrame(), t, "Error loading resources: " + t.toString(), false);
+            getFrame().alertThrowable(getFrame(), t, Messages.getString("SettingsPanelResources.15") + t.toString(), false); //$NON-NLS-1$
         }
     }
 
@@ -200,7 +200,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
             if (t instanceof ExecutionException) {
                 t = t.getCause();
             }
-            getFrame().alertThrowable(getFrame(), t, "Error loading resources: " + t.toString());
+            getFrame().alertThrowable(getFrame(), t, Messages.getString("SettingsPanelResources.16") + t.toString()); //$NON-NLS-1$
         }
     }
 
@@ -209,17 +209,17 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
         resetInvalidProperties();
         final String errors = checkProperties().trim();
         if (StringUtils.isNotEmpty(errors)) {
-            getFrame().alertError(getFrame(), "Error validating resource settings:\n\n" + errors);
+            getFrame().alertError(getFrame(), Messages.getString("SettingsPanelResources.17") + errors); //$NON-NLS-1$
             return false;
         }
 
-        if (!getFrame().alertOption(getFrame(), "<html>Libraries associated with any changed resources will be reloaded.<br/>Any channels / connectors using those libraries will be affected.<br/>Also, a maximum of 1000 files may be loaded into a directory<br/>resource, with additional files being skipped.<br/>Are you sure you wish to continue?</html>")) {
+        if (!getFrame().alertOption(getFrame(), Messages.getString("SettingsPanelResources.18"))) { //$NON-NLS-1$
             return false;
         }
 
         updateResource(resourceTable.getSelectedRow());
 
-        final String workingId = getFrame().startWorking("Saving resources...");
+        final String workingId = getFrame().startWorking(Messages.getString("SettingsPanelResources.19")); //$NON-NLS-1$
         final List<ResourceProperties> resources = new ArrayList<ResourceProperties>();
 
         for (int row = 0; row < resourceTable.getRowCount(); row++) {
@@ -243,7 +243,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
                     if (t instanceof ExecutionException) {
                         t = t.getCause();
                     }
-                    getFrame().alertThrowable(getFrame(), t, "Error saving resources: " + t.toString());
+                    getFrame().alertThrowable(getFrame(), t, Messages.getString("SettingsPanelResources.20") + t.toString()); //$NON-NLS-1$
                 } finally {
                     getFrame().stopWorking(workingId);
                 }
@@ -261,7 +261,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
             resetInvalidProperties();
             final String errors = StringUtils.defaultString(checkProperties()).trim();
             if (StringUtils.isNotEmpty(errors)) {
-                getFrame().alertError(getFrame(), "Error validating resource settings:\n\n" + errors);
+                getFrame().alertError(getFrame(), Messages.getString("SettingsPanelResources.21") + errors); //$NON-NLS-1$
                 return;
             }
 
@@ -275,7 +275,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
 
             int num = 1;
             do {
-                properties.setName("Resource " + num++);
+                properties.setName(Messages.getString("SettingsPanelResources.22") + num++); //$NON-NLS-1$
             } while (!checkUniqueName(properties.getName()));
 
             this.selectedRow = -1;
@@ -323,15 +323,15 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
 
         if (selectedRow >= 0) {
             if (getFrame().isSaveEnabled()) {
-                getFrame().alertWarning(getFrame(), "You must save before reloading any resources.");
+                getFrame().alertWarning(getFrame(), Messages.getString("SettingsPanelResources.23")); //$NON-NLS-1$
                 return;
             }
 
-            if (!getFrame().alertOption(getFrame(), "<html>Libraries associated with this resource will be reloaded.<br/>Any channels / connectors using those libraries will be<br/>affected. Also, a maximum of 1000 files may be loaded into<br/>a directory resource, with additional files being skipped.<br/>Are you sure you wish to continue?</html>")) {
+            if (!getFrame().alertOption(getFrame(), Messages.getString("SettingsPanelResources.24"))) { //$NON-NLS-1$
                 return;
             }
 
-            final String workingId = getFrame().startWorking("Reloading resource...");
+            final String workingId = getFrame().startWorking(Messages.getString("SettingsPanelResources.25")); //$NON-NLS-1$
             final String resourceId = ((ResourceProperties) resourceTable.getModel().getValueAt(selectedRow, PROPERTIES_COLUMN)).getId();
 
             SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
@@ -360,7 +360,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
                         if (t instanceof ExecutionException) {
                             t = t.getCause();
                         }
-                        getFrame().alertThrowable(getFrame(), t, "Error reloading resource: " + t.toString());
+                        getFrame().alertThrowable(getFrame(), t, Messages.getString("SettingsPanelResources.26") + t.toString()); //$NON-NLS-1$
                     } finally {
                         getFrame().stopWorking(workingId);
                     }
@@ -381,7 +381,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
         if (currentPropertiesPanel != null) {
             return currentPropertiesPanel.checkProperties();
         }
-        return "";
+        return Messages.getString("SettingsPanelResources.27"); //$NON-NLS-1$
     }
 
     private void updateResource(int row) {
@@ -394,16 +394,16 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
     }
 
     private void initComponents() {
-        setLayout(new MigLayout("insets 12, novisualpadding, hidemode 3, fill"));
+        setLayout(new MigLayout(Messages.getString("SettingsPanelResources.28"))); //$NON-NLS-1$
         setBackground(UIConstants.BACKGROUND_COLOR);
 
-        JPanel resourceListPanel = new JPanel(new MigLayout("insets 0, novisualpadding, hidemode 3, fill"));
+        JPanel resourceListPanel = new JPanel(new MigLayout(Messages.getString("SettingsPanelResources.29"))); //$NON-NLS-1$
         resourceListPanel.setBackground(getBackground());
-        resourceListPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(204, 204, 204)), "Resources", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Tahoma", 1, 11)));
+        resourceListPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(204, 204, 204)), Messages.getString("SettingsPanelResources.30"), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font(Messages.getString("SettingsPanelResources.31"), 1, 11))); //$NON-NLS-1$ //$NON-NLS-2$
 
         resourceTable = new MirthTable();
-        resourceTable.setModel(new RefreshTableModel(new Object[] { "Properties", "Name", "Type",
-                "Global Scripts" }, 0) {
+        resourceTable.setModel(new RefreshTableModel(new Object[] { Messages.getString("SettingsPanelResources.32"), Messages.getString("SettingsPanelResources.33"), Messages.getString("SettingsPanelResources.34"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                Messages.getString("SettingsPanelResources.35") }, 0) { //$NON-NLS-1$
             @Override
             public boolean isCellEditable(int row, int column) {
                 if (row == 0) {
@@ -423,7 +423,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
         resourceTable.setEditable(true);
         resourceTable.setSortable(false);
 
-        if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+        if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("SettingsPanelResources.36"), true)) { //$NON-NLS-1$
             resourceTable.setHighlighters(HighlighterFactory.createAlternateStriping(UIConstants.HIGHLIGHTER_COLOR, UIConstants.BACKGROUND_COLOR));
         }
 
@@ -432,7 +432,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
         }
 
         resourceTable.getColumnModel().getColumn(NAME_COLUMN).setCellEditor(new NameEditor());
-        resourceTable.getColumnExt(NAME_COLUMN).setToolTipText("The unique name of the resource.");
+        resourceTable.getColumnExt(NAME_COLUMN).setToolTipText(Messages.getString("SettingsPanelResources.37")); //$NON-NLS-1$
 
         resourceTable.getColumnModel().getColumn(TYPE_COLUMN).setMinWidth(100);
         resourceTable.getColumnModel().getColumn(TYPE_COLUMN).setMaxWidth(200);
@@ -443,43 +443,43 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
                 typeComboBoxActionPerformed(evt);
             }
         }));
-        resourceTable.getColumnExt(TYPE_COLUMN).setToolTipText("The type of resource.");
+        resourceTable.getColumnExt(TYPE_COLUMN).setToolTipText(Messages.getString("SettingsPanelResources.38")); //$NON-NLS-1$
 
         resourceTable.getColumnModel().getColumn(GLOBAL_SCRIPTS_COLUMN).setMinWidth(80);
         resourceTable.getColumnModel().getColumn(GLOBAL_SCRIPTS_COLUMN).setMaxWidth(80);
         resourceTable.getColumnModel().getColumn(GLOBAL_SCRIPTS_COLUMN).setCellRenderer(new CheckBoxRenderer());
         resourceTable.getColumnModel().getColumn(GLOBAL_SCRIPTS_COLUMN).setCellEditor(new CheckBoxEditor());
-        resourceTable.getColumnExt(GLOBAL_SCRIPTS_COLUMN).setToolTipText("<html>If checked, libraries associated with the corresponding<br/>resource will be included in global script contexts.</html>");
+        resourceTable.getColumnExt(GLOBAL_SCRIPTS_COLUMN).setToolTipText(Messages.getString("SettingsPanelResources.39")); //$NON-NLS-1$
 
         resourceTable.removeColumn(resourceTable.getColumnModel().getColumn(PROPERTIES_COLUMN));
 
         resourceTable.getSelectionModel().addListSelectionListener(this);
 
-        resourceTable.setToolTipText("<html>Add or remove resources to use<br/>in specific channels/connectors.</html>");
+        resourceTable.setToolTipText(Messages.getString("SettingsPanelResources.40")); //$NON-NLS-1$
 
-        resourceTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "selectNextColumnCell");
+        resourceTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), Messages.getString("SettingsPanelResources.41")); //$NON-NLS-1$
 
-        resourceListPanel.add(new JScrollPane(resourceTable), "grow, push");
+        resourceListPanel.add(new JScrollPane(resourceTable), Messages.getString("SettingsPanelResources.42")); //$NON-NLS-1$
 
-        add(resourceListPanel, "grow, h 20%");
+        add(resourceListPanel, Messages.getString("SettingsPanelResources.43")); //$NON-NLS-1$
 
         for (ResourcePropertiesPanel panel : propertiesPanelMap.values()) {
-            add(panel, "newline, grow, h 80%");
+            add(panel, Messages.getString("SettingsPanelResources.44")); //$NON-NLS-1$
         }
 
-        fillerPanel = new JPanel(new MigLayout("insets 5, novisualpadding, hidemode 3, fill", "", "[][grow]"));
+        fillerPanel = new JPanel(new MigLayout(Messages.getString("SettingsPanelResources.45"), Messages.getString("SettingsPanelResources.46"), Messages.getString("SettingsPanelResources.47"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         fillerPanel.setBackground(getBackground());
-        fillerPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(204, 204, 204)), "Resource Settings", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Tahoma", 1, 11)));
-        fillerLabel = new JLabel("Select a resource from the table above.");
+        fillerPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(204, 204, 204)), Messages.getString("SettingsPanelResources.48"), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font(Messages.getString("SettingsPanelResources.49"), 1, 11))); //$NON-NLS-1$ //$NON-NLS-2$
+        fillerLabel = new JLabel(Messages.getString("SettingsPanelResources.50")); //$NON-NLS-1$
         fillerPanel.add(fillerLabel);
 
         exceptionTextPane = new JTextPane();
         exceptionTextPane.setBackground(new Color(224, 223, 227));
         exceptionTextPane.setEditable(false);
         exceptionScrollPane = new JScrollPane(exceptionTextPane);
-        fillerPanel.add(exceptionScrollPane, "newline, grow");
+        fillerPanel.add(exceptionScrollPane, Messages.getString("SettingsPanelResources.51")); //$NON-NLS-1$
 
-        add(fillerPanel, "newline, grow, h 80%");
+        add(fillerPanel, Messages.getString("SettingsPanelResources.52")); //$NON-NLS-1$
     }
 
     private void typeComboBoxActionPerformed(ActionEvent evt) {
@@ -513,7 +513,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
                         @Override
                         public void run() {
                             resourceTable.getSelectionModel().setSelectionInterval(previousSelectedRow, previousSelectedRow);
-                            getFrame().alertError(getFrame(), "Error validating resource settings:\n\n" + errors);
+                            getFrame().alertError(getFrame(), Messages.getString("SettingsPanelResources.53") + errors); //$NON-NLS-1$
                             resourceTable.getSelectionModel().addListSelectionListener(SettingsPanelResources.this);
                         }
                     });
@@ -531,7 +531,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
                     for (Entry<String, ResourcePropertiesPanel> entry : propertiesPanelMap.entrySet()) {
                         entry.getValue().setVisible(false);
                     }
-                    fillerLabel.setText("The currently selected resource is invalid. Check to make sure all resource extensions are correctly loaded.");
+                    fillerLabel.setText(Messages.getString("SettingsPanelResources.54")); //$NON-NLS-1$
                     fillerPanel.setVisible(true);
 
                     Throwable cause = ((InvalidResourceProperties) properties).getCause();
@@ -565,7 +565,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
         }
 
         if (currentPropertiesPanel == null) {
-            fillerLabel.setText("Select a resource from the table above.");
+            fillerLabel.setText(Messages.getString("SettingsPanelResources.55")); //$NON-NLS-1$
             fillerPanel.setVisible(true);
         } else {
             fillerPanel.setVisible(false);
@@ -600,9 +600,9 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
         public ComboBoxRenderer(Object[] items) {
             super(items);
             this.items = items;
-            panel = new JPanel(new MigLayout("insets 0 3 0 0, novisualpadding, hidemode 3, fill"));
+            panel = new JPanel(new MigLayout(Messages.getString("SettingsPanelResources.56"))); //$NON-NLS-1$
             label = new JLabel();
-            panel.add(label, "grow");
+            panel.add(label, Messages.getString("SettingsPanelResources.57")); //$NON-NLS-1$
         }
 
         @Override
@@ -670,9 +670,9 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
         private MirthCheckBox checkBox;
 
         public CheckBoxRenderer() {
-            super(new MigLayout("insets 0, novisualpadding, hidemode 3, fill"));
+            super(new MigLayout(Messages.getString("SettingsPanelResources.58"))); //$NON-NLS-1$
             checkBox = new MirthCheckBox();
-            add(checkBox, "center");
+            add(checkBox, Messages.getString("SettingsPanelResources.59")); //$NON-NLS-1$
         }
 
         @Override
@@ -680,7 +680,7 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
             if (isSelected) {
                 setBackground(table.getSelectionBackground());
             } else {
-                setBackground(Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true) && row % 2 == 0 ? UIConstants.HIGHLIGHTER_COLOR : UIConstants.BACKGROUND_COLOR);
+                setBackground(Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("SettingsPanelResources.60"), true) && row % 2 == 0 ? UIConstants.HIGHLIGHTER_COLOR : UIConstants.BACKGROUND_COLOR); //$NON-NLS-1$
             }
             checkBox.setBackground(getBackground());
             if (value != null) {
@@ -696,9 +696,9 @@ public class SettingsPanelResources extends AbstractSettingsPanel implements Lis
 
         public CheckBoxEditor() {
             super(new MirthCheckBox());
-            panel = new JPanel(new MigLayout("insets 0, novisualpadding, hidemode 3, fill"));
+            panel = new JPanel(new MigLayout(Messages.getString("SettingsPanelResources.61"))); //$NON-NLS-1$
             checkBox = (JCheckBox) editorComponent;
-            panel.add(checkBox, "center");
+            panel.add(checkBox, Messages.getString("SettingsPanelResources.62")); //$NON-NLS-1$
         }
 
         @Override

@@ -27,7 +27,7 @@ public class MirthFieldConstraints extends PlainDocument {
     private Pattern pattern;
     private static final String NUMERIC_PATTERN = "^[0-9]*$";
     private static final String ALPHA_PATTERN = "^[a-zA-Z_\\-\\s]*$";
-    private static final String ALPHA_NUMERIC_PATTERN = "^[a-zA-Z_0-9\\-\\s]*$";
+    private static final String ALPHA_NUMERIC_PATTERN = "^[a-zA-Z_0-9\\u4e00-\\u9fa5\\-\\s]*$";
     private static final String MATCH_ALL_PATTERN = "^.*$";
 
     /**

@@ -1101,7 +1101,7 @@ public class Frame extends JXFrame {
         otherPane.setTitle(Messages.getString("Frame.334")); //$NON-NLS-1$
         otherPane.setName(TaskConstants.OTHER_KEY);
         otherPane.setFocusable(false);
-        addTask(TaskConstants.OTHER_NOTIFICATIONS, UIConstants.VIEW_NOTIFICATIONS, Messages.getString("Frame.335"), Messages.getString("Frame.336"), new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("Frame.337"))), otherPane, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        addTask(TaskConstants.OTHER_NOTIFICATIONS, "通知", Messages.getString("Frame.335"), Messages.getString("Frame.336"), new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("Frame.337"))), otherPane, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         addTask(TaskConstants.OTHER_VIEW_USER_API, Messages.getString("Frame.338"), Messages.getString("Frame.339"), Messages.getString("Frame.340"), new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("Frame.341"))), otherPane, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         addTask(TaskConstants.OTHER_VIEW_CLIENT_API, Messages.getString("Frame.342"), Messages.getString("Frame.343"), Messages.getString("Frame.344"), new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("Frame.345"))), otherPane, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         addTask(TaskConstants.OTHER_HELP, Messages.getString("Frame.346"), Messages.getString("Frame.347"), Messages.getString("Frame.348"), new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("Frame.349"))), otherPane, null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -1119,7 +1119,7 @@ public class Frame extends JXFrame {
     }
 
     public void updateNotificationTaskName(int notifications) {
-        String taskName = UIConstants.VIEW_NOTIFICATIONS;
+        String taskName = "通知";
         if (notifications > 0) {
             taskName += Messages.getString("Frame.366") + notifications + Messages.getString("Frame.367"); //$NON-NLS-1$ //$NON-NLS-2$
         }

@@ -27,7 +27,7 @@ import com.mirth.connect.model.Connector;
  * A panel that contains the MirthVariableList.
  */
 public class VariableList extends javax.swing.JPanel {
-    private String borderTitle = "Variables";
+    private String borderTitle = Messages.getString("VariableList.0"); //$NON-NLS-1$
 
     /** Creates new form VariableList */
     public VariableList() {
@@ -51,31 +51,31 @@ public class VariableList extends javax.swing.JPanel {
      */
     public void setVariableListInbound(Set<String> additionalVariables) {
         LinkedHashSet<String> variables = new LinkedHashSet<String>();
-        variables.add("Channel ID");
-        variables.add("Channel Name");
-        variables.add("Message ID");
-        variables.add("Raw Data");
-        variables.add("Transformed Data");
-        variables.add("Encoded Data");
-        variables.add("Message Source");
-        variables.add("Message Type");
-        variables.add("Message Version");
-        variables.add("Date");
-        variables.add("Formatted Date");
-        variables.add("Timestamp");
-        variables.add("Unique ID");
-        variables.add("Original File Name");
+        variables.add(Messages.getString("VariableList.1")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.2")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.3")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.4")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.5")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.6")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.7")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.8")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.9")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.10")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.11")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.12")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.13")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.14")); //$NON-NLS-1$
 
         if (mirthVariableList.getTransferMode() == TransferMode.VELOCITY) {
-            variables.add("Count");
+            variables.add(Messages.getString("VariableList.15")); //$NON-NLS-1$
         }
 
-        variables.add("XML Entity Encoder");
-        variables.add("XML Pretty Printer");
-        variables.add("Escape JSON String");
-        variables.add("JSON Pretty Printer");
-        variables.add("CDATA Tag");
-        variables.add("DICOM Message Raw Data");
+        variables.add(Messages.getString("VariableList.16")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.17")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.18")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.19")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.20")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.21")); //$NON-NLS-1$
         variables.addAll(additionalVariables);
 
         mirthVariableList.removeAll();
@@ -86,9 +86,9 @@ public class VariableList extends javax.swing.JPanel {
 
     public void setVariableListOutbound() {
         ArrayList<String> variables = new ArrayList<String>();
-        variables.add("Raw Data");
-        variables.add("Transformed Data");
-        variables.add("Encoded Data");
+        variables.add(Messages.getString("VariableList.22")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.23")); //$NON-NLS-1$
+        variables.add(Messages.getString("VariableList.24")); //$NON-NLS-1$
         mirthVariableList.removeAll();
         mirthVariableList.setListData(variables.toArray());
         jScrollPane1.setViewportView(mirthVariableList);
@@ -96,7 +96,7 @@ public class VariableList extends javax.swing.JPanel {
 
     public void setBorder(String title, Color color) {
         borderTitle = title;
-        setBorder(BorderFactory.createTitledBorder(null, title, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Tahoma", 0, 11), color));
+        setBorder(BorderFactory.createTitledBorder(null, title, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font(Messages.getString("VariableList.25"), 0, 11), color)); //$NON-NLS-1$
     }
 
     @Override
@@ -127,13 +127,13 @@ public class VariableList extends javax.swing.JPanel {
         mirthVariableList = new com.mirth.connect.client.ui.components.MirthVariableList();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setBorder(javax.swing.BorderFactory.createTitledBorder("Variables"));
+        setBorder(javax.swing.BorderFactory.createTitledBorder(Messages.getString("VariableList.26"))); //$NON-NLS-1$
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         mirthVariableList.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         mirthVariableList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { Messages.getString("VariableList.27"), Messages.getString("VariableList.28"), Messages.getString("VariableList.29"), Messages.getString("VariableList.30"), Messages.getString("VariableList.31") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });

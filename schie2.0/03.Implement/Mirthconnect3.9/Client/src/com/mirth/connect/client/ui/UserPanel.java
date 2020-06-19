@@ -31,15 +31,15 @@ import com.mirth.connect.model.User;
 
 public class UserPanel extends javax.swing.JPanel {
 
-    private final String USER_EMAIL_COLUMN_NAME = "Email";
-    private final String USERNAME_COLUMN_NAME = "Username";
-    private final String USERFIRSTNAME_COLUMN_NAME = "First Name";
-    private final String USERLASTNAME_COLUMN_NAME = "Last Name";
-    private final String USERORGANIZATION_COLUMN_NAME = "Organization";
-    private final String USERINDUSTRY_COLUMN_NAME = "Industry";
-    private final String USERPHONENUMBER_COLUMN_NAME = "Phone Number";
-    private final String USERDESCRIPTION_COLUMN_NAME = "Description";
-    private final String USERLASTLOGIN_COLUMN_NAME = "Last Login";
+    private final String USER_EMAIL_COLUMN_NAME = Messages.getString("UserPanel.0"); //$NON-NLS-1$
+    private final String USERNAME_COLUMN_NAME = Messages.getString("UserPanel.1"); //$NON-NLS-1$
+    private final String USERFIRSTNAME_COLUMN_NAME = Messages.getString("UserPanel.2"); //$NON-NLS-1$
+    private final String USERLASTNAME_COLUMN_NAME = Messages.getString("UserPanel.3"); //$NON-NLS-1$
+    private final String USERORGANIZATION_COLUMN_NAME = Messages.getString("UserPanel.4"); //$NON-NLS-1$
+    private final String USERINDUSTRY_COLUMN_NAME = Messages.getString("UserPanel.5"); //$NON-NLS-1$
+    private final String USERPHONENUMBER_COLUMN_NAME = Messages.getString("UserPanel.6"); //$NON-NLS-1$
+    private final String USERDESCRIPTION_COLUMN_NAME = Messages.getString("UserPanel.7"); //$NON-NLS-1$
+    private final String USERLASTLOGIN_COLUMN_NAME = Messages.getString("UserPanel.8"); //$NON-NLS-1$
 
     private final int USERNAME_COLUMN_NUMBER = 0;
     private final int USER_EMAIL_COLUMN_NUMBER = 4;
@@ -154,7 +154,7 @@ public class UserPanel extends javax.swing.JPanel {
             for (int i = 0; i < parent.users.size(); i++) {
                 User temp = parent.users.get(i);
 
-                tableData[i][0] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource("images/user.png")), temp.getUsername());
+                tableData[i][0] = new CellData(new ImageIcon(com.mirth.connect.client.ui.Frame.class.getResource(Messages.getString("UserPanel.9"))), temp.getUsername()); //$NON-NLS-1$
                 tableData[i][1] = temp.getFirstName();
                 tableData[i][2] = temp.getLastName();
                 tableData[i][3] = temp.getEmail();
@@ -163,7 +163,7 @@ public class UserPanel extends javax.swing.JPanel {
                 tableData[i][6] = temp.getIndustry();
 
                 if (temp.getLastLogin() != null) {
-                    tableData[i][7] = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(temp.getLastLogin().getTime());
+                    tableData[i][7] = new SimpleDateFormat(Messages.getString("UserPanel.10")).format(temp.getLastLogin().getTime()); //$NON-NLS-1$
                 }
 
                 tableData[i][8] = temp.getDescription();
@@ -198,7 +198,7 @@ public class UserPanel extends javax.swing.JPanel {
         }
 
         // Set highlighter.
-        if (Preferences.userNodeForPackage(Mirth.class).getBoolean("highlightRows", true)) {
+        if (Preferences.userNodeForPackage(Mirth.class).getBoolean(Messages.getString("UserPanel.11"), true)) { //$NON-NLS-1$
             Highlighter highlighter = HighlighterFactory.createAlternateStriping(UIConstants.HIGHLIGHTER_COLOR, UIConstants.BACKGROUND_COLOR);
             usersTable.setHighlighters(highlighter);
         }

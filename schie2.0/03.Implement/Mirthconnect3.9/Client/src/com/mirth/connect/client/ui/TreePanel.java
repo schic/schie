@@ -68,9 +68,9 @@ import com.mirth.connect.plugins.DataTypeClientPlugin;
 
 public class TreePanel extends javax.swing.JPanel {
 
-    private static final String EMPTY = "[empty]";
-    private String version = "";
-    private String type = "";
+    private static final String EMPTY = Messages.getString("TreePanel.0"); //$NON-NLS-1$
+    private String version = Messages.getString("TreePanel.1"); //$NON-NLS-1$
+    private String type = Messages.getString("TreePanel.2"); //$NON-NLS-1$
     private Logger logger = Logger.getLogger(this.getClass());
     private BaseEditorPane<?, ?> editorPane;
     private String _dropPrefix;
@@ -157,8 +157,8 @@ public class TreePanel extends javax.swing.JPanel {
 
     public void setupPopupMenu() {
         popupMenu = new JPopupMenu();
-        popupMenuExpand = new JMenuItem("Expand");
-        popupMenuExpand.setIcon(new ImageIcon(this.getClass().getResource("images/add.png")));
+        popupMenuExpand = new JMenuItem(Messages.getString("TreePanel.3")); //$NON-NLS-1$
+        popupMenuExpand.setIcon(new ImageIcon(this.getClass().getResource(Messages.getString("TreePanel.4")))); //$NON-NLS-1$
         popupMenuExpand.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -178,8 +178,8 @@ public class TreePanel extends javax.swing.JPanel {
         });
         popupMenu.add(popupMenuExpand);
 
-        popupMenuCollapse = new JMenuItem("Collapse");
-        popupMenuCollapse.setIcon(new ImageIcon(this.getClass().getResource("images/delete.png")));
+        popupMenuCollapse = new JMenuItem(Messages.getString("TreePanel.5")); //$NON-NLS-1$
+        popupMenuCollapse.setIcon(new ImageIcon(this.getClass().getResource(Messages.getString("TreePanel.6")))); //$NON-NLS-1$
         popupMenuCollapse.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -201,8 +201,8 @@ public class TreePanel extends javax.swing.JPanel {
         popupMenu.addSeparator();
 
         if (_dropPrefix.equals(MessageTreePanel.MAPPER_PREFIX)) {
-            popupMenuMapToVariable = new JMenuItem("Map to Variable");
-            popupMenuMapToVariable.setIcon(new ImageIcon(this.getClass().getResource("images/book_previous.png")));
+            popupMenuMapToVariable = new JMenuItem(Messages.getString("TreePanel.7")); //$NON-NLS-1$
+            popupMenuMapToVariable.setIcon(new ImageIcon(this.getClass().getResource(Messages.getString("TreePanel.8")))); //$NON-NLS-1$
             popupMenuMapToVariable.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -221,8 +221,8 @@ public class TreePanel extends javax.swing.JPanel {
             });
             popupMenu.add(popupMenuMapToVariable);
 
-            popupMenuMapSegment = new JMenuItem("Map to Message");
-            popupMenuMapSegment.setIcon(new ImageIcon(this.getClass().getResource("images/book_next.png")));
+            popupMenuMapSegment = new JMenuItem(Messages.getString("TreePanel.9")); //$NON-NLS-1$
+            popupMenuMapSegment.setIcon(new ImageIcon(this.getClass().getResource(Messages.getString("TreePanel.10")))); //$NON-NLS-1$
             popupMenuMapSegment.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -235,14 +235,14 @@ public class TreePanel extends javax.swing.JPanel {
                         return;
                     }
 
-                    PlatformUI.MIRTH_FRAME.channelEditPanel.transformerPane.addNewElement(MirthTree.constructMessageBuilderStepName(null, tp), MirthTree.constructPath(tp, tree.getPrefix(), "").toString(), "", TransformerPane.MESSAGE_BUILDER, true);
+                    PlatformUI.MIRTH_FRAME.channelEditPanel.transformerPane.addNewElement(MirthTree.constructMessageBuilderStepName(null, tp), MirthTree.constructPath(tp, tree.getPrefix(), Messages.getString("TreePanel.11")).toString(), Messages.getString("TreePanel.12"), TransformerPane.MESSAGE_BUILDER, true); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             });
             popupMenu.add(popupMenuMapSegment);
 
         } else if (_dropPrefix.equals(MessageTreePanel.MESSAGE_BUILDER_PREFIX)) {
-            popupMenuMapSegmentFilter = new JMenuItem("Map to Message");
-            popupMenuMapSegmentFilter.setIcon(new ImageIcon(this.getClass().getResource("images/book_next.png")));
+            popupMenuMapSegmentFilter = new JMenuItem(Messages.getString("TreePanel.13")); //$NON-NLS-1$
+            popupMenuMapSegmentFilter.setIcon(new ImageIcon(this.getClass().getResource(Messages.getString("TreePanel.14")))); //$NON-NLS-1$
             popupMenuMapSegmentFilter.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
@@ -255,14 +255,14 @@ public class TreePanel extends javax.swing.JPanel {
                         return;
                     }
 
-                    PlatformUI.MIRTH_FRAME.channelEditPanel.transformerPane.addNewElement(MirthTree.constructMessageBuilderStepName(null, tp), MirthTree.constructPath(tp, tree.getPrefix(), tree.getSuffix()).toString(), "", TransformerPane.MESSAGE_BUILDER, true);
+                    PlatformUI.MIRTH_FRAME.channelEditPanel.transformerPane.addNewElement(MirthTree.constructMessageBuilderStepName(null, tp), MirthTree.constructPath(tp, tree.getPrefix(), tree.getSuffix()).toString(), Messages.getString("TreePanel.15"), TransformerPane.MESSAGE_BUILDER, true); //$NON-NLS-1$
                 }
             });
             popupMenu.add(popupMenuMapSegmentFilter);
         }
 
-        popupMenuFilterSegment = new JMenuItem("Filter by Value");
-        popupMenuFilterSegment.setIcon(new ImageIcon(this.getClass().getResource("images/book_previous.png")));
+        popupMenuFilterSegment = new JMenuItem(Messages.getString("TreePanel.16")); //$NON-NLS-1$
+        popupMenuFilterSegment.setIcon(new ImageIcon(this.getClass().getResource(Messages.getString("TreePanel.17")))); //$NON-NLS-1$
         popupMenuFilterSegment.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -275,7 +275,7 @@ public class TreePanel extends javax.swing.JPanel {
                     return;
                 }
 
-                PlatformUI.MIRTH_FRAME.channelEditPanel.filterPane.addNewElement("", MirthTree.constructNodeDescription(tp), MirthTree.constructPath(tp, tree.getPrefix(), tree.getSuffix()).toString(), FilterPane.RULE_BUILDER, true);
+                PlatformUI.MIRTH_FRAME.channelEditPanel.filterPane.addNewElement(Messages.getString("TreePanel.18"), MirthTree.constructNodeDescription(tp), MirthTree.constructPath(tp, tree.getPrefix(), tree.getSuffix()).toString(), FilterPane.RULE_BUILDER, true); //$NON-NLS-1$
             }
         });
         popupMenu.add(popupMenuFilterSegment);
@@ -324,7 +324,7 @@ public class TreePanel extends javax.swing.JPanel {
     }
 
     public void filter() {
-        final String workingId = PlatformUI.MIRTH_FRAME.startWorking("Filtering...");
+        final String workingId = PlatformUI.MIRTH_FRAME.startWorking(Messages.getString("TreePanel.19")); //$NON-NLS-1$
         lastWorkingId = workingId;
         FilterTreeModel model = (FilterTreeModel) tree.getModel();
 
@@ -350,10 +350,10 @@ public class TreePanel extends javax.swing.JPanel {
 
         JsonNode jsonDoc = null;
 
-        messageName = "";
-        version = "";
-        type = "";
-        String messageDescription = "";
+        messageName = Messages.getString("TreePanel.20"); //$NON-NLS-1$
+        version = Messages.getString("TreePanel.21"); //$NON-NLS-1$
+        type = Messages.getString("TreePanel.22"); //$NON-NLS-1$
+        String messageDescription = Messages.getString("TreePanel.23"); //$NON-NLS-1$
         String dataType = null;
         if (source.length() > 0 && !source.equals(ignoreText)) {
             IMessageSerializer serializer;
@@ -361,7 +361,7 @@ public class TreePanel extends javax.swing.JPanel {
             if (PlatformUI.MIRTH_FRAME.displayNameToDataType.containsKey(messageType)) {
                 dataType = PlatformUI.MIRTH_FRAME.displayNameToDataType.get(messageType);
             } else {
-                logger.error("Invalid data type");
+                logger.error(Messages.getString("TreePanel.24")); //$NON-NLS-1$
                 return;
             }
 
@@ -384,7 +384,7 @@ public class TreePanel extends javax.swing.JPanel {
                         if (metadata.get(DefaultMetaData.TYPE_VARIABLE_MAPPING) != null) {
                             type = ((String) metadata.get(DefaultMetaData.TYPE_VARIABLE_MAPPING)).trim();
                         } else {
-                            type = "Unknown type";
+                            type = Messages.getString("TreePanel.25"); //$NON-NLS-1$
                         }
 
                         messageName = type;
@@ -425,16 +425,16 @@ public class TreePanel extends javax.swing.JPanel {
                         if (metadata.get(DefaultMetaData.VERSION_VARIABLE_MAPPING) != null) {
                             version = ((String) metadata.get(DefaultMetaData.VERSION_VARIABLE_MAPPING)).trim();
                         } else {
-                            version = "Unknown version";
+                            version = Messages.getString("TreePanel.26"); //$NON-NLS-1$
                         }
 
                         if (metadata.get(DefaultMetaData.TYPE_VARIABLE_MAPPING) != null) {
                             type = ((String) metadata.get(DefaultMetaData.TYPE_VARIABLE_MAPPING)).trim();
                         } else {
-                            type = "Unknown type";
+                            type = Messages.getString("TreePanel.27"); //$NON-NLS-1$
                         }
 
-                        messageName = type + " (" + version + ")";
+                        messageName = type + Messages.getString("TreePanel.28") + version + Messages.getString("TreePanel.29"); //$NON-NLS-1$ //$NON-NLS-2$
                         Map<String, Class<? extends MessageVocabulary>> vocabs = new HashMap<String, Class<? extends MessageVocabulary>>();
                         for (DataTypeClientPlugin dataTypePlugin : LoadedExtensions.getInstance().getDataTypePlugins().values()) {
                             Class<? extends MessageVocabulary> vocabulary = dataTypePlugin.getVocabulary();
@@ -444,7 +444,7 @@ public class TreePanel extends javax.swing.JPanel {
                             }
                         }
                         vocabulary = MessageVocabularyFactory.getInstance(PlatformUI.MIRTH_FRAME.mirthClient, vocabs).getVocabulary(dataType, version, type);
-                        messageDescription = vocabulary.getDescription(type.replaceAll("-", ""));
+                        messageDescription = vocabulary.getDescription(type.replaceAll(Messages.getString("TreePanel.30"), Messages.getString("TreePanel.31"))); //$NON-NLS-1$ //$NON-NLS-2$
 
                         docBuilder = docFactory.newDocumentBuilder();
                         String message;
@@ -465,7 +465,7 @@ public class TreePanel extends javax.swing.JPanel {
                         MirthTreeNode top;
 
                         if (messageDescription.length() > 0) {
-                            top = new MirthTreeNode(messageName + " (" + messageDescription + ")");
+                            top = new MirthTreeNode(messageName + Messages.getString("TreePanel.32") + messageDescription + Messages.getString("TreePanel.33")); //$NON-NLS-1$ //$NON-NLS-2$
                         } else {
                             top = new MirthTreeNode(messageName);
                         }
@@ -486,7 +486,7 @@ public class TreePanel extends javax.swing.JPanel {
                     break;
 
                 case RAW:
-                    MirthTreeNode top = new MirthTreeNode("Raw Data.");
+                    MirthTreeNode top = new MirthTreeNode(Messages.getString("TreePanel.34")); //$NON-NLS-1$
                     createTree(top);
                     filter();
                     break;
@@ -583,7 +583,7 @@ public class TreePanel extends javax.swing.JPanel {
             ArrayNode arrNode = (ArrayNode) element;
             currentNode.setJSONType(JSONType.ARRAY);
 
-            MirthTreeNode childNode = new MirthTreeNode("");
+            MirthTreeNode childNode = new MirthTreeNode(Messages.getString("TreePanel.35")); //$NON-NLS-1$
             childNode.setSerializationType(SerializationType.JSON);
             childNode.setArrayElement(true);
             currentNode.add(childNode);
@@ -596,10 +596,10 @@ public class TreePanel extends javax.swing.JPanel {
 
                 for (int i = 0; i < arrNode.size(); i++) {
                     // The node name is the index of the array.
-                    String arrDescription = "[" + i + "]";
+                    String arrDescription = Messages.getString("TreePanel.36") + i + Messages.getString("TreePanel.37"); //$NON-NLS-1$ //$NON-NLS-2$
                     // Include the field name as long as the parent isn't also an array.
                     if (!parentIsArray) {
-                        arrDescription = fieldName + " " + arrDescription;
+                        arrDescription = fieldName + Messages.getString("TreePanel.38") + arrDescription; //$NON-NLS-1$
                     }
                     processJsonElement(dataType, arrDescription, arrNode.get(i), currentNode, true);
                 }
@@ -645,10 +645,10 @@ public class TreePanel extends javax.swing.JPanel {
             String description;
             MirthTreeNode currentNode = new MirthTreeNode(LoadedExtensions.getInstance().getDataTypePlugins().get(dataType).getNodeText(vocabulary, element.getNodeName()));
 
-            String text = "";
+            String text = Messages.getString("TreePanel.39"); //$NON-NLS-1$
             if (element.hasChildNodes()) {
                 text = element.getFirstChild().getNodeValue();
-                if ((text == null) || (text.equals("") || text.trim().length() == 0)) {
+                if ((text == null) || (text.equals(Messages.getString("TreePanel.40")) || text.trim().length() == 0)) { //$NON-NLS-1$
                     currentNode.add(new MirthTreeNode(element.getNodeName()));
                 } else {
                     currentNode.add(new MirthTreeNode(text));
@@ -656,9 +656,9 @@ public class TreePanel extends javax.swing.JPanel {
             } else {
                 int minLevel = LoadedExtensions.getInstance().getDataTypePlugins().get(dataType).getMinTreeLevel();
                 if (minLevel > 0) {
-                    String regex = ".*";
+                    String regex = Messages.getString("TreePanel.41"); //$NON-NLS-1$
                     for (int i = 0; i < minLevel; i++) {
-                        regex += "\\..*";
+                        regex += Messages.getString("TreePanel.42"); //$NON-NLS-1$
                     }
 
                     // build regex
@@ -667,11 +667,11 @@ public class TreePanel extends javax.swing.JPanel {
                         // Add the sub-node handler (SEG.1)
                         currentNode.add(new MirthTreeNode(element.getNodeName()));
                         // Add a sub node (SEG.1.1)
-                        String newNodeName = element.getNodeName() + ".1";
+                        String newNodeName = element.getNodeName() + Messages.getString("TreePanel.43"); //$NON-NLS-1$
                         description = vocabulary.getDescription(newNodeName);
                         MirthTreeNode parentNode;
                         if (description != null && description.length() > 0) {
-                            parentNode = new MirthTreeNode(newNodeName + " (" + description + ")");
+                            parentNode = new MirthTreeNode(newNodeName + Messages.getString("TreePanel.44") + description + Messages.getString("TreePanel.45")); //$NON-NLS-1$ //$NON-NLS-2$
                         } else {
                             parentNode = new MirthTreeNode(newNodeName);
                         }
@@ -701,7 +701,7 @@ public class TreePanel extends javax.swing.JPanel {
         NamedNodeMap atts = el.getAttributes();
         for (int i = 0; i < atts.getLength(); i++) {
             Attr att = (Attr) atts.item(i);
-            MirthTreeNode attNode = new MirthTreeNode("@" + att.getName());
+            MirthTreeNode attNode = new MirthTreeNode(Messages.getString("TreePanel.46") + att.getName()); //$NON-NLS-1$
             attNode.add(new MirthTreeNode(att.getValue()));
             dmtn.add(attNode);
         }
@@ -747,14 +747,14 @@ public class TreePanel extends javax.swing.JPanel {
     }
 
     public void clearMessage() {
-        MirthTreeNode top = new MirthTreeNode("Enter a message template.");
+        MirthTreeNode top = new MirthTreeNode(Messages.getString("TreePanel.47")); //$NON-NLS-1$
         MirthTree tree = new MirthTree(top, _dropPrefix, _dropSuffix);
         treePane.setViewportView(tree);
         revalidate();
     }
 
     public void setInvalidMessage(String messageType) {
-        MirthTreeNode top = new MirthTreeNode("Template is not valid " + messageType + ".");
+        MirthTreeNode top = new MirthTreeNode(Messages.getString("TreePanel.48") + messageType + Messages.getString("TreePanel.49")); //$NON-NLS-1$ //$NON-NLS-2$
         MirthTree tree = new MirthTree(top, _dropPrefix, _dropSuffix);
         treePane.setViewportView(tree);
         revalidate();
@@ -777,14 +777,14 @@ public class TreePanel extends javax.swing.JPanel {
         exact = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(5, 1, 1, 1), "Message Tree", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(5, 1, 1, 1), Messages.getString("TreePanel.50"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font(Messages.getString("TreePanel.51"), 1, 11))); // NOI18N //$NON-NLS-1$ //$NON-NLS-2$
 
-        jLabel1.setText("Filter:");
+        jLabel1.setText(Messages.getString("TreePanel.52")); //$NON-NLS-1$
 
         treePane.setViewportView(tree);
 
         exact.setBackground(new java.awt.Color(255, 255, 255));
-        exact.setText("Match Exact");
+        exact.setText(Messages.getString("TreePanel.53")); //$NON-NLS-1$
         exact.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         exact.setMargin(new java.awt.Insets(0, 0, 0, 0));
 

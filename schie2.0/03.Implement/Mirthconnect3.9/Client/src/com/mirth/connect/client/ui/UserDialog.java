@@ -34,11 +34,11 @@ public class UserDialog extends MirthDialog implements UserDialogInterface {
         boolean passwordRequired = false;
         if (currentUser != null) {
             editingLoggedInUser = currentUser.getUsername().equals(PlatformUI.USER_NAME);
-            jLabel2.setText("Edit User");
+            jLabel2.setText(Messages.getString("UserDialog.0")); //$NON-NLS-1$
         } else {
             currentUser = new User();
             passwordRequired = true;
-            jLabel2.setText("New User");
+            jLabel2.setText(Messages.getString("UserDialog.1")); //$NON-NLS-1$
         }
 
         userEditPanel.setUser(this, currentUser);
@@ -88,28 +88,28 @@ public class UserDialog extends MirthDialog implements UserDialogInterface {
         userEditPanel = new com.mirth.connect.client.ui.UserEditPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("User");
+        setTitle(Messages.getString("UserDialog.2")); //$NON-NLS-1$
 
         channelOverview.setBackground(new java.awt.Color(255, 255, 255));
-        channelOverview.setName(""); // NOI18N
+        channelOverview.setName(Messages.getString("UserDialog.3")); // NOI18N //$NON-NLS-1$
 
-        finishButton.setText("Finish");
+        finishButton.setText(Messages.getString("UserDialog.4")); //$NON-NLS-1$
         finishButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 finishButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setText("Cancel");
+        cancelButton.setText(Messages.getString("UserDialog.5")); //$NON-NLS-1$
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setFont(new java.awt.Font(Messages.getString("UserDialog.6"), 1, 18)); // NOI18N //$NON-NLS-1$
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("User");
+        jLabel2.setText(Messages.getString("UserDialog.7")); //$NON-NLS-1$
 
         javax.swing.GroupLayout mirthHeadingPanel1Layout = new javax.swing.GroupLayout(mirthHeadingPanel1);
         mirthHeadingPanel1.setLayout(mirthHeadingPanel1Layout);
