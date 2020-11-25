@@ -1,0 +1,2005 @@
+<channel version="3.9.0">
+  <id>ebf69d12-caf8-4d22-912f-2a87359cbe4c</id>
+  <nextMetaDataId>11</nextMetaDataId>
+  <name>schie3</name>
+  <description></description>
+  <revision>726</revision>
+  <sourceConnector version="3.9.0">
+    <metaDataId>0</metaDataId>
+    <name>sourceConnector</name>
+    <properties class="com.mirth.connect.connectors.http.HttpReceiverProperties" version="3.9.0">
+      <pluginProperties>
+        <com.mirth.connect.plugins.httpauth.NoneHttpAuthProperties version="3.9.0">
+  <authType>NONE</authType>
+        </com.mirth.connect.plugins.httpauth.NoneHttpAuthProperties>
+      </pluginProperties>
+      <listenerConnectorProperties version="3.9.0">
+        <host>0.0.0.0</host>
+        <port>8686</port>
+      </listenerConnectorProperties>
+      <sourceConnectorProperties version="3.9.0">
+        <responseVariable>ret</responseVariable>
+        <respondAfterProcessing>true</respondAfterProcessing>
+        <processBatch>false</processBatch>
+        <firstResponse>false</firstResponse>
+        <processingThreads>1</processingThreads>
+        <resourceIds class="linked-hash-map">
+          <entry>
+            <string>Default Resource</string>
+            <string>[Default Resource]</string>
+          </entry>
+        </resourceIds>
+        <queueBufferSize>1000</queueBufferSize>
+      </sourceConnectorProperties>
+      <xmlBody>false</xmlBody>
+      <parseMultipart>true</parseMultipart>
+      <includeMetadata>false</includeMetadata>
+      <binaryMimeTypes>application/.*(?&lt;!json|xml)$|image/.*|video/.*|audio/.*</binaryMimeTypes>
+      <binaryMimeTypesRegex>true</binaryMimeTypesRegex>
+      <responseContentType>text/html</responseContentType>
+      <responseDataTypeBinary>false</responseDataTypeBinary>
+      <responseStatusCode>200</responseStatusCode>
+      <responseHeaders class="linked-hash-map">
+        <entry>
+          <string>Access-Control-Allow-Origin</string>
+          <list>
+            <string>*</string>
+          </list>
+        </entry>
+      </responseHeaders>
+      <responseHeadersVariable></responseHeadersVariable>
+      <useResponseHeadersVariable>false</useResponseHeadersVariable>
+      <charset>UTF-8</charset>
+      <contextPath>datachange</contextPath>
+      <timeout>20000</timeout>
+      <staticResources/>
+    </properties>
+    <transformer version="3.9.0">
+      <elements>
+        <com.mirth.connect.plugins.javascriptstep.JavaScriptStep version="3.9.0">
+          <sequenceNumber>0</sequenceNumber>
+          <enabled>true</enabled>
+          <script>var messageData = sourceMap.get(&apos;parameters&apos;);
+var cmd = messageData.getParameter(&quot;cmd&quot;);
+var paramObj = messageData.getParameter(&quot;paramObj&quot;);
+if(cmd == null){
+	destinationSet.removeAllExcept([&apos;html_list&apos;]);
+}else if (cmd == &quot;new&quot;){
+	destinationSet.removeAllExcept([&apos;html_new&apos;]);
+}else if (cmd == &quot;new_srclist&quot;){
+	destinationSet.removeAllExcept([&apos;html_new_srclist&apos;]);
+	var src_usr = messageData.getParameter(&quot;src_usr&quot;);
+	globalChannelMap.put(&apos;src_usr&apos;,src_usr);
+	var src_pw = messageData.getParameter(&quot;src_pw&quot;);
+	globalChannelMap.put(&apos;src_pw&apos;,src_pw);
+	var src_jdbcurl = messageData.getParameter(&quot;src_jdbcurl&quot;);
+	globalChannelMap.put(&apos;src_jdbcurl&apos;,src_jdbcurl);
+	globalChannelMap.put(&apos;src_driverClass&apos;,getDriver(src_jdbcurl));
+	var des_usr = messageData.getParameter(&quot;des_usr&quot;);
+	globalChannelMap.put(&apos;des_usr&apos;,des_usr);
+	var des_pw = messageData.getParameter(&quot;des_pw&quot;);
+	globalChannelMap.put(&apos;des_pw&apos;,des_pw);
+	var des_jdbcurl = messageData.getParameter(&quot;des_jdbcurl&quot;);
+	globalChannelMap.put(&apos;des_jdbcurl&apos;,des_jdbcurl);
+	globalChannelMap.put(&apos;des_driverClass&apos;,getDriver(des_jdbcurl));
+	var creat_table = messageData.getParameter(&quot;creat_table&quot;);
+	if(creat_table == null){
+		globalChannelMap.put(&apos;creat_table&apos;,&quot;no&quot;);
+	}else if(creat_table == &quot;on&quot;){
+		globalChannelMap.put(&apos;creat_table&apos;,&quot;yes&quot;);
+	}
+}else if (cmd == &quot;create&quot; ){
+	destinationSet.removeAllExcept([&apos;data_new_create&apos;]);
+	var obdata = JSON.parse(paramObj);
+	var tablesmap = obdata.source.tablesmap;
+	var source = obdata.source;
+	channelMap.put(&apos;tablesmap&apos;,tablesmap);
+}else if (cmd == &quot;new_creat_over&quot;){
+	destinationSet.removeAllExcept([&apos;data_new_creat_over&apos;]);
+	var errormsg = messageData.getParameter(&quot;errormsg&quot;);
+	globalChannelMap.put(&apos;errormsg&apos;,errormsg);
+}else if (cmd == &quot;del&quot;){
+	destinationSet.removeAllExcept([&apos;data_del&apos;]);
+	var task_id = messageData.getParameter(&quot;task_id&quot;);
+	globalChannelMap.put(&apos;task_id&apos;,task_id);
+}else if (cmd == &quot;delover&quot;){
+	destinationSet.removeAllExcept([&apos;data_del_over&apos;]);
+	var delmsg = messageData.getParameter(&quot;delmsg&quot;);
+	globalChannelMap.put(&apos;delmsg&apos;,delmsg);
+}else if (cmd == &quot;start&quot;){
+	destinationSet.removeAllExcept([&apos;update_start_detail&apos;]);
+	var start_task_id = messageData.getParameter(&quot;task_id&quot;);
+	globalChannelMap.put(&apos;start_task_id&apos;,start_task_id);
+}else if (cmd == &quot;startupdate&quot;){
+	destinationSet.removeAllExcept([&apos;update_data&apos;]);
+	var update_task_id = messageData.getParameter(&quot;update_task_id&quot;);
+	globalChannelMap.put(&apos;update_task_id&apos;,update_task_id);
+}
+function getDriver(jdbcurl){
+	if(jdbcurl.indexOf(&quot;mysql&quot;) &gt; -1){
+		return &quot;com.mysql.cj.jdbc.Driver&quot;;
+	}
+	if(jdbcurl.indexOf(&quot;oracle&quot;) &gt; -1){
+		return &quot;oracle.jdbc.driver.OracleDriver&quot;;
+	}
+	if(jdbcurl.indexOf(&quot;postgresql&quot;) &gt; -1){
+		return &quot;org.postgresql.Driver&quot;;
+	}
+	if(jdbcurl.indexOf(&quot;sqlserver&quot;) &gt; -1){
+		return &quot;net.sourceforge.jtds.jdbc.Driver&quot;;
+	}
+}</script>
+        </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
+      </elements>
+      <inboundTemplate encoding="base64"></inboundTemplate>
+      <outboundTemplate encoding="base64"></outboundTemplate>
+      <inboundDataType>RAW</inboundDataType>
+      <outboundDataType>RAW</outboundDataType>
+      <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+        <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+          <splitType>JavaScript</splitType>
+          <batchScript></batchScript>
+        </batchProperties>
+      </inboundProperties>
+      <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+        <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+          <splitType>JavaScript</splitType>
+          <batchScript></batchScript>
+        </batchProperties>
+      </outboundProperties>
+    </transformer>
+    <filter version="3.9.0">
+      <elements/>
+    </filter>
+    <transportName>HTTP Listener</transportName>
+    <mode>SOURCE</mode>
+    <enabled>true</enabled>
+    <waitForPrevious>true</waitForPrevious>
+  </sourceConnector>
+  <destinationConnectors>
+    <connector version="3.9.0">
+      <metaDataId>1</metaDataId>
+      <name>html_list</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.9.0">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.9.0">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <script>logger.info(&quot;(html_list)--------&quot;);
+//html循环每一行之前的部分
+var  resp =&quot;&lt;!DOCTYPE html&gt;\n&quot; +
+                &quot;&lt;html&gt;\n&quot; +
+                &quot;&lt;head&gt;\n&quot; +
+                &quot;    &lt;meta charset=\&quot;UTF-8\&quot;&gt;\n&quot; +
+                &quot;    &lt;title&gt;数据交换任务列表&lt;/title&gt;\n&quot; +
+                &quot;    &lt;style&gt;\n&quot; +
+                &quot;        #content2 {\n&quot; +
+                &quot;            border-radius: 25px;\n&quot; +
+                &quot;            border: 1px solid black;\n&quot; +
+                &quot;            padding: 20px;\n&quot; +
+                &quot;            width: 1400px;\n&quot; +
+                &quot;            height: 0 auto;\n&quot; +
+                &quot;            margin: 0 auto;\n&quot; +
+                &quot;            background-color: rgb(181, 215, 228);\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;        #content {\n&quot; +
+                &quot;            border-radius: 25px;\n&quot; +
+                &quot;            border: 1px solid black;\n&quot; +
+                &quot;            padding: 20px;\n&quot; +
+                &quot;            width: 1400px;\n&quot; +
+                &quot;            height: 0 auto;\n&quot; +
+                &quot;            margin: 0 auto;\n&quot; +
+                &quot;            background-color: rgb(181, 215, 228);\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        h2 {\n&quot; +
+                &quot;            text-align: center;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        table {\n&quot; +
+                &quot;            width: 100%;\n&quot; +
+                &quot;      table-layout: fixed;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        td {\n&quot; +
+                &quot;            text-align: center;\n&quot; +
+                &quot;      overflow: hidden;\n&quot; +
+                &quot;      white-space: nowrap;\n&quot; +
+                &quot;      text-overflow: ellipsis;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    &lt;/style&gt;\n&quot; +
+                &quot;    &lt;script src=\&quot;https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js\&quot;&gt;&lt;/script&gt;\n&quot; +
+                &quot;&lt;/head&gt;\n&quot; +
+                &quot;\n&quot; +
+                &quot;&lt;body bgcolor=\&quot;#d0d0d0\&quot;&gt;\n&quot; +
+                &quot;&lt;div id=\&quot;content2\&quot; style=\&quot;display:none\&quot;&gt;\n&quot; +
+                &quot;    &lt;h2&gt;提交成功,请等待结果......&lt;/h2&gt;\n&quot; +
+                &quot;&lt;/div&gt;\n&quot; +
+                &quot;&lt;div id=\&quot;content\&quot;&gt;\n&quot; +
+                &quot;    &lt;h2&gt;数据交换任务列表&lt;/h2&gt;\n&quot; +
+                &quot;    &lt;button onclick=\&quot;getNew()\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 44px;height: 25px;\&quot;&gt;新建&lt;/button&gt;\n&quot; +
+                &quot;    &lt;table border=\&quot;1px\&quot; id=\&quot;test_table\&quot;&gt;\n&quot; +
+                &quot;        &lt;tr&gt;\n&quot; +
+                &quot;            &lt;th&gt;任务ID&lt;/th&gt;\n&quot; +
+                &quot;            &lt;th&gt;任务名称&lt;/th&gt;\n&quot; +
+                &quot;            &lt;th&gt;源库url&lt;/th&gt;\n&quot; +
+                &quot;            &lt;th&gt;目标库url&lt;/th&gt;\n&quot; +
+                &quot;            &lt;th&gt;交换内容&lt;/th&gt;\n&quot; +
+                &quot;      &lt;th&gt;更新时间&lt;/th&gt;\n&quot; +
+                &quot;            &lt;th&gt;创建时间&lt;/th&gt;\n&quot; +
+                &quot;      &lt;th&gt;操作&lt;/th&gt;\n&quot; +
+                &quot;        &lt;/tr&gt;&quot;;
+//查询任务表
+var dbConn;
+var result;
+
+try {
+	dbConn = DatabaseConnectionFactory.createDatabaseConnection(&apos;com.mysql.cj.jdbc.Driver&apos;, &apos;jdbc:mysql://localhost:3306/schie?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai&apos;, &apos;root&apos;, &apos;root&apos;);
+	result = dbConn.executeCachedQuery(&apos;SELECT * FROM schie_data GROUP BY create_time desc&apos;);
+	while(result.next()){
+		var resp2 = &quot;&lt;tr&gt;\n&quot; +
+                &quot;            &lt;td title = \&quot;&quot;+result.getString(&quot;task_id&quot;)+&quot;\&quot;&gt;&quot;+result.getString(&quot;task_id&quot;)+&quot;&lt;/td&gt;\n&quot; +
+                &quot;            &lt;td title = \&quot;&quot;+result.getString(&quot;task_name&quot;)+&quot;\&quot;&gt;&quot;+result.getString(&quot;task_name&quot;)+&quot;&lt;/td&gt;\n&quot; +
+                &quot;            &lt;td title = \&quot;&quot;+result.getString(&quot;src_jdbcurl&quot;)+&quot;\&quot;&gt;&quot;+result.getString(&quot;src_jdbcurl&quot;)+&quot;&lt;/td&gt;\n&quot; +
+                &quot;            &lt;td title = \&quot;&quot;+result.getString(&quot;des_jdbcurl&quot;)+&quot;\&quot;&gt;&quot;+result.getString(&quot;des_jdbcurl&quot;)+&quot;&lt;/td&gt;\n&quot; +
+                &quot;            &lt;td title = \&quot;&quot;+result.getString(&quot;tables_map&quot;)+&quot;\&quot;&gt;&quot;+result.getString(&quot;tables_map&quot;)+&quot;&lt;/td&gt;\n&quot; +
+                &quot;            &lt;td title = \&quot;&quot;+DateUtil.formatDate(&quot;yyyy-MM-dd HH:mm:ss&quot;, result.getTimestamp(&quot;update_time&quot;))+&quot;\&quot;&gt;&quot;+DateUtil.formatDate(&quot;yyyy-MM-dd HH:mm:ss&quot;, result.getTimestamp(&quot;update_time&quot;))+&quot;&lt;/td&gt;\n&quot; +
+                &quot;            &lt;td title = \&quot;&quot;+DateUtil.formatDate(&quot;yyyy-MM-dd HH:mm:ss&quot;, result.getTimestamp(&quot;create_time&quot;))+&quot;\&quot;&gt;&quot;+DateUtil.formatDate(&quot;yyyy-MM-dd HH:mm:ss&quot;, result.getTimestamp(&quot;create_time&quot;))+&quot;&lt;/td&gt;\n&quot; +
+                &quot;    &lt;td&gt;\n&quot; +
+                &quot;        &lt;button type=\&quot;button\&quot; onclick=\&quot;getStart(&apos;&quot;+result.getString(&quot;task_id&quot;)+&quot;&apos;)\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 70px;height:30px;\&quot;&gt;增量更新\n&quot; +
+                &quot;        &lt;/button&gt;\n&quot; +
+                &quot;        &lt;button type=\&quot;button\&quot; onclick=\&quot;getDelete(&apos;&quot;+result.getString(&quot;task_id&quot;)+&quot;&apos;)\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 50px;height:30px;\&quot;&gt;删除\n&quot; +
+                &quot;        &lt;/button&gt;\n&quot; +
+                &quot;    &lt;/td&gt;\n&quot; +
+                &quot;        &lt;/tr&gt;&quot;;
+     	resp+=resp2;
+	}
+	var resp3 =&quot;&lt;/table&gt;\n&quot; +
+                &quot;&lt;/div&gt;\n&quot; +
+                &quot;&lt;script&gt;\n&quot; +
+                &quot;    function getNew(){\n&quot; +
+                &quot;    document.location.href=\&quot;http://localhost:8686/datachange/?cmd=new\&quot;;\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;  function getStart(id){\n&quot; +
+                &quot;    document.location.href=\&quot;http://localhost:8686/datachange/?cmd=start&amp;&amp;task_id=\&quot;+id;\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;  function getDelete(id){\n&quot; +
+                &quot;    var params = {cmd:\&quot;del\&quot;,task_id:id};\n&quot; +
+                &quot;    var targetUrl = encodeURI(\&quot;http://localhost:8686/datachange/\&quot;);\n&quot; +
+                &quot;        $.ajax({\n&quot; +
+                &quot;            type : \&quot;post\&quot;,\n&quot; +
+                &quot;            url : targetUrl,\n&quot; +
+                &quot;            dataType : \&quot;html\&quot;,\n&quot; +
+                &quot;            data : params,\n&quot; +
+                &quot;            async:false,\n&quot; +
+                &quot;            success : function(msg) {\n&quot; +
+                &quot;        console.log(msg);\n&quot; +
+                &quot;                document.location.href=\&quot;http://localhost:8686/datachange/?cmd=delover&amp;&amp;delmsg=\&quot;+msg;\n&quot; +
+                &quot;            }\n&quot; +
+                &quot;        });\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;&lt;/script&gt;\n&quot; +
+                &quot;&lt;/body&gt;\n&quot; +
+                &quot;&lt;/html&gt;&quot;;
+     resp = resp + resp3; 
+     //每一个目标都有一个自己的响应               
+	$r(&apos;ret&apos;,resp);
+} finally {
+	if (dbConn) {
+		dbConn.close();
+	}
+}</script>
+      </properties>
+      <transformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.9.0">
+        <elements/>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+    <connector version="3.9.0">
+      <metaDataId>2</metaDataId>
+      <name>html_new</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.9.0">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.9.0">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <script>logger.info(&quot;(html_new)--------&quot;);
+var resp =&quot;&lt;!DOCTYPE html&gt;\n&quot; +
+                &quot;&lt;html&gt;\n&quot; +
+                &quot;&lt;head&gt;\n&quot; +
+                &quot;    &lt;meta charset=\&quot;UTF-8\&quot;&gt;\n&quot; +
+                &quot;    &lt;title&gt;新建任务&lt;/title&gt;\n&quot; +
+                &quot;    &lt;style&gt;\n&quot; +
+                &quot;        html,\n&quot; +
+                &quot;        body {\n&quot; +
+                &quot;            margin: 0px;\n&quot; +
+                &quot;            padding: 0px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\t\t#content2 {\n&quot; +
+                &quot;            border-radius: 25px;\n&quot; +
+                &quot;            border: 1px solid black;\n&quot; +
+                &quot;            padding: 20px;\n&quot; +
+                &quot;            width: 1400px;\n&quot; +
+                &quot;            height: 0 auto;\n&quot; +
+                &quot;            margin: 0 auto;\n&quot; +
+                &quot;            background-color: rgb(181, 215, 228);\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;        #content {\n&quot; +
+                &quot;            border-radius: 25px;\n&quot; +
+                &quot;            border: 1px solid black;\n&quot; +
+                &quot;            padding: 20px;\n&quot; +
+                &quot;            width: 1400px;\n&quot; +
+                &quot;            height: 0 auto;\n&quot; +
+                &quot;            margin: 0 auto;\n&quot; +
+                &quot;            background-color: rgb(181, 215, 228);\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        h1 {\n&quot; +
+                &quot;            margin: 0;\n&quot; +
+                &quot;            text-align: center;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\t\th2 {\n&quot; +
+                &quot;            margin: 0;\n&quot; +
+                &quot;            text-align: center;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        textarea {\n&quot; +
+                &quot;            width: 500px;\n&quot; +
+                &quot;            height: 100px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        .textStyle1 {\n&quot; +
+                &quot;            margin-left: 2px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        .textStyle2 {\n&quot; +
+                &quot;            margin-left: 18px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        .textStyle3 {\n&quot; +
+                &quot;            margin-left: 34px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        .textStyle4 {\n&quot; +
+                &quot;            margin-left: 0px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        .textCheckbox {\n&quot; +
+                &quot;            margin-left: 160px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    &lt;/style&gt;\n&quot; +
+                &quot;  &lt;script src=\&quot;https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js\&quot;&gt;&lt;/script&gt;\n&quot; +
+                &quot;&lt;/head&gt;\n&quot; +
+                &quot;\n&quot; +
+                &quot;&lt;body bgcolor=\&quot;#d0d0d0\&quot;&gt;\n&quot; +
+                &quot;  &lt;div id=\&quot;content2\&quot; style=\&quot;display:none\&quot;&gt;\n&quot; +
+                &quot;    &lt;h2&gt;拉取数据源结构,请等待......&lt;/h2&gt;\n&quot; +
+                &quot;  &lt;/div&gt;\n&quot; +
+                &quot;    &lt;div id=\&quot;content\&quot;&gt;\n&quot; +
+                &quot;        &lt;h1&gt;新建数据交换任务&lt;/h1&gt;\n&quot; +
+                &quot;        &lt;form id=\&quot;form01\&quot; action=\&quot;http://localhost:8686/datachange/\&quot; method=\&quot;post\&quot;&gt;\n&quot; +
+                &quot;      &lt;input  type=\&quot;hidden\&quot; name=\&quot;cmd\&quot; value=\&quot;new_srclist\&quot;&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textStyle1\&quot;&gt;数据源数据库用户名: &amp;emsp;&lt;input id=\&quot;accountUser\&quot; type=\&quot;text\&quot; name=\&quot;src_usr\&quot;&gt;&lt;/P&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textStyle2\&quot;&gt;数据源数据库密码: &amp;emsp;&lt;input id=\&quot;oldPassword\&quot; type=\&quot;password\&quot; name=\&quot;src_pw\&quot;&gt;&lt;/P&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textStyle4\&quot;&gt;数据源数据库jdbcurl: &lt;input id=\&quot;jbdcurl1\&quot; type=\&quot;text\&quot; value=\&quot;\&quot;  \n&quot; +
+                &quot;      style=\&quot;width:300px;\&quot; name=\&quot;src_jdbcurl\&quot;&gt;\n&quot; +
+                &quot;                &lt;select id=\&quot;select1\&quot; onchange=\&quot;showTxet1()\&quot;&gt;\n&quot; +
+                &quot;          &lt;option value=\&quot;选择数据库\&quot;&gt;请选择模板&lt;/option&gt;\n&quot; +
+                &quot;                    &lt;option value=\&quot;jdbc:oracle:thin:@host:port:dbname\&quot;&gt;Oracle&lt;/option&gt;\n&quot; +
+                &quot;                    &lt;option value=\&quot;jdbc:mysql://host:port/dbname?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai\&quot;&gt;MySQL&lt;/option&gt;\n&quot; +
+                &quot;                    &lt;option value=\&quot;jdbc:postgresql://host:port/dbname\&quot;&gt;PostgreSQL&lt;/option&gt;\n&quot; +
+                &quot;          &lt;option value=\&quot;jdbc:jtds:sqlserver://host:port/dbname\&quot;&gt;SQL Server&lt;/option&gt;\n&quot; +
+                &quot;                &lt;/select&gt;\n&quot; +
+                &quot;      &lt;/P&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textStyle2\&quot;&gt;目标数据库用户名:  &amp;emsp;&lt;input type=\&quot;text\&quot; id=\&quot;targetUser\&quot; name=\&quot;des_usr\&quot;&gt;&lt;/P&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textStyle3\&quot;&gt;目标数据库密码:  &amp;emsp;&lt;input type=\&quot;password\&quot; id=\&quot;targetPassword\&quot; name=\&quot;des_pw\&quot;&gt;&lt;/P&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textStyle2\&quot;&gt;目标数据库jdbcurl: &lt;input id=\&quot;jbdcurl2\&quot; type=\&quot;text\&quot; value=\&quot;\&quot; \n&quot; +
+                &quot;      style=\&quot;width:300px;\&quot; name=\&quot;des_jdbcurl\&quot;&gt;\n&quot; +
+                &quot;                &lt;select id=\&quot;select2\&quot; onchange=\&quot;showTxet2()\&quot;&gt;\n&quot; +
+                &quot;          &lt;option value=\&quot;选择数据库\&quot;&gt;请选择模板&lt;/option&gt;\n&quot; +
+                &quot;                    &lt;option value=\&quot;jdbc:oracle:thin:@host:port:dbname\&quot;&gt;Oracle&lt;/option&gt;\n&quot; +
+                &quot;                    &lt;option value=\&quot;jdbc:mysql://host:port/dbname?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai\&quot;&gt;MySQL&lt;/option&gt;\n&quot; +
+                &quot;                    &lt;option value=\&quot;jdbc:postgresql://host:port/dbname\&quot;&gt;PostgreSQL&lt;/option&gt;\n&quot; +
+                &quot;          &lt;option value=\&quot;jdbc:jtds:sqlserver://host:port/dbname\&quot;&gt;SQL Server&lt;/option&gt;\n&quot; +
+                &quot;                &lt;/select&gt;\n&quot; +
+                &quot;            &lt;/P&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textCheckbox\&quot;&gt;&lt;input type=\&quot;checkbox\&quot; id=\&quot;creat_table\&quot; name=\&quot;creat_table\&quot; &gt;\n&quot; +
+                &quot;      &lt;span&gt;目标数据库需要建立目标表?(勾选上,需要;不勾选,则不需要)&lt;/span&gt;\n&quot; +
+                &quot;      &lt;/p&gt;\n&quot; +
+                &quot;      &lt;p&gt;\n&quot; +
+                &quot;      &lt;button type=\&quot;button\&quot; onclick=\&quot;goBack()\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 100px;height: 30px;\&quot;&gt;返回&lt;/button&gt;\n&quot; +
+                &quot;      &lt;input id=\&quot;submit\&quot; type=\&quot;submit\&quot; value=\&quot;下一步\&quot;  style=\&quot;background: #66B3FF; color: #fff;width: 100px;height: 30px;\&quot;&gt;\n&quot; +
+                &quot;      &lt;/p&gt;\n&quot; +
+                &quot;        &lt;/form&gt;\n&quot; +
+                &quot;    &lt;/div&gt;\n&quot; +
+                &quot;     &lt;script&gt;\n&quot; +
+                &quot;        // 第一个下拉框事件\n&quot; +
+                &quot;        function showTxet1() {\n&quot; +
+                &quot;            var val = document.getElementById(\&quot;select1\&quot;).value;//获取下拉框值\n&quot; +
+                &quot;            var jbdcurl = document.getElementById(\&quot;jbdcurl1\&quot;);//获取文本框\n&quot; +
+                &quot;            jbdcurl.value = val;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;        // 第二个下拉框事件同上\n&quot; +
+                &quot;        function showTxet2() {\n&quot; +
+                &quot;            var val = document.getElementById(\&quot;select2\&quot;).value;\n&quot; +
+                &quot;            var jbdcurl = document.getElementById(\&quot;jbdcurl2\&quot;);\n&quot; +
+                &quot;            jbdcurl.value = val;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    $(&apos;#submit&apos;).click(function () {\n&quot; +
+                &quot;      document.getElementById(\&quot;content2\&quot;).style.display=\&quot;\&quot;;\n&quot; +
+                &quot;      document.getElementById(\&quot;content\&quot;).style.display=\&quot;none\&quot;;\n&quot; +
+                &quot;       var json = $(\&quot;#form01\&quot;).serializeArray();\n&quot; +
+                &quot;             console.log(JSON.stringify(json));\n&quot; +
+                &quot;    });\n&quot; +
+                &quot;    function goBack() {\n&quot; +
+                &quot;    \twindow.history.back();\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;    &lt;/script&gt; \n&quot; +
+                &quot;&lt;/body&gt;\n&quot; +
+                &quot;&lt;/html&gt;&quot;;
+$r(&apos;ret&apos;,resp);</script>
+      </properties>
+      <transformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.9.0">
+        <elements/>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+    <connector version="3.9.0">
+      <metaDataId>3</metaDataId>
+      <name>html_new_srclist</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.9.0">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.9.0">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <script>logger.info(&quot;(html_srclist)--------&quot;);
+var dbConn,dbConn2, rs,resp=&apos;&apos;,errormsg=&quot;&quot;;
+var object = Packages.java.lang.String;
+//html页面的头部  &lt;body&gt;标签之前的东西
+var htmlHead = &quot;&lt;!DOCTYPE html&gt;\n&quot; +
+                &quot;&lt;html&gt;\n&quot; +
+                &quot;&lt;head&gt;\n&quot; +
+                &quot;    &lt;meta charset=\&quot;UTF-8\&quot;&gt;\n&quot; +
+                &quot;    &lt;title&gt;新建任务&lt;/title&gt;\n&quot; +
+                &quot;    &lt;style&gt;\n&quot; +
+                &quot;        #content2 {\n&quot; +
+                &quot;            border-radius: 25px;\n&quot; +
+                &quot;            border: 1px solid black;\n&quot; +
+                &quot;            padding: 20px;\n&quot; +
+                &quot;            width: 1400px;\n&quot; +
+                &quot;            height: 0 auto;\n&quot; +
+                &quot;            margin: 0 auto;\n&quot; +
+                &quot;            background-color: rgb(181, 215, 228);\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;        #content {\n&quot; +
+                &quot;            border-radius: 25px;\n&quot; +
+                &quot;            border: 1px solid black;\n&quot; +
+                &quot;            padding: 20px;\n&quot; +
+                &quot;            width: 1400px;\n&quot; +
+                &quot;            height: 0 auto;\n&quot; +
+                &quot;            margin: 0 auto;\n&quot; +
+                &quot;            background-color: rgb(181, 215, 228);\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        h2 {\n&quot; +
+                &quot;            text-align: center;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        table {\n&quot; +
+                &quot;            width: 100%;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        td {\n&quot; +
+                &quot;            text-align: center;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    &lt;/style&gt;\n&quot; +
+                &quot;    &lt;script src=\&quot;https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js\&quot;&gt;&lt;/script&gt;\n&quot; +
+                &quot;&lt;/head&gt;&quot;;
+try {
+	errormsg = &quot;数据源数据库连接失败&quot;;
+	dbConn = DatabaseConnectionFactory.createDatabaseConnection($(&apos;src_driverClass&apos;),$(&apos;src_jdbcurl&apos;),$(&apos;src_usr&apos;),$(&apos;src_pw&apos;));
+	var metaData = dbConn.getConnection().getMetaData();
+	var statement = dbConn.getConnection().createStatement();
+	errormsg = &quot;目标数据库连接失败&quot;;
+	dbConn2 = DatabaseConnectionFactory.createDatabaseConnection($(&apos;des_driverClass&apos;),$(&apos;des_jdbcurl&apos;),$(&apos;des_usr&apos;),$(&apos;des_pw&apos;));
+	errormsg = &quot;获取数据源表单失败&quot;;
+	if($(&apos;src_jdbcurl&apos;).indexOf(&quot;oracle&quot;) &gt; -1){
+		rs = metaData.getTables(null, metaData.getUserName(), &quot;%&quot;, [&quot;TABLE&quot;]);
+	}else if($(&apos;src_jdbcurl&apos;).indexOf(&quot;mysql&quot;) &gt; -1){
+		rs = metaData.getTables(dbConn.getConnection().getCatalog(), null, &quot;%&quot;, [&quot;TABLE&quot;]);
+	}else if($(&apos;src_jdbcurl&apos;).indexOf(&quot;postgresql&quot;) &gt; -1){
+		rs = metaData.getTables(dbConn.getConnection().getCatalog(), null, &quot;%&quot;, [&quot;TABLE&quot;]);
+	}else if($(&apos;src_jdbcurl&apos;).indexOf(&quot;sqlserver&quot;) &gt; -1){
+		rs = metaData.getTables(dbConn.getConnection().getCatalog(), null, &quot;%&quot;, [&quot;TABLE&quot;]);
+	}
+	//2.定义html页面的第二个部分，从body标签到  表格头部
+	var htmlTable01 = &quot;&lt;body bgcolor=\&quot;#d0d0d0\&quot;&gt;\n&quot; +
+                &quot;&lt;div id=\&quot;content2\&quot; style=\&quot;display:none\&quot;&gt;\n&quot; +
+                &quot;    &lt;h2&gt;提交成功,请等待执行结果......&lt;/h2&gt;\n&quot; +
+                &quot;&lt;/div&gt;\n&quot; +
+                &quot;&lt;div id=\&quot;content\&quot;&gt;\n&quot; +
+                &quot;    &lt;h2&gt;数据源数据库表清单&lt;/h2&gt;\n&quot; +
+                &quot;    &lt;button onclick=\&quot;opcheckboxed(&apos;a&apos;, &apos;checkall&apos;)\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 44px;height: 25px;\&quot;&gt;全选&lt;/button&gt;\n&quot; +
+                &quot;    &lt;button onclick=\&quot;opcheckboxed(&apos;a&apos;, &apos;uncheckall&apos;)\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 70px;height: 25px;\&quot;&gt;取消全选&lt;/button&gt;\n&quot; +
+                &quot;    &lt;button onclick=\&quot;opcheckboxed(&apos;a&apos;, &apos;reversecheck&apos;)\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 44px;height: 25px;\&quot;&gt;反选&lt;/button&gt;\n&quot; +
+                &quot;    &lt;table border=\&quot;1px\&quot; id=\&quot;test_table\&quot;&gt;\n&quot; +
+                &quot;        &lt;tr&gt;\n&quot; +
+                &quot;            &lt;th&gt;&lt;/th&gt;\n&quot; +
+                &quot;            &lt;th&gt;表名&lt;/th&gt;\n&quot; +
+                &quot;            &lt;th&gt;数据量&lt;/th&gt;\n&quot; +
+                &quot;            &lt;th&gt;表备注&lt;/th&gt;\n&quot; +
+                &quot;            &lt;th&gt;表类别&lt;/th&gt;\n&quot; +
+                &quot;            &lt;th&gt;表模式&lt;/th&gt;\n&quot; +
+                &quot;      &lt;th&gt;增量字段&lt;/th&gt;\n&quot; +
+                &quot;        &lt;/tr&gt;&quot;;
+	while(rs.next()){
+		var table_name = rs.getString(&quot;TABLE_NAME&quot;);
+		if($(&apos;src_jdbcurl&apos;).indexOf(&quot;oracle&quot;) &gt; -1){
+			var count_sql = &apos;select count(*) from &quot;&apos;+table_name+&apos;&quot;&apos;;
+		}else if($(&apos;src_jdbcurl&apos;).indexOf(&quot;mysql&quot;) &gt; -1){
+			var count_sql = &apos;select count(*) from &apos;+table_name;
+		}else if($(&apos;src_jdbcurl&apos;).indexOf(&quot;postgresql&quot;) &gt; -1){
+			var count_sql = &apos;select count(*) from &apos;+table_name;
+		}else if($(&apos;src_jdbcurl&apos;).indexOf(&quot;sqlserver&quot;) &gt; -1){
+			var count_sql = &apos;select count(*) from &apos;+table_name;
+		}
+		logger.info(&apos;count_sql------&apos;+count_sql);
+		rss = statement.executeQuery(count_sql);
+		rss.next();
+		var row = rss.getInt(1);
+		//4.遍历该表格下的字段信息  加入到HTML页面的表格数据中
+		htmlTable01 += &quot;&lt;tr&gt;\n&quot; +
+                &quot;            &lt;td&gt;&lt;input type=\&quot;checkbox\&quot; name=\&quot;a\&quot; value=\&quot;1\&quot; style=\&quot;height: 18px;width: 20px;\&quot;&gt;&lt;/td&gt;\n&quot; +
+                &quot;            &lt;td&gt;&quot;+table_name+&quot;&lt;/td&gt;\n&quot; +
+                &quot;            &lt;td&gt;&quot;+row+&quot;&lt;/td&gt;\n&quot; +
+                &quot;            &lt;td&gt;&quot;+rs.getString(&quot;REMARKS&quot;)+&quot;&lt;/td&gt;\n&quot; +
+                &quot;            &lt;td&gt;&quot;+rs.getString(&quot;TABLE_CAT&quot;)+&quot;&lt;/td&gt;\n&quot; +
+                &quot;            &lt;td&gt;&quot;+rs.getString(&quot;TABLE_SCHEM&quot;)+&quot;&lt;/td&gt;\n&quot; +
+                &quot;      &lt;td bgcolor=\&quot;#FFFFFF\&quot; contenteditable=\&quot;true\&quot;&gt;&lt;/td&gt;\n&quot; +
+                &quot;        &lt;/tr&gt;&quot;;
+     }
+     //5.html页面最后部分  从table结束标签  到  最后的html结束标签
+     var htmlTable02 =&quot;&lt;/table&gt;\n&quot; +
+                &quot;    &lt;p&gt;\n&quot; +
+                &quot;        &lt;button type=\&quot;button\&quot; onclick=\&quot;goBack()\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 100px;height: 30px;\&quot;&gt;返回&lt;/button&gt;\n&quot; +
+                &quot;        &lt;button type=\&quot;button\&quot; onclick=\&quot;getTDtext()\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 100px;height: 30px;\&quot;&gt;执行&lt;/button&gt;\n&quot; +
+                &quot;    &lt;/p&gt;\n&quot; +
+                &quot;&lt;/div&gt;\n&quot; +
+                &quot;&lt;script&gt;\n&quot; +
+                &quot;    function opcheckboxed(objName, type){\n&quot; +
+                &quot;        var objNameList=document.getElementsByName(objName);\n&quot; +
+                &quot;        if(null!=objNameList){\n&quot; +
+                &quot;            for(var i=0;i&lt;objNameList.length;i++){\n&quot; +
+                &quot;                if(objNameList[i].checked==true){\n&quot; +
+                &quot;                    if(type != &apos;checkall&apos;) { \n&quot; +
+                &quot;                        objNameList[i].checked=false;\n&quot; +
+                &quot;                    }\n&quot; +
+                &quot;                } else {\n&quot; +
+                &quot;                    if(type != &apos;uncheckall&apos;) {\n&quot; +
+                &quot;                        objNameList[i].checked=true;\n&quot; +
+                &quot;                    }\n&quot; +
+                &quot;                }\n&quot; +
+                &quot;            }\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;    function goBack() {\n&quot; +
+                &quot;        window.history.back();\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;    function getTDtext() {\n&quot; +
+                &quot;        //1.拼装json格式参数数据；\n&quot; +
+                &quot;        var dataStr1 = \&quot;{\\n\&quot;;\n&quot; +
+                &quot;        var dataStr2 = \&quot;\\\&quot;source\\\&quot;: {\\n\&quot; +\n&quot; +
+                &quot;            \&quot;\t\\\&quot;tablesmap\\\&quot;: [\&quot;;\n&quot; +
+                &quot;        var dataStr3 = \&quot;\&quot;;\n&quot; +
+                &quot;        var rows = document.getElementById(\&quot;test_table\&quot;).rows;\n&quot; +
+                &quot;        var a = document.getElementsByName(\&quot;a\&quot;);\n&quot; +
+                &quot;        var table = document.getElementById(\&quot;test_table\&quot;);\n&quot; +
+                &quot;        for (var i = 0; i &lt; a.length; i++) {\n&quot; +
+                &quot;            if (a[i].checked) {\n&quot; +
+                &quot;                var row = a[i].parentElement.parentElement.rowIndex;\n&quot; +
+                &quot;                var bm = rows[row].cells[1].innerHTML;//表名\n&quot; +
+                &quot;                var zd = rows[row].cells[2].innerHTML;//数据量\n&quot; +
+                &quot;                var lx = rows[row].cells[3].innerHTML;//表备注\n&quot; +
+                &quot;                var dx = rows[row].cells[4].innerHTML;//表类别\n&quot; +
+                &quot;                var sm = rows[row].cells[5].innerHTML;//表模式\n&quot; +
+                &quot;        var zl = rows[row].cells[6].innerHTML;//增量字段\n&quot; +
+                &quot;                dataStr3 += \&quot;        {\\n\&quot; +\n&quot; +
+                &quot;                \&quot;            \\\&quot;table_name\\\&quot;: \\\&quot;\&quot;+bm+\&quot;\\\&quot;,\\n\&quot; +\n&quot; +
+                &quot;                \&quot;            \\\&quot;table_zlfild\\\&quot;:\\\&quot;\&quot;+zl+\&quot;\\\&quot;\\n\&quot; +\n&quot; +
+                &quot;                \&quot;        },\\n\&quot;;\n&quot; +
+                &quot;            }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;        var dataStr33 = dataStr3.substring(0, dataStr3.lastIndexOf(&apos;,&apos;));\n&quot; +
+                &quot;        var dataStr4  = \&quot;        ]\\n\&quot; +\n&quot; +
+                &quot;            \&quot;    }\\n\&quot; +\n&quot; +
+                &quot;            \&quot;}\&quot;;\n&quot; +
+                &quot;        var dataStr = dataStr1.concat(dataStr2).concat(dataStr33).concat(dataStr4);\n&quot; +
+                &quot;        console.log(dataStr);\n&quot; +
+                &quot;        //隐藏表格，弹出等待结果通知\n&quot; +
+                &quot;        document.getElementById(\&quot;content2\&quot;).style.display=\&quot;\&quot;;\n&quot; +
+                &quot;        document.getElementById(\&quot;content\&quot;).style.display=\&quot;none\&quot;;\n&quot; +
+                &quot;        //发送ajax请求，接收最新的页面\n&quot; +
+                &quot;        var params = {paramObj:dataStr,cmd:\&quot;create\&quot;};\n&quot; +
+                &quot;        var targetUrl = encodeURI(\&quot;http://localhost:8686/datachange/\&quot;);\n&quot; +
+                &quot;        $.ajax({\n&quot; +
+                &quot;            type : \&quot;post\&quot;,\n&quot; +
+                &quot;            url : targetUrl,\n&quot; +
+                &quot;            dataType : \&quot;html\&quot;,\n&quot; +
+                &quot;            data : params,\n&quot; +
+                &quot;            async:false,\n&quot; +
+                &quot;            success : function(errormsg) {\n&quot; +
+                &quot;                console.log(\&quot;ajax发送请求交互成功\&quot;);\n&quot; +
+                &quot;        console.log(errormsg);\n&quot; +
+                &quot;                document.location.href=\&quot;http://localhost:8686/datachange/?cmd=new_creat_over&amp;&amp;errormsg=\&quot;+errormsg;\n&quot; +
+                &quot;            }\n&quot; +
+                &quot;        });\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;&lt;/script&gt;\n&quot; +
+                &quot;&lt;/body&gt;\n&quot; +
+                &quot;&lt;/html&gt;&quot;;
+     statement.close();
+	dbConn.close();
+	resp = htmlHead+htmlTable01+htmlTable02;
+  }catch(e){
+	logger.debug(e.toString());
+	resp = &quot;&lt;!DOCTYPE html&gt;\n&quot; +
+                &quot;&lt;html&gt;\n&quot; +
+                &quot;&lt;head&gt;\n&quot; +
+                &quot;    &lt;meta charset=\&quot;UTF-8\&quot;&gt;\n&quot; +
+                &quot;    &lt;title&gt;异常&lt;/title&gt;\n&quot; +
+                &quot;    &lt;style&gt;\n&quot; +
+                &quot;        #content {\n&quot; +
+                &quot;            border-radius: 25px;\n&quot; +
+                &quot;            border: 1px solid black;\n&quot; +
+                &quot;            padding: 20px;\n&quot; +
+                &quot;            width: 1400px;\n&quot; +
+                &quot;            height: 0 auto;\n&quot; +
+                &quot;            margin: 0 auto;\n&quot; +
+                &quot;            background-color: rgb(181, 215, 228);\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        h3 {\n&quot; +
+                &quot;            text-align: center;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    &lt;/style&gt;\n&quot; +
+                &quot;&lt;/head&gt;\n&quot; +
+                &quot;&lt;body bgcolor=\&quot;#d0d0d0\&quot;&gt;\n&quot; +
+                &quot;&lt;div id=\&quot;content\&quot;&gt;\n&quot; +
+                &quot;    &lt;h3&gt;异常:&quot;+errormsg+e.toString()+&quot;&lt;br/&gt;请检查参数填写是否正确，或联系管理员。&lt;/h3&gt;\n&quot; +
+                &quot;&lt;/body&gt;\n&quot; +
+                &quot;&lt;/html&gt;&quot;;
+} 
+finally {
+	if (dbConn) dbConn.close();
+	if (dbConn2) dbConn2.close();
+}
+$r(&apos;ret&apos;,resp);</script>
+      </properties>
+      <transformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.9.0">
+        <elements/>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+    <connector version="3.9.0">
+      <metaDataId>4</metaDataId>
+      <name>data_new_create</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.9.0">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.9.0">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <script>logger.info(&quot;(data_first_create)--------&quot;);
+var errorMsg = &quot;&quot;;
+var okMsg = &quot;&quot;;
+var src_Conn;
+var srcconn;
+var des_Conn;
+var desconn;
+
+var tablelist = Lists.list();
+var resp = &quot;&quot;;
+var statement;
+try{
+	errorMsg = &apos;代码中异常:第一次创建源数据库连接失败&lt;br&gt;&apos;;
+	src_Conn = DatabaseConnectionFactory.createDatabaseConnection($(&apos;src_driverClass&apos;),$(&apos;src_jdbcurl&apos;), $(&apos;src_usr&apos;), $(&apos;src_pw&apos;));
+	srcconn = src_Conn.getConnection();
+	errorMsg = &apos;代码中异常:第一次创建目标数据库连接失败&lt;br&gt;&apos;;
+	des_Conn = DatabaseConnectionFactory.createDatabaseConnection($(&apos;des_driverClass&apos;),$(&apos;des_jdbcurl&apos;), $(&apos;des_usr&apos;), $(&apos;des_pw&apos;));
+	desconn = des_Conn.getConnection();
+	for(var i in $(&apos;tablesmap&apos;)){
+		var table = $(&apos;tablesmap&apos;)[i];
+		var table_name = table.table_name;
+	     tablelist.add(table_name);
+	}
+	errorMsg = &apos;代码中异常:创建目标表失败&lt;br&gt;&apos;;
+	if($(&apos;creat_table&apos;) == &quot;yes&quot;){
+		var lit = tablelist.listIterator();
+		while(lit.hasNext()){
+			var tableName = lit.next();
+			var create_table_SQL = &quot;CREATE TABLE &quot;+tableName+&quot; (&quot;;
+			var metaData = srcconn.getMetaData();
+			var rs =metaData.getColumns(srcconn.getCatalog(), null, tableName, null);
+			while(rs.next()){
+				var columnName = rs.getString(&quot;COLUMN_NAME&quot;);
+				var dataTypeName = rs.getString(&quot;TYPE_NAME&quot;);
+				var columnSize = rs.getInt(&quot;COLUMN_SIZE&quot;);
+				if(dataTypeName ==&quot;char&quot;||dataTypeName ==&quot;varchar&quot;||dataTypeName ==&quot;tinyblob&quot;||dataTypeName ==&quot;tinytext&quot;||dataTypeName ==&quot;tinytext&quot;||dataTypeName ==&quot;text&quot;||dataTypeName ==&quot;nvarchar&quot;||dataTypeName ==&quot;nchar&quot;||dataTypeName ==&quot;ntext&quot;){
+					create_table_SQL +=columnName+&quot; &quot;+dataTypeName+&quot;(&quot;+columnSize+&quot;),&quot;;
+				}else{
+					create_table_SQL +=columnName+&quot; varchar(255),&quot;;
+				}
+			}
+			if($(&apos;des_jdbcurl&apos;).indexOf(&quot;oracle&quot;) &gt; -1){
+				create_table_SQL = create_table_SQL.substring(0,create_table_SQL.length-1)+&apos;)&apos;;
+			}else{
+				create_table_SQL = create_table_SQL.substring(0,create_table_SQL.length-1)+&apos;);&apos;;
+			}
+			logger.info(create_table_SQL);
+			statement = desconn.createStatement();
+			statement.execute(create_table_SQL);
+			okMsg = &quot;目标表已创建成功！&quot;;
+		}
+	}
+}catch (e) {
+	logger.debug(errorMsg);
+	logger.debug(e.toString());
+	resp = okMsg+errorMsg+e.toString();
+	$r(&apos;ret&apos;,resp);
+	return;
+}finally {
+	if (statement) statement.close();
+	if (src_Conn) src_Conn.close();
+	if (des_Conn) des_Conn.close();
+}
+var src_statement;
+var des_statement;
+var resultData;
+try {
+	errorMsg = &apos;代码中异常:第二次源数据库连接失败&lt;br&gt;&apos;;
+	src_Conn = DatabaseConnectionFactory.createDatabaseConnection($(&apos;src_driverClass&apos;),$(&apos;src_jdbcurl&apos;), $(&apos;src_usr&apos;), $(&apos;src_pw&apos;));
+	srcconn = src_Conn.getConnection();
+	src_statement = srcconn.createStatement();
+	errorMsg = &apos;代码中异常:第二次目标数据库连接失败&lt;br&gt;&apos;;
+	des_Conn = DatabaseConnectionFactory.createDatabaseConnection($(&apos;des_driverClass&apos;),$(&apos;des_jdbcurl&apos;), $(&apos;des_usr&apos;), $(&apos;des_pw&apos;));
+	desconn = des_Conn.getConnection();
+	des_Conn.setAutoCommit(false);
+	des_statement = desconn.createStatement();
+	var tableNum = 0;
+	var rawNum = 0;
+	var lit = tablelist.listIterator();
+	while(lit.hasNext()){
+		var tableName = lit.next();
+		var dataNum = 0;
+		if($(&apos;src_jdbcurl&apos;).indexOf(&quot;oracle&quot;) &gt; -1){
+			var querySQL =&apos;SELECT * FROM &quot;&apos;+tableName+&apos;&quot;&apos;;
+		}else{
+			var querySQL =&quot;SELECT * FROM &quot;+tableName;
+		}
+		resultData = src_statement.executeQuery(querySQL);
+		var resultMetaData =resultData.getMetaData();
+		var cols = resultMetaData.getColumnCount();
+		errorMsg = &apos;代码中异常:目标数据库插入数据失败&apos;;
+		while(resultData.next()){
+			var insert_SQL = &apos;INSERT INTO &apos;+tableName+&apos; (&apos;;
+			var insert_SQL2 = &quot;) VALUES (&quot;;
+			for (var j = 1; j &lt;= cols; j++) {
+				insert_SQL += resultMetaData.getColumnName(j)+&quot;,&quot;;
+				insert_SQL2 += &quot;&apos;&quot;+resultData.getObject(j)+&quot;&apos;,&quot;;
+			}
+			insert_SQL = insert_SQL.substring(0,insert_SQL.length-1) + insert_SQL2.substring(0,insert_SQL2.length-1) + &apos;)&apos;;
+			des_statement.addBatch(insert_SQL);
+			rawNum++;
+			dataNum++;
+			if(rawNum&gt;0 &amp;&amp; rawNum % 1000 == 0){
+				des_statement.executeBatch();
+				des_Conn.commit();
+			}
+		}
+		resp+=&quot;初始化&lt;font color=\&quot;blue\&quot;&gt;&quot;+tableName+&quot;&lt;/font&gt;数据表，合计&lt;font color=\&quot;blue\&quot;&gt;&quot;+dataNum+&quot;&lt;/font&gt;条数据,&lt;br&gt;&quot;;
+		tableNum++;
+		des_statement.executeBatch();
+		des_Conn.commit();
+	}
+	des_Conn.setAutoCommit(true);
+	resp+=&quot;本次数据交换共初始化&lt;font color=\&quot;blue\&quot;&gt;&quot;+tableNum+&quot;&lt;/font&gt;张数据表共合计&lt;font color=\&quot;blue\&quot;&gt;&quot;+rawNum+&quot;&lt;/font&gt;条数据&quot;;
+	okMsg +=&quot;数据也初始化成功！&quot;;
+	
+	errorMsg = &apos;任务保存失败:连接任务配置表失败&lt;br&gt;&apos;;
+	var dbConn;
+	var result;
+	var paramList = Lists.list();
+	dbConn = DatabaseConnectionFactory.createDatabaseConnection(&apos;com.mysql.cj.jdbc.Driver&apos;, &apos;jdbc:mysql://localhost:3306/schie?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai&apos;, &apos;root&apos;, &apos;root&apos;);
+	errorMsg = &apos;任务保存失败:保存任务失败&lt;br&gt;&apos;;
+	insert_sql = &quot;INSERT schie_data ( task_id, task_name, src_jdbcurl, src_driverClass, src_usr, src_pw, des_jdbcurl, des_driverClass, des_usr, des_pw, creat_table, tables_map, update_time,create_time ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)&quot;;
+	paramList.add(createID());
+	paramList.add(createName(dbConn));
+	paramList.add($(&apos;src_jdbcurl&apos;));
+	paramList.add($(&apos;src_driverClass&apos;));
+	paramList.add($(&apos;src_usr&apos;));
+	paramList.add($(&apos;src_pw&apos;));
+	paramList.add($(&apos;des_jdbcurl&apos;));
+	paramList.add($(&apos;des_driverClass&apos;));
+	paramList.add($(&apos;des_usr&apos;));
+	paramList.add($(&apos;des_pw&apos;));
+	paramList.add($(&apos;creat_table&apos;));
+//	var tablesmap = $(&apos;tablesmap&apos;);JSON.stringify(obj)
+//	paramList.add(JSON.stringify($(&apos;tablesource&apos;)));
+	paramList.add(JSON.stringify($(&apos;tablesmap&apos;)));
+	paramList.add(DateUtil.getCurrentDate(&quot;yyyy-MM-dd HH:mm:ss&quot;));
+	paramList.add(DateUtil.getCurrentDate(&quot;yyyy-MM-dd HH:mm:ss&quot;));
+	result = dbConn.executeUpdate(insert_sql, paramList);
+	$r(&apos;ret&apos;,resp);
+} catch (err) {
+	logger.debug(errorMsg);
+	logger.debug(err.toString());
+	resp = okMsg+errorMsg+err.toString();
+	$r(&apos;ret&apos;,resp);
+	des_Conn.rollback();
+	throw err;
+	return;
+}finally {
+	if (dbConn) dbConn.close();
+	if (des_statement) des_statement.close();
+	if (src_statement) src_statement.close();
+	if (src_Conn) src_Conn.close();
+	if (des_Conn) des_Conn.close();
+}</script>
+      </properties>
+      <transformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.9.0">
+        <elements/>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+    <connector version="3.9.0">
+      <metaDataId>5</metaDataId>
+      <name>data_new_creat_over</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.9.0">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.9.0">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <script>logger.info(&quot;(data_creat_over)--------&quot;);
+var resp =&quot;&lt;!DOCTYPE html&gt;\n&quot; +
+                &quot;&lt;html&gt;\n&quot; +
+                &quot;&lt;head&gt;\n&quot; +
+                &quot;    &lt;meta charset=\&quot;UTF-8\&quot;&gt;\n&quot; +
+                &quot;    &lt;title&gt;新建任务&lt;/title&gt;\n&quot; +
+                &quot;    &lt;style&gt;\n&quot; +
+                &quot;        #content2 {\n&quot; +
+                &quot;      word-break: break-all; \n&quot; +
+                &quot;      word-wrap: break-word;\n&quot; +
+                &quot;            border-radius: 25px;\n&quot; +
+                &quot;            border: 1px solid black;\n&quot; +
+                &quot;            padding: 20px;\n&quot; +
+                &quot;            width: 1400px;\n&quot; +
+                &quot;            height: 0 auto;\n&quot; +
+                &quot;            margin: 0 auto;\n&quot; +
+                &quot;            background-color: rgb(181, 215, 228);\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    h2 {\n&quot; +
+                &quot;            text-align: center;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    &lt;/style&gt;\n&quot; +
+                &quot;&lt;/head&gt;\n&quot; +
+                &quot;&lt;body bgcolor=\&quot;#d0d0d0\&quot;&gt;\n&quot; +
+                &quot;&lt;div id=\&quot;content2\&quot;&gt;\n&quot; +
+                &quot;    &lt;h2&gt;数据交换结束&lt;/h2&gt;\n&quot; +
+                &quot;  &lt;h2&gt;&quot;+$(&apos;errormsg&apos;)+&quot;&lt;/h2&gt;\n&quot; +
+                &quot;  &lt;p&gt;\n&quot; +
+                &quot;        &lt;button type=\&quot;button\&quot; onclick=\&quot;goBack()\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 100px;height: 30px;\&quot;&gt;返回&lt;/button&gt;\n&quot; +
+                &quot;    &lt;/p&gt;\n&quot; +
+                &quot;&lt;/div&gt;\n&quot; +
+                &quot;&lt;script&gt;\n&quot; +
+                &quot;    function goBack() {\n&quot; +
+                &quot;        document.location.href=\&quot;http://localhost:8686/datachange/\&quot;;\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;&lt;/script&gt;\n&quot; +
+                &quot;&lt;/body&gt;\n&quot; +
+                &quot;&lt;/html&gt;&quot;;
+//每一个目标都有一个自己的响应   
+$r(&apos;ret&apos;,resp);
+</script>
+      </properties>
+      <transformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.9.0">
+        <elements/>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+    <connector version="3.9.0">
+      <metaDataId>7</metaDataId>
+      <name>data_del</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.9.0">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.9.0">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <script>logger.info(&quot;(data_del)--------&quot;);
+//删除任务
+var dbConn;
+var result;
+var errorMsg = &quot;&quot;;
+var resp = &quot;&quot;;
+try {
+	errorMsg = &quot;删除任务失败:连接任务配置表失败！&lt;br&gt;&quot;;
+	dbConn = DatabaseConnectionFactory.createDatabaseConnection(&apos;com.mysql.cj.jdbc.Driver&apos;, &apos;jdbc:mysql://localhost:3306/schie?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai&apos;, &apos;root&apos;, &apos;root&apos;);
+	errorMsg = &quot;删除任务失败:任务删除SQL执行错误！&lt;br&gt;&quot;;
+	result = dbConn.executeUpdate(&apos;DELETE  FROM schie_data WHERE task_id = &quot;&apos;+$(&apos;task_id&apos;)+&apos;&quot;&apos;);
+     resp = &quot;该任务已成功删除！&quot;; 
+     //每一个目标都有一个自己的响应               
+	$r(&apos;ret&apos;,resp);
+}catch (err) {
+	logger.debug(err.toString());
+	resp = errorMsg+err.toString();
+	$r(&apos;ret&apos;,resp);
+	des_Conn.rollback();
+	throw err;
+	return;
+}finally {
+	if (dbConn) dbConn.close();
+}</script>
+      </properties>
+      <transformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.9.0">
+        <elements/>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+    <connector version="3.9.0">
+      <metaDataId>8</metaDataId>
+      <name>data_del_over</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.9.0">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.9.0">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <script>logger.info(&quot;(data_del_over)--------&quot;);
+var resp =&quot;&lt;!DOCTYPE html&gt;\n&quot; +
+                &quot;&lt;html&gt;\n&quot; +
+                &quot;&lt;head&gt;\n&quot; +
+                &quot;    &lt;meta charset=\&quot;UTF-8\&quot;&gt;\n&quot; +
+                &quot;    &lt;title&gt;任务删除&lt;/title&gt;\n&quot; +
+                &quot;    &lt;style&gt;\n&quot; +
+                &quot;        #content2 {\n&quot; +
+                &quot;      word-break: break-all; \n&quot; +
+                &quot;      word-wrap: break-word;\n&quot; +
+                &quot;            border-radius: 25px;\n&quot; +
+                &quot;            border: 1px solid black;\n&quot; +
+                &quot;            padding: 20px;\n&quot; +
+                &quot;            width: 1400px;\n&quot; +
+                &quot;            height: 0 auto;\n&quot; +
+                &quot;            margin: 0 auto;\n&quot; +
+                &quot;            background-color: rgb(181, 215, 228);\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    h2 {\n&quot; +
+                &quot;            text-align: center;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    &lt;/style&gt;\n&quot; +
+                &quot;&lt;/head&gt;\n&quot; +
+                &quot;&lt;body bgcolor=\&quot;#d0d0d0\&quot;&gt;\n&quot; +
+                &quot;&lt;div id=\&quot;content2\&quot;&gt;\n&quot; +
+                &quot;    &lt;h2&gt;任务删除&lt;/h2&gt;\n&quot; +
+                &quot;  &lt;h2&gt;&quot;+$(&apos;delmsg&apos;)+&quot;&lt;/h2&gt;\n&quot; +
+                &quot;  &lt;p&gt;\n&quot; +
+                &quot;        &lt;button type=\&quot;button\&quot; onclick=\&quot;goBack()\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 100px;height: 30px;\&quot;&gt;返回&lt;/button&gt;\n&quot; +
+                &quot;    &lt;/p&gt;\n&quot; +
+                &quot;&lt;/div&gt;\n&quot; +
+                &quot;&lt;script&gt;\n&quot; +
+                &quot;    function goBack() {\n&quot; +
+                &quot;        document.location.href=\&quot;http://localhost:8686/datachange/\&quot;;\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;&lt;/script&gt;\n&quot; +
+                &quot;&lt;/body&gt;\n&quot; +
+                &quot;&lt;/html&gt;&quot;;
+//每一个目标都有一个自己的响应   
+$r(&apos;ret&apos;,resp);
+</script>
+      </properties>
+      <transformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.9.0">
+        <elements/>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+    <connector version="3.9.0">
+      <metaDataId>9</metaDataId>
+      <name>update_start_detail</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.9.0">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.9.0">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <script>logger.info(&quot;(update_start_detail)--------&quot;);
+//任务详情
+var dbConn;
+var result;
+var errorMsg = &quot;&quot;;
+var resp = &quot;&quot;;
+try {
+	errorMsg = &quot;查看详情时连接失败！&lt;br&gt;&quot;;
+	dbConn = DatabaseConnectionFactory.createDatabaseConnection(&apos;com.mysql.cj.jdbc.Driver&apos;, &apos;jdbc:mysql://localhost:3306/schie?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai&apos;, &apos;root&apos;, &apos;root&apos;);
+	errorMsg = &quot;查看详情时查询失败！&lt;br&gt;&quot;;
+	result = dbConn.executeCachedQuery(&apos;SELECT * FROM schie_data WHERE task_id = &quot;&apos;+$(&apos;start_task_id&apos;)+&apos;&quot;&apos;);
+	while(result.next()){
+	resp =&quot;&lt;!DOCTYPE html&gt;\n&quot; +
+                &quot;&lt;html&gt;\n&quot; +
+                &quot;&lt;head&gt;\n&quot; +
+                &quot;    &lt;meta charset=\&quot;UTF-8\&quot;&gt;\n&quot; +
+                &quot;    &lt;title&gt;任务详情&lt;/title&gt;\n&quot; +
+                &quot;    &lt;style&gt;\n&quot; +
+                &quot;        html,\n&quot; +
+                &quot;        body {\n&quot; +
+                &quot;            margin: 0px;\n&quot; +
+                &quot;            padding: 0px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        #content {\n&quot; +
+                &quot;            border-radius: 25px;\n&quot; +
+                &quot;            border: 1px solid black;\n&quot; +
+                &quot;            padding: 20px;\n&quot; +
+                &quot;            width: 1400px;\n&quot; +
+                &quot;            height: 0 auto;\n&quot; +
+                &quot;            margin: 0 auto;\n&quot; +
+                &quot;            background-color: rgb(181, 215, 228);\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        h1 {\n&quot; +
+                &quot;            margin: 0;\n&quot; +
+                &quot;            text-align: center;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        textarea {\n&quot; +
+                &quot;            width: 500px;\n&quot; +
+                &quot;            height: 100px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        .textStyle1 {\n&quot; +
+                &quot;            margin-left: 2px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        .textStyle2 {\n&quot; +
+                &quot;            margin-left: 18px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        .textStyle3 {\n&quot; +
+                &quot;            margin-left: 34px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;\n&quot; +
+                &quot;        .textStyle4 {\n&quot; +
+                &quot;            margin-left: 0px;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    &lt;/style&gt;\n&quot; +
+                &quot;  &lt;script src=\&quot;https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js\&quot;&gt;&lt;/script&gt;\n&quot; +
+                &quot;&lt;/head&gt;\n&quot; +
+                &quot;\n&quot; +
+                &quot;&lt;body bgcolor=\&quot;#d0d0d0\&quot;&gt;\n&quot; +
+                &quot;    &lt;div id=\&quot;content\&quot;&gt;\n&quot; +
+                &quot;        &lt;h1&gt;任务详情&lt;/h1&gt;\n&quot; +
+                &quot;        &lt;form id=\&quot;form01\&quot; action=\&quot;http://localhost:8686/datachange/\&quot; method=\&quot;post\&quot;&gt;\n&quot; +
+                &quot;      &lt;input  type=\&quot;hidden\&quot; name=\&quot;cmd\&quot; value=\&quot;startupdate\&quot;&gt;\n&quot; +
+                &quot;      &lt;input  type=\&quot;hidden\&quot; name=\&quot;update_task_id\&quot; value=\&quot;&quot;+result.getString(&quot;task_id&quot;)+&quot;\&quot;&gt;\n&quot; +
+                &quot;      &lt;p class=\&quot;textStyle2\&quot;&gt;任务ID:&amp;emsp;&amp;emsp;&quot;+result.getString(&quot;task_id&quot;)+&quot;&lt;/P&gt;\n&quot; +
+                &quot;      &lt;p class=\&quot;textStyle2\&quot;&gt;任务名字:&amp;emsp;&amp;emsp;&quot;+result.getString(&quot;task_name&quot;)+&quot;&lt;/P&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textStyle1\&quot;&gt;数据源数据库用户名:&amp;emsp;&amp;emsp;&quot;+result.getString(&quot;src_usr&quot;)+&quot;&lt;/P&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textStyle2\&quot;&gt;数据源数据库密码:&amp;emsp;&amp;emsp;******&lt;/P&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textStyle4\&quot;&gt;数据源数据库jdbcurl:&amp;emsp;&amp;emsp;&quot;+result.getString(&quot;src_jdbcurl&quot;)+&quot;&lt;/P&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textStyle2\&quot;&gt;目标数据库用户名:&amp;emsp;&amp;emsp;&quot;+result.getString(&quot;des_usr&quot;)+&quot;&lt;/P&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textStyle3\&quot;&gt;目标数据库密码:&amp;emsp;&amp;emsp;******&lt;/P&gt;\n&quot; +
+                &quot;            &lt;p class=\&quot;textStyle2\&quot;&gt;目标数据库jdbcurl:&amp;emsp;&amp;emsp;&quot;+result.getString(&quot;des_jdbcurl&quot;)+&quot;&lt;/P&gt;\n&quot; +
+                &quot;      &lt;p class=\&quot;textStyle2\&quot;&gt; 初始化是否建表:&amp;emsp;&amp;emsp;&quot;+result.getString(&quot;creat_table&quot;)+&quot;&lt;/P&gt;\n&quot; +
+                &quot;      &lt;p class=\&quot;textStyle2\&quot;&gt; 数据最近更新时间:&amp;emsp;&amp;emsp;&quot;+DateUtil.formatDate(&quot;yyyy-MM-dd HH:mm:ss&quot;, result.getTimestamp(&quot;update_time&quot;))+&quot;&lt;/P&gt;\n&quot; +
+                &quot;      &lt;p class=\&quot;textStyle2\&quot;&gt; 交换任务创建时间:&amp;emsp;&amp;emsp;&quot;+DateUtil.formatDate(&quot;yyyy-MM-dd HH:mm:ss&quot;, result.getTimestamp(&quot;create_time&quot;))+&quot;&lt;/P&gt;\n&quot; +
+                &quot;      &lt;p class=\&quot;textStyle2\&quot;&gt; 交换内容:&amp;emsp;&amp;emsp;&lt;br&gt;\n&quot; +
+                &quot;      &lt;textarea rows=\&quot;13\&quot; cols=\&quot;100\&quot; disabled=\&quot;true\&quot;&gt;&quot;+result.getString(&quot;tables_map&quot;)+&quot;&lt;/textarea&gt;\n&quot; +
+                &quot;      &lt;/P&gt;\n&quot; +
+                &quot;      &lt;p&gt;\n&quot; +
+                &quot;      &lt;button type=\&quot;button\&quot; onclick=\&quot;goBack()\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 100px;height: 30px;\&quot;&gt;返回&lt;/button&gt;\n&quot; +
+                &quot;      &lt;input id=\&quot;submit\&quot; type=\&quot;submit\&quot; value=\&quot;确定更新\&quot;  style=\&quot;background: #66B3FF; color: #fff;width: 100px;height: 30px;\&quot;&gt;\n&quot; +
+                &quot;      &lt;/p&gt;\n&quot; +
+                &quot;        &lt;/form&gt;\n&quot; +
+                &quot;    &lt;/div&gt; \n&quot; +
+                &quot;  &lt;script&gt;\n&quot; +
+                &quot;    $(&apos;#submit&apos;).click(function () {\n&quot; +
+                &quot;       var json = $(\&quot;#form01\&quot;).serializeArray();\n&quot; +
+                &quot;    });\n&quot; +
+                &quot;    function goBack() {\n&quot; +
+                &quot;      document.location.href=\&quot;http://localhost:8686/datachange/\&quot;;\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;    &lt;/script&gt; \n&quot; +
+                &quot;&lt;/body&gt;\n&quot; +
+                &quot;&lt;/html&gt;&quot;;	
+	}
+     //每一个目标都有一个自己的响应               
+	$r(&apos;ret&apos;,resp);
+}catch (err) {
+	logger.debug(err.toString());
+	resp = errorMsg+err.toString();
+	$r(&apos;ret&apos;,resp);
+	des_Conn.rollback();
+	throw err;
+	return;
+}finally {
+	if (dbConn) dbConn.close();
+}
+</script>
+      </properties>
+      <transformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.9.0">
+        <elements/>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+    <connector version="3.9.0">
+      <metaDataId>10</metaDataId>
+      <name>update_data</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.9.0">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.9.0">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <script>logger.info(&quot;(update_data)--------&quot;);
+var resp = &apos;&apos;,respmsg = &apos;&apos;;
+var src_jdbcurl,src_driverClass,src_usr,src_pw,des_jdbcurl,des_driverClass,des_usr,des_pw,tables_map,update_time;
+var taskConn;
+var taskres;
+var errorMsg = &quot;&quot;;
+var srcConn,desConn;
+var updateSum = 0,tableSum = 0;
+try {
+	//查询出任务
+	errorMsg = &quot;拉取任务时连接失败！&lt;br&gt;&quot;;
+	taskConn = DatabaseConnectionFactory.createDatabaseConnection(&apos;com.mysql.cj.jdbc.Driver&apos;, &apos;jdbc:mysql://localhost:3306/schie?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai&apos;, &apos;root&apos;, &apos;root&apos;);
+	errorMsg = &quot;拉取任务时查询失败！&lt;br&gt;&quot;;
+	taskres = taskConn.executeCachedQuery(&apos;SELECT * FROM schie_data WHERE task_id = &quot;&apos;+$(&apos;update_task_id&apos;)+&apos;&quot;&apos;);
+	while(taskres.next()){
+		src_jdbcurl = taskres.getString(&quot;src_jdbcurl&quot;);
+		src_driverClass = taskres.getString(&quot;src_driverClass&quot;);
+		src_usr = taskres.getString(&quot;src_usr&quot;);
+		src_pw = taskres.getString(&quot;src_pw&quot;);
+		des_jdbcurl = taskres.getString(&quot;des_jdbcurl&quot;);
+		des_driverClass = taskres.getString(&quot;des_driverClass&quot;);
+		des_usr = taskres.getString(&quot;des_usr&quot;);
+		des_pw = taskres.getString(&quot;des_pw&quot;);
+		tables_map = taskres.getString(&quot;tables_map&quot;);
+	}
+	errorMsg = &quot;获取源数据库连接失败！&lt;br&gt;&quot;;
+	srcConn = DatabaseConnectionFactory.createDatabaseConnection(src_driverClass, src_jdbcurl, src_usr,src_pw);
+	errorMsg = &quot;获取目标数据库连接失败！&lt;br&gt;&quot;;
+	desConn = DatabaseConnectionFactory.createDatabaseConnection(des_driverClass, des_jdbcurl, des_usr,des_pw);
+	//拉取出各个表和增量字段
+	var tablesMap = JSON.parse(tables_map);
+	for(var i in tablesMap){
+		var table = tablesMap[i];
+		var table_name = table.table_name;
+		var table_zlfild = table.table_zlfild;
+		//目标表依靠增量字段查询出最后一条数据；
+		var des_res,src_res;
+		var last_sql = &apos;&apos;;
+		if(des_jdbcurl.indexOf(&quot;oracle&quot;) &gt; -1){
+			last_sql = &apos;SELECT * FROM (SELECT * FROM &apos;+table_name+&apos; ORDER BY &apos;+table_zlfild+&apos; DESC) WHERE ROWNUM = 1&apos;;
+		}else{
+			last_sql = &apos;SELECT * FROM &apos;+table_name+&apos; ORDER BY &apos;+table_zlfild+&apos; DESC limit 1&apos;;
+		}
+		errorMsg = &quot;查询目标数据库&quot;+table_name+&quot;表最后一条数据失败！&lt;br&gt;SQL语句:&quot;+last_sql+&quot;;&lt;br&gt;&lt;br&gt;&quot;;
+		des_res = desConn.executeCachedQuery(last_sql);
+		var des_zlfild;
+		while(des_res.next()){
+			des_zlfild = des_res.getString(table_zlfild);
+			des_zlfild = des_zlfild.substring(0, des_zlfild.lastIndexOf(&apos;.&apos;));
+		}
+		var srcQuery = &apos;&apos;;
+		if(src_jdbcurl.indexOf(&quot;oracle&quot;) &gt; -1){
+			srcQuery = &apos;SELECT * FROM &quot;&apos;+table_name+&apos;&quot; WHERE &quot;&apos;+table_zlfild+&apos;&quot;&gt;to_date(\&apos;&apos;+des_zlfild+&apos;\&apos;,\&apos;yyyy-mm-dd HH24:MI:SS\&apos;)&apos;;
+		}else if(src_jdbcurl.indexOf(&quot;postgresql&quot;) &gt; -1){
+			srcQuery = &apos;SELECT * FROM &apos;+table_name+&apos; WHERE &apos;+table_zlfild+&apos; &gt; \&apos;&apos;+des_zlfild+&apos;\&apos;&apos;;
+		}else {
+			srcQuery = &apos;SELECT * FROM &apos;+table_name+&apos; WHERE &apos;+table_zlfild+&apos; &gt; &quot;&apos;+des_zlfild+&apos;&quot;&apos;;
+		}
+		errorMsg = &quot;查询数据源数据库&quot;+table_name+&quot;表最新数据失败！&lt;br&gt;SQL语句:&quot;+srcQuery+&quot;;&lt;br&gt;&lt;br&gt;&quot;;
+		src_res = srcConn.executeCachedQuery(srcQuery);//看是否有新增的
+		errorMsg = &quot;增量更新数据失败！&lt;br&gt;&quot;;
+		var sum = 0;
+		sum = updateData(des_jdbcurl,des_driverClass,des_usr,des_pw,src_res,table_name,sum);
+		respmsg += &apos;更新&lt;font color=\&quot;blue\&quot;&gt;&apos;+table_name+&apos;&lt;/font&gt;表，合计&lt;font color=\&quot;blue\&quot;&gt;&apos;+sum+&apos;&lt;/font&gt;条数据;&lt;br&gt;&apos;;
+		updateSum = updateSum + sum;
+		tableSum++;
+	}
+	respmsg = respmsg + &apos;本次增量更新共计&lt;font color=\&quot;blue\&quot;&gt;&apos;+tableSum+&apos;&lt;/font&gt;张表，共计&lt;font color=\&quot;blue\&quot;&gt;&apos;+updateSum+&apos;&lt;/font&gt;条数据&apos;;
+	resp =&quot;&lt;!DOCTYPE html&gt;\n&quot; +
+                &quot;&lt;html&gt;\n&quot; +
+                &quot;&lt;head&gt;\n&quot; +
+                &quot;    &lt;meta charset=\&quot;UTF-8\&quot;&gt;\n&quot; +
+                &quot;    &lt;title&gt;更新异常&lt;/title&gt;\n&quot; +
+                &quot;    &lt;style&gt;\n&quot; +
+                &quot;        #content2 {\n&quot; +
+                &quot;      word-break: break-all; \n&quot; +
+                &quot;      word-wrap: break-word;\n&quot; +
+                &quot;            border-radius: 25px;\n&quot; +
+                &quot;            border: 1px solid black;\n&quot; +
+                &quot;            padding: 20px;\n&quot; +
+                &quot;            width: 1400px;\n&quot; +
+                &quot;            height: 0 auto;\n&quot; +
+                &quot;            margin: 0 auto;\n&quot; +
+                &quot;            background-color: rgb(181, 215, 228);\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    h2 {\n&quot; +
+                &quot;            text-align: center;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    &lt;/style&gt;\n&quot; +
+                &quot;&lt;/head&gt;\n&quot; +
+                &quot;&lt;body bgcolor=\&quot;#d0d0d0\&quot;&gt;\n&quot; +
+                &quot;&lt;div id=\&quot;content2\&quot;&gt;\n&quot; +
+                &quot;    &lt;h2&gt;增量更新结束&lt;/h2&gt;\n&quot; +
+                &quot;  &lt;h2&gt;&quot;+respmsg+&quot;&lt;/h2&gt;\n&quot; +
+                &quot;  &lt;p&gt;\n&quot; +
+                &quot;        &lt;button type=\&quot;button\&quot; onclick=\&quot;goBack()\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 100px;height: 30px;\&quot;&gt;返回&lt;/button&gt;\n&quot; +
+                &quot;    &lt;/p&gt;\n&quot; +
+                &quot;&lt;/div&gt;\n&quot; +
+                &quot;&lt;script&gt;\n&quot; +
+                &quot;    function goBack() {\n&quot; +
+                &quot;        document.location.href=\&quot;http://localhost:8686/datachange/\&quot;;\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;&lt;/script&gt;\n&quot; +
+                &quot;&lt;/body&gt;\n&quot; +
+                &quot;&lt;/html&gt;&quot;;
+	//修改更新时间
+     errorMsg = &apos;增量更新后任务保存失败！&lt;br&gt;&apos;;
+	var resultover;
+	var update_sql = &apos;UPDATE schie_data SET update_time =\&apos;&apos;+DateUtil.getCurrentDate(&quot;yyyy-MM-dd HH:mm:ss&quot;)+&apos;\&apos; WHERE task_id = &quot;&apos;+$(&apos;update_task_id&apos;)+&apos;&quot;&apos;;
+	logger.info(&quot;update_sql---&quot;+update_sql);
+	resultover = taskConn.executeUpdate(update_sql);
+	
+     $r(&apos;ret&apos;,resp);          
+}catch (err) {
+	logger.debug(err.toString());
+	resp =&quot;&lt;!DOCTYPE html&gt;\n&quot; +
+                &quot;&lt;html&gt;\n&quot; +
+                &quot;&lt;head&gt;\n&quot; +
+                &quot;    &lt;meta charset=\&quot;UTF-8\&quot;&gt;\n&quot; +
+                &quot;    &lt;title&gt;更新异常&lt;/title&gt;\n&quot; +
+                &quot;    &lt;style&gt;\n&quot; +
+                &quot;        #content2 {\n&quot; +
+                &quot;      word-break: break-all; \n&quot; +
+                &quot;      word-wrap: break-word;\n&quot; +
+                &quot;            border-radius: 25px;\n&quot; +
+                &quot;            border: 1px solid black;\n&quot; +
+                &quot;            padding: 20px;\n&quot; +
+                &quot;            width: 1400px;\n&quot; +
+                &quot;            height: 0 auto;\n&quot; +
+                &quot;            margin: 0 auto;\n&quot; +
+                &quot;            background-color: rgb(181, 215, 228);\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    h2 {\n&quot; +
+                &quot;            text-align: center;\n&quot; +
+                &quot;        }\n&quot; +
+                &quot;    &lt;/style&gt;\n&quot; +
+                &quot;&lt;/head&gt;\n&quot; +
+                &quot;&lt;body bgcolor=\&quot;#d0d0d0\&quot;&gt;\n&quot; +
+                &quot;&lt;div id=\&quot;content2\&quot;&gt;\n&quot; +
+                &quot;    &lt;h2&gt;增量更新结束&lt;/h2&gt;\n&quot; +
+                &quot;  &lt;h2&gt;&quot;+errorMsg+err.toString()+&quot;&lt;/h2&gt;\n&quot; +
+                &quot;  &lt;p&gt;\n&quot; +
+                &quot;        &lt;button type=\&quot;button\&quot; onclick=\&quot;goBack()\&quot; style=\&quot;background: #66B3FF; color: #fff;width: 100px;height: 30px;\&quot;&gt;返回&lt;/button&gt;\n&quot; +
+                &quot;    &lt;/p&gt;\n&quot; +
+                &quot;&lt;/div&gt;\n&quot; +
+                &quot;&lt;script&gt;\n&quot; +
+                &quot;    function goBack() {\n&quot; +
+                &quot;        document.location.href=\&quot;http://localhost:8686/datachange/\&quot;;\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;&lt;/script&gt;\n&quot; +
+                &quot;&lt;/body&gt;\n&quot; +
+                &quot;&lt;/html&gt;&quot;;
+	$r(&apos;ret&apos;,resp);
+	throw err;
+	return;
+}finally {
+	if (taskConn) taskConn.close();
+	if (srcConn) srcConn.close();
+	if (desConn) desConn.close();
+}
+</script>
+      </properties>
+      <transformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.9.0">
+        <elements/>
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.0">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.9.0">
+        <elements/>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+  </destinationConnectors>
+  <preprocessingScript>// Modify the message variable below to pre process data
+return message;</preprocessingScript>
+  <postprocessingScript>// This script executes once after a message has been processed
+// Responses returned from here will be stored as &quot;Postprocessor&quot; in the response map
+return;</postprocessingScript>
+  <deployScript>// This script executes once when the channel is deployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</deployScript>
+  <undeployScript>// This script executes once when the channel is undeployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</undeployScript>
+  <properties version="3.9.0">
+    <clearGlobalChannelMap>true</clearGlobalChannelMap>
+    <messageStorageMode>PRODUCTION</messageStorageMode>
+    <encryptData>false</encryptData>
+    <removeContentOnCompletion>false</removeContentOnCompletion>
+    <removeOnlyFilteredOnCompletion>false</removeOnlyFilteredOnCompletion>
+    <removeAttachmentsOnCompletion>false</removeAttachmentsOnCompletion>
+    <initialState>STARTED</initialState>
+    <storeAttachments>true</storeAttachments>
+    <metaDataColumns>
+      <metaDataColumn>
+        <name>SOURCE</name>
+        <type>STRING</type>
+        <mappingName>mirth_source</mappingName>
+      </metaDataColumn>
+      <metaDataColumn>
+        <name>TYPE</name>
+        <type>STRING</type>
+        <mappingName>mirth_type</mappingName>
+      </metaDataColumn>
+    </metaDataColumns>
+    <attachmentProperties version="3.9.0">
+      <type>None</type>
+      <properties/>
+    </attachmentProperties>
+    <resourceIds class="linked-hash-map">
+      <entry>
+        <string>Default Resource</string>
+        <string>[Default Resource]</string>
+      </entry>
+    </resourceIds>
+  </properties>
+  <exportData>
+    <metadata>
+      <enabled>true</enabled>
+      <lastModified>
+        <time>1605860445025</time>
+        <timezone>Asia/Shanghai</timezone>
+      </lastModified>
+      <pruningSettings>
+        <archiveEnabled>true</archiveEnabled>
+      </pruningSettings>
+    </metadata>
+    <codeTemplateLibraries>
+      <codeTemplateLibrary version="3.9.0">
+        <id>37cbc679-c7bf-41ac-bee4-5e0a1f2e0706</id>
+        <name>schie3 Helper Functions</name>
+        <revision>7</revision>
+        <lastModified>
+          <time>1605755877514</time>
+          <timezone>Asia/Shanghai</timezone>
+        </lastModified>
+        <description></description>
+        <includeNewChannels>false</includeNewChannels>
+        <enabledChannelIds>
+          <string>ebf69d12-caf8-4d22-912f-2a87359cbe4c</string>
+        </enabledChannelIds>
+        <disabledChannelIds>
+          <string>c05c11d9-ca11-4e72-b87d-40864b07ec2d</string>
+          <string>bb0b3d05-755b-44bc-aea8-704f52932f93</string>
+          <string>7456fb68-ac57-4317-a3d7-359952830e42</string>
+          <string>1d0014e7-da7d-4bdc-8152-da05083f3bc6</string>
+          <string>42ca7f60-3ed3-492c-b87e-1b1cd987d528</string>
+          <string>c462a85a-4c71-4611-bfc7-6cb55212aa07</string>
+        </disabledChannelIds>
+        <codeTemplates>
+          <codeTemplate version="3.9.0">
+            <id>f6ef30a6-19d3-46e7-bc15-72d1d1110504</id>
+            <name>createID</name>
+            <revision>7</revision>
+            <lastModified>
+              <time>1604631412110</time>
+              <timezone>Asia/Shanghai</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	生成id
+	@return {String} return description
+*/
+function createID() {
+	var ustr = UUIDGenerator.getUUID();
+	var dastr = DateUtil.getCurrentDate(&quot;yyyyMMddHHmmss&quot;);
+	return ustr.substring(0,8).concat(dastr.substring(0,8)).concat(ustr.substring(14,18));
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.9.0">
+            <id>ef4558e8-dd27-4620-9864-0f212db25ccc</id>
+            <name>createName</name>
+            <revision>9</revision>
+            <lastModified>
+              <time>1604644759610</time>
+              <timezone>Asia/Shanghai</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	生成任务名字
+	@param {String} arg1 - arg1 description
+	@return {String} return description
+*/
+function createName(dbconn) {
+	try {
+		var dbresult = dbconn.executeCachedQuery(&apos;select count(*) from schie_data&apos;);
+		dbresult.next();
+		var max = dbresult.getInt(1)+1;
+		var str = &quot;任务&quot;+(dbresult.getInt(1)+1);
+		return str;
+	} catch (err) {
+		logger.error(&quot;生成任务名字失败&quot;);
+		logger.error(err);
+	}
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.9.0">
+            <id>906aaf01-b5da-4189-83de-d4773f54d5c9</id>
+            <name>updateData</name>
+            <revision>7</revision>
+            <lastModified>
+              <time>1605706305146</time>
+              <timezone>Asia/Shanghai</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	Modify the description here. Modify the function name and parameters as needed. One function per
+	template is recommended; create a new code template for each new function.
+
+	@param {String} arg1 - arg1 description
+	@return {String} return description
+*/
+function updateData(des_jdbcurl,des_driverClass,des_usr,des_pw,src_res,table_name,sum){
+	var desconn;
+	try {
+		errorMsg = &apos;增量更新异常:目标数据库连接失败！&lt;br&gt;&apos;;
+		desConn = DatabaseConnectionFactory.createDatabaseConnection(des_driverClass,des_jdbcurl, des_usr,des_pw);
+		dconn = desConn.getConnection();
+		desConn.setAutoCommit(false);
+		des_statement = dconn.createStatement();
+		
+		var resultMetaData = src_res.getOriginal().getMetaData();
+		var cols = resultMetaData.getColumnCount();
+		errorMsg = &apos;增量更新异常:更新新增数据失败！&lt;br&gt;&apos;;
+		while(src_res.next()){
+			var insert_SQL = &apos;INSERT INTO &apos;+table_name+&apos; (&apos;;
+			var insert_SQL2 = &quot;) VALUES (&quot;;
+			for (var j = 1; j &lt;= cols; j++) {
+				insert_SQL += resultMetaData.getColumnName(j)+&quot;,&quot;;
+				insert_SQL2 += &quot;&apos;&quot;+src_res.getObject(j)+&quot;&apos;,&quot;;
+			}
+			insert_SQL = insert_SQL.substring(0,insert_SQL.length-1) + insert_SQL2.substring(0,insert_SQL2.length-1) + &apos;)&apos;;
+			des_statement.addBatch(insert_SQL);
+			sum++;
+		}
+		des_statement.executeBatch();
+		desConn.commit();	 
+		return sum; 
+	} catch (err) {
+		logger.info(errorMsg+err.toString());
+		throw errorMsg+err;
+		desConn.rollback();
+		return;
+	}
+	finally {
+		if (des_statement) des_statement.close();
+		if (desConn) desConn.close();
+	}
+}</code>
+            </properties>
+          </codeTemplate>
+        </codeTemplates>
+      </codeTemplateLibrary>
+    </codeTemplateLibraries>
+  </exportData>
+</channel>
